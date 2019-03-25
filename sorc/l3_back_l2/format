@@ -1,0 +1,36 @@
+Header type information (same across outputs):
+*  channel polarizations        (H or V) (0 or 1, respectively)
+*  channel frequencies          (real, in GHz)
+*  instrument/platform          (int -- see below)
+
+Pointwise:
+date/time of observation     (to the minute) -- ncoda: 12 chars -- YYYYMMDDHHMM
+lat-lon                      (real)
+channel temperatures         (~19 to ~90 GHz, varies slightly by instrument, real, 0.01 precision)
+retrieved ice concentration  ([0-1] with 1.57, 2.24, and a couple others as flags)
+quality/confidence indicator (1-5, with 1 being best, 5 being bad data, 4 being weather)
+
+
+#  Additional Information:
+quality indicator:
+1 best    :
+2
+3
+4 weather : might be valid Tb, but is flagged as not sea ice by filter
+5 bad     : fails even cursory tb check
+
+Flags:
+1.57 : land
+1.95 : coast -- use with care and caution
+2.24 : undefined, don't use
+
+6. Satellite ID, integer (n_obs)
+Satellite ID Codes and Incoming File Names:
+AMSR: 1=AMSR2 {amsr_ice}
+SSMI/S: 16=DMSP-16 {ssmi}
+
+17=DMSP-17
+18=DMSP-18
+19=DMSP-19
+
+# conv=swab for/from archival file

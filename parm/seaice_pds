@@ -1,0 +1,11 @@
+ 10    disp
+  2    parmcat
+  0    parm
+  0    ifhr
+120    pds(2)
+128    pds(4)
+102    pds(6)
+  0    pds(7)
+  1    pds(13)
+  0    pds(14)
+  2    pds(22)

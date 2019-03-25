@@ -1,0 +1,88 @@
+#!/bin/sh
+
+set -x
+
+# Bring the various environment-sensitive definitions out of J jobs and to here:
+#NCO refers to these as 'job card' variables
+
+export HOMEbase=/u/Robert.Grumbine/para
+export seaice_analysis_ver=v4.3.0
+export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
+
+export MODULEPATH_ROOT=/usrx/local/prod/modulefiles
+module load prod_envir/1.0.2
+
+#export COMROOT=/gpfs/dell1/nco/ops/com
+#export NWROOTp1=/gpfs/gp1/nco/ops/nwprod
+#export NWROOTp3=/gpfs/dell1/nco/ops/nwprod
+#export NWROOTp2=/gpfs/gp2/nco/ops/nwprod
+#export GESROOThps=/gpfs/hps/nco/ops/nwges
+#export GESROOTp3=/gpfs/dell1/nco/ops/nwges
+#export GESROOTp2=/gpfs/gp2/nco/ops/nwges
+#export GESROOTp1=/gpfs/gp1/nco/ops/nwges
+#export GESROOT=/gpfs/dell1/nco/ops/nwges
+#export COMROOTp3=/gpfs/dell1/nco/ops/com
+#export COMROOTp2=/gpfs/gp2/nco/ops/com
+#export COMROOTp1=/gpfs/gp1/nco/ops/com
+#export COMROOThps=/gpfs/hps/nco/ops/com
+#export NWROOT=/gpfs/dell1/nco/ops/nwprod
+#export NWROOThps=/gpfs/hps/nco/ops/nwprod
+#export DCOMROOT=/gpfs/gp1/nco/ops/dcom
+
+export RUN_ENVIR=not_nco
+export envir=developer
+#export NWROOT=/nwprod2
+#export NWROOTprod=/nwprod2
+#export NWROOTp1=/nwprod
+#export DCOMROOT=/dcom
+#export COMROOTp1=/com
+#export GESROOTp1=/nwges
+ 
+
+export COMINsst_base=$COMROOTp2/gfs/prod
+export NET=omb
+export RUN=sice
+export cyc=${cyc:-00}
+export cycle=t${cyc}z
+export pid=$$
+export jobid=$pid
+
+
+if [ "$envir" = 'prod' ] || [ "$envir" = 'para' ] || [ "$envir" = 'test' ] ; then
+  #NCO
+  export HOMEbase=/nw${envir}
+  export COMROOT=/com
+  export COMINsst_base=/com/gfs/prod
+  export PCOMROOT=/pcom/${envir}/mrf
+else
+  #developer
+  export COMROOT=/u/Robert.Grumbine/noscrub/com/
+  export DATAROOT=/gpfs/dell2/ptmp/wx21rg/
+  export HOMEbase=/u/Robert.Grumbine/para
+  export jlogfile=/u/Robert.Grumbine/jlogfile
+  export PCOMROOT=/u/Robert.Grumbine/noscrub/pcom/$RUN
+  export SENDCOM=YES
+
+  #export COMROOT=/u/Robert.Grumbine/noscrub/com/${NET}/${envir}
+  #export COMINsst_base=/u/Robert.Grumbine/noscrub/com/gfs/prod
+fi
+
+########################################################
+#DBN stuff
+########################################################
+#export DBNROOT=/nwprod/spa_util/fakedbn
+export DBNROOT=/iodprod/dbnet_siphon
+if [ "$envir" = "prod" ] ; then
+  export SENDDBN=YES
+  export SENDDBN_NTC=YES
+else
+  if [ $envir = "para" ] ; then
+    export SENDDBN=YES
+    export SENDDBN_NTC=NO
+    export DBN_ALERT_TYPE=TBD_PARA
+  else
+    export SENDDBN=NO
+    export SENDDBN_NTC=NO
+  fi
+fi
+########################################################

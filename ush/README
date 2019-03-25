@@ -1,0 +1,20 @@
+All files (except README) should be executable in this directory.
+
+There are two types of scripts, with two purposes.  
+
+Types are noice, and imsice.  Both are aimed at cleaning up bad/overage elements of the analysis.
+
+noice -- If there is no IMS ice analysis, proceed with this
+imsice -- Use the imsice analysis
+
+The main versions for the globe, and have no other tag in their name.
+_gl are variations for working on the Great Lakes, needed by the Great Lakes wave model.
+
+
+Robert Grumbine
+22 November 2016
+
+4 -r-xr-xr-x. 1 rmg3 wd2  385 Mar  3  2016 noice.sh*
+4 -r-xr-xr-x. 1 rmg3 wd2  488 Mar  3  2016 noice_gl.sh*
+4 -r-xr-xr-x. 1 rmg3 wd2  904 Aug 23 12:56 imsice.sh*
+4 -r-xr-xr-x. 1 rmg3 wd2 1048 Aug 23 12:56 imsice_gl.sh*

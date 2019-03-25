@@ -1,0 +1,11 @@
+Information about problems is in the individual scripts.
+
+The main issue is in the imsice*.sh scripts, where they want an IMS ice 
+analysis.  In operations, the analysis is in /dcom  The main failure mode 
+is probably to not have an updated analysis to work with.  Script should 
+proceed gracefully even without a new analysis.
+
+Gracefully still means that it won't complete everything it would if the 
+analysis were present.  But the downstream usages do not require that.  
+The script exits in a state that the downstream may proceed normally.
+

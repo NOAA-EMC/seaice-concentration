@@ -1,0 +1,16 @@
+! Oceanographic products - Waves
+!D# CT# ID# PD# NAME                             UNITS                GNAM         SCALE   MISSING
+!23|123|123|123|12345678901234567890123456789012|12345678901234567890|123456789012|12345|123456.89
+010 000 003 000 Sig hght of comb wnd waves/swell m                    HTSGW            0  -9999.00
+010 000 004 000 Direction of wind waves          Degree true          DRCTWW           0  -9999.00
+010 000 005 000 Significant hght of wind waves   m                    HGHTWW           0  -9999.00
+010 000 006 000 Mean period of wind waves        s                    PERDWW           0  -9999.00
+010 000 007 000 Direction of swell waves         Degree true          DRCTSW           0  -9999.00
+010 000 008 000 Significant hght of swell waves  m                    HGHTSW           0  -9999.00
+010 000 009 000 Mean period of swell waves       s                    PERDSW           0  -9999.00
+010 000 010 000 Primary wave direction           Degree true          DRCTPW           0  -9999.00
+010 000 011 000 Primary wave mean period         s                    PERDPW           0  -9999.00
+010 000 012 000 Secondary wave direction         Degree true          DRCTSW           0  -9999.00
+010 002 000 000 Ice Cover                        Proportion           ICEC             0  -9999.00
+010 000 013 000 Secondary wave mean period       s                    PERDSW           0  -9999.00
+010 003 193 000 Extra Tropical Storm Surge       m                    ETSRG            0  -9999.00

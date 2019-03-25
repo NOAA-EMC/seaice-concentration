@@ -1,0 +1,30 @@
+########################################################################
+#
+#  Filename: nagrib.tbl
+#
+#  Used by: NA_format
+#
+#  Description:  This table is used by the NA_format script to get
+#                parameters for the different models that are to be
+#                GEMPAK grid formatted.  The parameters are used as
+#                model specific settings to the NAWIPS nagrib program.
+#
+########################################################################
+#
+#  The format of the table entries is as follows:
+#
+#  MODEL|CPYFIL|GAREA|GBTBLS|MAXGRD|KXKY|GRDAREA|PROJ|OUTPUT
+#
+#  NOTES: 1. Lines with a pound (#) sign in the first column
+#            are treated as comments.  
+#         2. Valid entries cannot have leading whitespace.
+#         3. Valid entries are pipe (|) delimited.
+#         4. Blank lines are ignored.
+#
+########################################################################
+#
+#MODEL     |CPYFIL|GAREA        |GBTBLS             |MAXGRD|KXKY  |GRDAREA      |PROJ     |OUTPUT
+#----------|------|-------------|-------------------|------|------|-------------|---------|------
+sice       |gds   |dset         |                   |4999  |      |             |         |T
+ice        |gds   |40;130;75;10 |wmogrib2.tbl       |10    |      |40;130;75;10 |         |T
+ice_5min   |gds   |grid         |ice_cover_grib2.tbl|10    |      |             |         |T

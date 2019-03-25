@@ -1,0 +1,144 @@
+!
+! WMOGRIB2.TBL -- GRIB 1 parameter conversion table version 2
+!
+!ID# NAME                             UNITS                GNAM         SCALE   MISSING
+!
+001 Pressure                          Pa                   PRES            -2  -9999.00
+002 Pressure reduced to MSL           Pa                   PMSL            -2  -9999.00
+003 Pressure tendency                 Pa s**-1             PTND            -2  -9999.00
+!004 undefined                         -                                     0  -9999.00
+!005 undefined                         -                                     0  -9999.00
+!006 Geopotential                      m**2 s**-2           GP               0  -9999.00
+007 Geopotential height               gpm                  HGHT             0  -9999.00
+!008 Geometrical height                m                    DIST             0  -9999.00
+!009 Standard deviation of height      m                    HGHTSD           0  -9999.00
+!010 Total ozone                       Dobson units         TOZO             0  -9999.00
+!
+011 Temperature                       K                    TMPK             0  -9999.00
+012 Virtual temperature               K                    TVRK             0  -9999.00
+013 Potential temperature             K                    THTA             0  -9999.00
+014 Equivalent potential temp         K                    THTE             0  -9999.00
+015 Maximum temperature               K                    TMXK             0  -9999.00
+016 Minimum temperature               K                    TMNK             0  -9999.00
+017 Dew-point temperature             K                    DWPK             0  -9999.00
+018 Dew-point depression(or deficit)  K                    DPDK             0  -9999.00
+!019 Lapse rate                        K m**-1              LAPS             0  -9999.00
+!020 Visibility                        m                    VSBY             0  -9999.00
+!
+!021 Radar spectra(1)                  -                    RDSP1            0  -9999.00
+!022 Radar spectra(2)                  -                    RDSP2            0  -9999.00
+!023 Radar spectra(3)                  -                    RDSP3            0  -9999.00
+024 Parcel Lifted Index (to 500hPa)   K                    LIFT             0  -9999.00
+!025 Temperature anomaly               K                    TMPKA            0  -9999.00
+!026 Pressure anomaly                  Pa                   PRESA           -2  -9999.00
+!027 Geopotential height anomaly       gpm                  HGHTA            0  -9999.00
+028 Wave spectra(1)                   -                    WVSP1            0  -9999.00
+029 Wave spectra(2)                   -                    WVSP2            0  -9999.00
+030 Wave spectra(3)                   -                    WVSP3            0  -9999.00
+!
+031 Wind direction                    Degree true          DRCT             0  -9999.00
+032 Wind speed                        m s**-1              SPED             0  -9999.00
+033 u-component of wind               m s**-1              UREL             0  -9999.00
+034 v-component of wind               m s**-1              VREL             0  -9999.00
+035 Stream function                   m**2 s**-1           STRM             0  -9999.00
+!036 Velocity potential                m**2 s**-1           VPOT             0  -9999.00
+037 Montgomery streamfunction         m**2 s**-2           PSYM            -2  -9999.00
+!038 Sigma co-ordinate vert vel        s**-1                SGCVV            0  -9999.00
+039 Pressure vertical velocity        Pa s**-1             OMEG            -2  -9999.00
+!040 Geometric vertical velocity       m s**-1              VVEL             0  -9999.00
+!
+041 Absolute vorticity                s**-1                AVOR             0  -9999.00
+042 Absolute divergence               s**-1                DIV              0  -9999.00
+043 Relative vorticity                s**-1                VOR              0  -9999.00
+044 Relative divergence               s**-1                RDIV             0  -9999.00
+045 Vertical u-component shear        s**-1                USHR             0  -9999.00
+046 Vertical v-component shear        s**-1                VSHR             0  -9999.00
+047 Direction of current              Degree true          DRCTC            0  -9999.00
+048 Speed of current                  m s**-1              SPEDC            0  -9999.00
+049 u-component of current            m s**-1              URELC            0  -9999.00
+050 v-component of current            m s**-1              VRELC            0  -9999.00
+!
+051 Specific humidity                 kg kg**-1            SPFH             0  -9999.00
+052 Relative humidity                 %                    RELH             0  -9999.00
+053 Humidity mixing ratio             kg kg**-1            MIXR             3  -9999.00
+054 Precipitable water                kg m**-2             PWTR             0  -9999.00
+055 Vapour pressure                   Pa                   VAPR            -2  -9999.00
+!056 Saturation deficit                Pa                   SATD            -2  -9999.00
+057 Evaporation                       kg m**-2             EVAP             0  -9999.00
+058 Cloud ice                         kg m**-2             CICE             0  -9999.00
+059 Precipitation rate                kg m**-2 s**-1       PR--             0  -9999.00
+060 Thunderstorm probability          %                    TSTM             0  -9999.00
+!
+061 Total precipitation               kg m**-2             P--M             0     -0.01
+062 Large scale precipitation         kg m**-2             S--M             0     -0.01
+063 Convective precipitation          kg m**-2             C--M             0     -0.01
+!064 Snowfall rate water equivalent    kg m**-2 s**-1       SR--             0  -9999.00
+065 Water equiv of accum snow depth   kg m**-2             SWEM             0  -9999.00
+066 Snow depth                        m                    SNDM             0  -9999.00
+067 Mixed layer depth                 m                    MIXL             0  -9999.00
+068 Transient thermocline depth       m                    TTHDP            0  -9999.00
+069 Main thermocline depth            m                    MTHDP            0  -9999.00
+070 Main thermocline anomaly          m                    MTHAN            0  -9999.00
+!
+!071 Total cloud cover                 %                    CLD              0  -9999.00
+!072 Convective cloud cover            %                    CCLD             0  -9999.00
+!073 Low cloud cover                   %                    CLDL             0  -9999.00
+!074 Medium cloud cover                %                    CLDM             0  -9999.00
+!075 High cloud cover                  %                    CLDH             0  -9999.00
+076 Cloud water                       kg m**-2             CWTR             0  -9999.00
+077 Condensation pressure             Pa                   CNDP            -2  -9999.00
+!078 Convective snow                   kg m**-2             CSNO             0  -9999.00
+!079 Large scale snow                  kg m**-2             LSNO             0  -9999.00
+080 Water temperature                 K                    WTMPK            0  -9999.00
+!
+081 Land-sea mask (1=land,0=sea)      1,0                  LAND             0  -9999.00
+082 Deviation of sea-level from mean  m                    CLVLD            0  -9999.00
+083 Surface roughness                 m                    SRLM             0  -9999.00
+084 Albedo                            %                    ALBD             0  -9999.00
+085 Soil temperature                  K                    SLTK             0  -9999.00
+086 Soil moisture content             kg m**-2             SLMM             0  -9999.00
+!087 Vegetation                        %                    VEG              0  -9999.00
+088 Salinity                          kg kg**-1            SLTY             0  -9999.00
+089 Density                           kg m**-3             DNTY             0  -9999.00
+090 Water runoff                      kg m**-2             RNOF             0  -9999.00
+!
+091 Ice concent (1=ice,0=no ice)      1,0                  ICE              0  -9999.00
+092 Ice thickness                     m                    ICET             0  -9999.00
+093 Direction of ice drift            Degree true          DRCTI            0  -9999.00
+094 Speed of ice drift                m s**-1              SPEDI            0  -9999.00
+095 u-component of ice drift          m s**-1              URELI            0  -9999.00
+096 v-component of ice drift          m s**-1              VRELI            0  -9999.00
+097 Ice growth                        m                    IGRO             0  -9999.00
+098 Ice divergence                    s**-1                IDIV             0  -9999.00
+099 Snow melt                         kg m**-2             N--M             0  -9999.00
+100 Sig hght of comb wind waves/swell m                    HTSGW            0  -9999.00
+!
+101 Direction of wind waves           Degree true          DRCTWW           0  -9999.00
+102 Significant hght of wind waves    m                    HGHTWW           0  -9999.00
+103 Mean period of wind waves         s                    PERDWW           0  -9999.00
+104 Direction of swell waves          Degree true          DRCTSW           0  -9999.00
+105 Significant hght of swell waves   m                    HGHTSW           0  -9999.00
+106 Mean period of swell waves        s                    PERDSW           0  -9999.00
+107 Primary wave direction            Degree true          DRCTPW           0  -9999.00
+108 Primary wave mean period          s                    PERDPW           0  -9999.00
+109 Secondary wave direction          Degree true          DRCTSW           0  -9999.00
+110 Secondary wave mean period        s                    PERDSW           0  -9999.00
+!
+111 Net short-wave radiation (sfc)    W m**-2              SNIR             0  -9999.00
+112 Net long-wave radiation (sfc)     W m**-2              SNOR             0  -9999.00
+113 Net short-wave rad (top of atm)   W m**-2              SWRT             0  -9999.00
+114 Net long-wave rad (top of atm)    W m**-2              LWRT             0  -9999.00
+!115 Long-wave radiation               W m**-2              LWRAD            0  -9999.00
+!116 Short-wave radiation              W m**-2              SWRAD            0  -9999.00
+!117 Global radiation                  W m**-2              GLRAD            0  -9999.00
+!118 undefined                         -                                     0  -9999.00
+!119 undefined                         -                                     0  -9999.00
+!120 undefined                         -                                     0  -9999.00
+!
+121 Latent heat flux                  W m**-2              FXLH             0  -9999.00
+122 Sensible heat flux                W m**-2              FXSH             0  -9999.00
+!123 Boundary layer dissipation        W m**-2              BLDIS            0  -9999.00
+!124 u-component of momentum flux      N m**-2              URELFX           0  -9999.00
+!125 v-component of momentum flux      N m**-2              VRELFX           0  -9999.00
+!126 Wind mixing energy                J                    ENRG             0  -9999.00
+!127 Image data                        -                    IMAG             0  -9999.00

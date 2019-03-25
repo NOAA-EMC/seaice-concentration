@@ -1,0 +1,11 @@
+Top level notes on the source codes/programs.
+Robert Grumbine 22 November 2016
+
+The directories are one for each satellite instrument (ssmi, ssmis, 
+amsr2, avhrr) and then a 'general' directory.  'general' contains 
+everything which is not unique to a particular satellite.  Each 
+satellite directory has two program directories -- one for decoding 
+bufr files to a flat binary, and one for doing something useful with 
+those data.  
+
+

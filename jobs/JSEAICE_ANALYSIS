@@ -1,0 +1,67 @@
+#!/bin/sh
+
+set -xae
+# #### 05/18/99 #############################
+# SETUP SEAICE CONCENTRATION ANALYSIS PROCESSING CONTROL SHELL VARIABLES
+# ###########################################
+export PS4='$SECONDS + '
+date
+echo cyc is ${cyc:?}
+echo envir is ${envir:?}
+echo seaice_analysis_ver is ${seaice_analysis_ver:?} 
+export pid=$$
+
+export DATA=$DATAROOT/${job}.${pid}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+export cycle=t${cyc}z
+export NET=omb
+
+#################################################
+# Specify job's execution areas (directory paths)
+#################################################
+export EXECseaice_analysis=$HOMEseaice_analysis/exec
+export FIXseaice_analysis=$HOMEseaice_analysis/fix
+export PARMseaice_analysis=$HOMEseaice_analysis/parm
+export USHseaice_analysis=$HOMEseaice_analysis/ush
+
+#########################################
+# Run setpdy and initialize PDY variables
+#########################################
+setpdy.sh
+. ./PDY
+
+export RUN=sice
+export COMIN=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}
+export COMINm1=${COMROOT}/${NET}/${envir}/${RUN}.${PDYm1}
+export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}
+
+export COMINsst=${COMINsst_base}/sst.${PDY}
+export COMINsstm1=${COMINsst_base}/sst.${PDYm1}
+
+export DCOM=$DCOMROOT/us007003/$PDY
+export DCOMm1=$DCOMROOT/us007003/$PDYm1
+
+#NCO request for this var to be defined in J
+#phase1 export USHobsproc_dump=${NWROOTp1}/obsproc_dump.${obsproc_dump_ver}/ush
+export USHobsproc_dump=${HOMEobsproc_dump}/ush
+
+mkdir -p $COMOUT
+env
+
+#####################################
+# Execute the script
+$HOMEseaice_analysis/scripts/exseaice_analysis.sh.ecf >> $pgmout
+export err=$?
+err_chk
+#####################################
+
+cat $pgmout
+
+date

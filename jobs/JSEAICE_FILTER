@@ -1,0 +1,64 @@
+#!/bin/sh
+
+set -xae
+# #### 31 March 2015 ******************************
+# SETUP AVHRR DATA RETRIEVAL for SEAICE CONCENTRATION ANALYSIS filter
+# ###########################################
+echo Have Entered Filtering Script, PDY = $PDY m1 = $PDYm1
+
+export PS4='$SECONDS + '
+date
+echo cyc is ${cyc:?}
+echo envir is ${envir:?}
+echo seaice_analysis_ver is ${seaice_analysis_ver:?} 
+export pid=$$
+
+export DATA=$DATAROOT/${job}.${pid}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.${pid}"
+
+export cycle=t${cyc}z
+export NET=omb
+
+#################################################
+# Specify job's execution areas (directory paths)
+#################################################
+export EXECseaice_analysis=$HOMEseaice_analysis/exec
+export FIXseaice_analysis=$HOMEseaice_analysis/fix
+export PARMseaice_analysis=$HOMEseaice_analysis/parm
+export USHseaice_analysis=$HOMEseaice_analysis/ush
+
+#########################################
+# Run setpdy and initialize PDY variables
+#########################################
+if [ -z $PDY ] ; then
+  setpdy.sh
+  . ./PDY
+fi
+echo FILTER pdy = $PDY
+
+export RUN=sice
+export COMIN=${COMROOT}/omb/${envir}/${RUN}.${PDY}
+export COMINm1=${COMROOT}/omb/${envir}/${RUN}.${PDYm1}
+export COMOUT=${COMROOT}/omb/${envir}/${RUN}.${PDY}
+export DCOM=$DCOMROOT/us007003/$PDY
+
+mkdir -p $COMOUT
+env
+
+#####################################
+# Execute the script
+echo ${HOMEseaice_analysis}
+$HOMEseaice_analysis/scripts/exseaice_filter >> $pgmout
+export err=$?
+err_chk
+#####################################
+
+cat $pgmout
+
+date

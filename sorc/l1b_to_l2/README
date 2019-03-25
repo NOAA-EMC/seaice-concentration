@@ -1,0 +1,17 @@
+ssmis_tol2:
+   read in L1b BUFR data from NCEP data tanks, computes some filters, computes sea ice concentration using the NASA Team algorithm, and write out the Tb, flags, lat, lon, observed time*, and concentration. 
+
+bayes: 
+   do some bayesian filter construction/testing
+
+demo:
+    output and demostration diagnostics of filters
+
+
+ssmis_tol2:
+  algorithm.c     -- apply Team weather filter and compute ice concentration 
+  filter.c        -- locally-developed land/water/mixed filters
+  skel.c          -- netcdf segment, call filters and algorithm
+  bufr.c          -- initial check on values from BUFR decode
+  ssmisu_decode.f -- do the BUFR reading from the tank
+

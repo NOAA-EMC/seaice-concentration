@@ -13,7 +13,7 @@ MMAB_SRC=$(BASE)/$(VER)/sorc/
 #------------------- should need no changes below here ------------------------
 #Compilers and their options
 FC=ifort
-FOPTS=-c -std95 -O2 $(MMAB_INC)
+FOPTS=-c -O2 $(MMAB_INC)
 #FOPTS=-c -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
 
 ##Home desk:

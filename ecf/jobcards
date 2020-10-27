@@ -5,38 +5,26 @@ set -x
 # Bring the various environment-sensitive definitions out of J jobs and to here:
 #NCO refers to these as 'job card' variables
 
-export HOMEbase=/u/Robert.Grumbine/para
+export HOMEbase=/u/Robert.Grumbine/rgdev
 export seaice_analysis_ver=v4.3.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 export MODULEPATH_ROOT=/usrx/local/prod/modulefiles
-module load prod_envir/1.0.2
 
 #export COMROOT=/gpfs/dell1/nco/ops/com
-#export NWROOTp1=/gpfs/gp1/nco/ops/nwprod
 #export NWROOTp3=/gpfs/dell1/nco/ops/nwprod
-#export NWROOTp2=/gpfs/gp2/nco/ops/nwprod
 #export GESROOThps=/gpfs/hps/nco/ops/nwges
 #export GESROOTp3=/gpfs/dell1/nco/ops/nwges
-#export GESROOTp2=/gpfs/gp2/nco/ops/nwges
-#export GESROOTp1=/gpfs/gp1/nco/ops/nwges
 #export GESROOT=/gpfs/dell1/nco/ops/nwges
 #export COMROOTp3=/gpfs/dell1/nco/ops/com
-#export COMROOTp2=/gpfs/gp2/nco/ops/com
-#export COMROOTp1=/gpfs/gp1/nco/ops/com
 #export COMROOThps=/gpfs/hps/nco/ops/com
 #export NWROOT=/gpfs/dell1/nco/ops/nwprod
 #export NWROOThps=/gpfs/hps/nco/ops/nwprod
-#export DCOMROOT=/gpfs/gp1/nco/ops/dcom
 
 export RUN_ENVIR=not_nco
 export envir=developer
 #export NWROOT=/nwprod2
 #export NWROOTprod=/nwprod2
-#export NWROOTp1=/nwprod
-#export DCOMROOT=/dcom
-#export COMROOTp1=/com
-#export GESROOTp1=/nwges
  
 
 export COMINsst_base=$COMROOTp2/gfs/prod
@@ -58,7 +46,7 @@ else
   #developer
   export COMROOT=/u/Robert.Grumbine/noscrub/com/
   export DATAROOT=/gpfs/dell2/ptmp/wx21rg/
-  export HOMEbase=/u/Robert.Grumbine/para
+  export HOMEbase=/u/Robert.Grumbine/rgdev
   export jlogfile=/u/Robert.Grumbine/jlogfile
   export PCOMROOT=/u/Robert.Grumbine/noscrub/pcom/$RUN
   export SENDCOM=YES

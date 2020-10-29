@@ -1,9 +1,17 @@
 #!/bin/sh
 
-set -x
 
 # Bring the various environment-sensitive definitions out of J jobs and to here:
 #NCO refers to these as 'job card' variables
+module load ips/19.0.5.281 impi/19.0.5
+module load prod_envir/1.1.0
+module load prod_util/1.1.5
+module load grib_util/1.1.1
+module load bufr_dumplist/2.3.0
+module load dumpjb/5.1.0
+module list
+
+set -xe
 
 export HOMEbase=/u/Robert.Grumbine/rgdev
 export seaice_analysis_ver=v4.3.0
@@ -11,23 +19,14 @@ export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 export MODULEPATH_ROOT=/usrx/local/prod/modulefiles
 
-#export COMROOT=/gpfs/dell1/nco/ops/com
-#export NWROOTp3=/gpfs/dell1/nco/ops/nwprod
-#export GESROOThps=/gpfs/hps/nco/ops/nwges
-#export GESROOTp3=/gpfs/dell1/nco/ops/nwges
-#export GESROOT=/gpfs/dell1/nco/ops/nwges
-#export COMROOTp3=/gpfs/dell1/nco/ops/com
-#export COMROOThps=/gpfs/hps/nco/ops/com
-#export NWROOT=/gpfs/dell1/nco/ops/nwprod
-#export NWROOThps=/gpfs/hps/nco/ops/nwprod
+export COMINsst_base=`compath.py gfs`
+export COMINsst_base=${COMINsst_base}/prod/
+echo COMINsst_base = $COMINsst_base
 
+#Important that these be after compaty.py
 export RUN_ENVIR=not_nco
 export envir=developer
-#export NWROOT=/nwprod2
-#export NWROOTprod=/nwprod2
- 
 
-export COMINsst_base=$COMROOTp2/gfs/prod
 export NET=omb
 export RUN=sice
 export cyc=${cyc:-00}

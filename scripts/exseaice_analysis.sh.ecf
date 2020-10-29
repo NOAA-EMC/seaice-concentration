@@ -500,7 +500,7 @@ then
   $DBNROOT/bin/dbn_alert GRIB_LOW $NET $job  ${PCOMROOT}/mrf/seaice.t${cyc}z.wmosouthpsg.${job}
 fi
 
-
+echo completed the L2 and L3 analyses
 
 #-----------------------------------------------------------
 # Construct the modeller's global sea ice grid
@@ -512,9 +512,10 @@ fi
 #-----------------------------------------------------------
 
 qc="false"
+echo qc, cominsst, cominsstm1:
+echo $qc $COMINsst $COMINsstm1
 
-if [ -s $COMINsst/rtgssthr_grb_0.083 ]
-then 
+if [ -s $COMINsst/rtgssthr_grb_0.083 ] ; then
   cp $COMINsst/rtgssthr_grb_0.083 oned
   qc="true"
 else

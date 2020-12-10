@@ -46,7 +46,8 @@ export RUN=sice
 export COMIN=${COMROOT}/omb/${envir}/${RUN}.${PDY}
 export COMINm1=${COMROOT}/omb/${envir}/${RUN}.${PDYm1}
 export COMOUT=${COMROOT}/omb/${envir}/${RUN}.${PDY}
-export DCOM=$DCOMROOT/us007003/$PDY
+export DCOM=$DCOMROOT/prod/$PDY
+echo DCOMROOT: $DCOMROOT
 
 mkdir -p $COMOUT
 env

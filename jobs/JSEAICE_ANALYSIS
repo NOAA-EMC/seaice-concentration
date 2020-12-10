@@ -45,11 +45,10 @@ export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}
 export COMINsst=${COMINsst_base}/sst.${PDY}
 export COMINsstm1=${COMINsst_base}/sst.${PDYm1}
 
-export DCOM=$DCOMROOT/us007003/$PDY
-export DCOMm1=$DCOMROOT/us007003/$PDYm1
+export DCOM=$DCOMROOT/prod/$PDY
+export DCOMm1=$DCOMROOT/prod/$PDYm1
 
 #NCO request for this var to be defined in J
-#phase1 export USHobsproc_dump=${NWROOTp1}/obsproc_dump.${obsproc_dump_ver}/ush
 export USHobsproc_dump=${HOMEobsproc_dump}/ush
 
 mkdir -p $COMOUT

@@ -17,7 +17,7 @@ set -xe
 #Note that date is PDYm1 -- this gives full calendar day of data 
 if [ ! -f $COMOUT/land.$PDYm1 ] ; then
   echo working on land $PDYm1
-  ln -sf ${DCOMROOT}/us007003/$PDY/b021/xx054 fort.11
+  ln -sf ${DCOMROOT}/prod/$PDY/b021/xx054 fort.11
   touch fort.51
   time $EXECseaice_analysis/seaice_avhrrbufr
   cp fort.51 $COMOUT/land.$PDYm1
@@ -26,7 +26,7 @@ fi
 
 if [ ! -f $COMOUT/seas.$PDYm1 ] ; then
   echo working on seas $PDYm1
-  ln -sf ${DCOMROOT}/us007003/$PDY/b021/xx053 fort.11
+  ln -sf ${DCOMROOT}/prod/$PDY/b021/xx053 fort.11
   time $EXECseaice_analysis/seaice_avhrrbufr 
   touch fort.51
   cp fort.51 $COMOUT/seas.$PDYm1

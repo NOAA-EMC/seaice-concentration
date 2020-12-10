@@ -10,11 +10,14 @@ echo initial tag date = $tag
 set -e
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz loading modules zzzzzzzzzzzzzzzzzzzzzzz
 #. /usrx/local/Modules/3.2.10/init/bash
-module load ips/18.0.1.163
-module load prod_envir/1.0.2
-module load prod_util/1.1.0 grib_util/1.1.0
-module load bufr_dumplist/2.0.0
-module load dumpjb/5.0.0
+module purge
+module load ips/19.0.5.281 impi/19.0.5
+module load prod_envir/1.1.0
+module load prod_util/1.1.5 
+module load grib_util/1.1.1
+module load bufr_dumplist/2.3.0
+module load dumpjb/5.1.0
+module list
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 
 set -xe
@@ -22,7 +25,7 @@ set -xe
 # Bring the various environment-sensitive definitions out of J jobs and to here:
 #NCO refers to these as 'job card' variables
 
-export HOMEbase=/u/Robert.Grumbine/para
+export HOMEbase=/u/Robert.Grumbine/rgdev
 export seaice_analysis_ver=v4.3.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 

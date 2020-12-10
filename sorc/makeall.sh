@@ -24,25 +24,28 @@ else
   module --ignore-cache load "./seaice_analysis.modulefile"
   if [ $? -ne 0 ] ; then
     echo some problem trying to load ./seaice_analysis.modulefile
-    module load EnvVars/1.0.2 ips/18.0.1.163  impi/18.0.1
-    module load w3nco/2.0.6 w3emc/2.3.0
-    module load bufr/11.2.0 bacio/2.0.2
-    module load libpng/1.2.44
+    #NCO Compilation modules
+    module load EnvVars/1.0.3 ips/19.0.5.281  impi/19.0.5
+    #NCO build libraries for grib, bufr, ...
+    module load w3nco/2.2.0 w3emc/2.4.0
+    module load bacio/2.0.3
+    module load libpng/1.2.59
+    module load jasper/1.900.29
+    module load g2/3.2.0
     module load zlib/1.2.11
-    module load jasper/1.900.1
-    module load g2/3.1.0
+    module load bufr/11.3.1
 
   fi
   module list
 #If being built against new mmablib by developer:
-  export BASE=~/para/mmablib/
-  export MMAB_VER=v3.5.0
+  export BASE=/u/Robert.Grumbine/rgdev/mmablib
+  export VER=""
+  export MMAB_INC=$BASE/include/
+  export MMAB_SRC=${BASE}/sorc/
+  export MMAB_LIB="-L ${BASE}/"
+  export MMAB_VER=""
   export VER=$MMAB_VER
-  export MMAB_INC=${BASE}/$VER/include/
-  export MMAB_SRC=${BASE}/$VER/sorc/
-  export MMAB_LIB='-L ${BASE}/${VER}/'
-#from nco modulefile in /nwprod2/lib/modulefiles/mmab
-  export dlib=${BASE}/${VER}
+  export dlib=${BASE}
   export MMAB_INC=$dlib/include
   export MMAB_OMBC_LIB4=$dlib/libombc_4.a
   export MMAB_OMBF_LIB4=$dlib/libombf_4.a

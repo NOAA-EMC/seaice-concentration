@@ -17,8 +17,9 @@ FOPTS=-c -O2 $(MMAB_INC)
 #FOPTS=-c -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
 
 ##Home desk:
-#FC=gfortran
-###FOPTS=-c -std=f95 -O2 -I$(MMAB_INC) $(NETCDF_INCLUDE)
+FC=gfortran
+#FOPTS=-c -std=f95 -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
+FOPTS=-c -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
 
 FLD=$(FC)
 FLDFLAGS=

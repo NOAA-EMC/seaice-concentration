@@ -40,6 +40,7 @@ int filt22   = 0;
   Write out netcdf
 */
 #define NDIMS 1
+#define ERR(e) {printf("Error: %s\n", nc_strerror(e)); fflush(stdout); }
 
 /* ////////////////  For intercepting binary and writing out flat /////////// */
 #ifdef BINOUT
@@ -71,7 +72,8 @@ int open_nc_(int *unit, int *ncid, int *platform, int *varid) {
 
   int varid_tb19v, varid_tb19h, varid_tb22v, varid_tb37v, varid_tb37h;
   int varid_tb85v, varid_tb85h;
-  int varid_lat, varid_lon, varid_sic, varid_qc, varid_land, varid_dtg;
+  int varid_lat, varid_lon, varid_sic, varid_qc, varid_land, varid_dtg1, varid_dtg2;
+  int retcode;
 
   #ifdef BINOUT
   flatout = fopen("flatout","w");
@@ -93,7 +95,8 @@ int open_nc_(int *unit, int *ncid, int *platform, int *varid) {
   nc_def_var(*ncid, "ice_concentration", NC_FLOAT, NDIMS, dimids, &varid_sic);
   nc_def_var(*ncid, "quality", NC_INT, NDIMS, dimids, &varid_qc);
   nc_def_var(*ncid, "land_flag", NC_FLOAT, NDIMS, dimids, &varid_land);
-  nc_def_var(*ncid, "date_time_group", NC_LONG, NDIMS, dimids, &varid_dtg);
+  nc_def_var(*ncid, "dtg_yyyymmdd", NC_INT, NDIMS, dimids, &varid_dtg1);
+  nc_def_var(*ncid, "dtg_hhmm", NC_INT, NDIMS, dimids, &varid_dtg2);
   nc_def_var(*ncid, "tb_19V", NC_FLOAT, NDIMS, dimids, &varid_tb19v);
   nc_def_var(*ncid, "tb_19H", NC_FLOAT, NDIMS, dimids, &varid_tb19h);
   nc_def_var(*ncid, "tb_22V", NC_FLOAT, NDIMS, dimids, &varid_tb22v);
@@ -109,7 +112,7 @@ int open_nc_(int *unit, int *ncid, int *platform, int *varid) {
   varid[2] = varid_sic;
   varid[3] = varid_qc;
   varid[4] = varid_land;
-  varid[5] = varid_dtg;
+  varid[5] = varid_dtg1;
   varid[6] = varid_tb19v;
   varid[7] = varid_tb19h;
   varid[8] = varid_tb22v;
@@ -117,6 +120,7 @@ int open_nc_(int *unit, int *ncid, int *platform, int *varid) {
   varid[10] = varid_tb37h;
   varid[11] = varid_tb85v;
   varid[12] = varid_tb85h;
+  varid[13] = varid_dtg2;
 
   return 0;
 }
@@ -138,7 +142,7 @@ void ssmiout_nc_
 
   ssmipt x;
   int bad = 0, k, j;
-  long int dtg;
+  int dtg1, dtg2;
   float conc, land, tb[NFREQS];
   int nobs, qc, nfreqs = NFREQS;
 
@@ -166,8 +170,8 @@ void ssmiout_nc_
       if (x.tb[j] > 350) bad += 1;
       tb[j] = x.tb[j];
   }
-  printf("%d %d %f %f  %f %f\n", x.satid, x.year, x.clat, x.clon, x.tb[0], x.tb[6]);
-  fflush(stdout);
+  //printf("%d %d %f %f  %f %f\n", x.satid, x.year, x.clat, x.clon, x.tb[0], x.tb[6]);
+  //fflush(stdout);
  
 
   size_t start[NDIMS]; start[0] = (size_t) *nwrites;
@@ -188,18 +192,19 @@ void ssmiout_nc_
     qc = 5;
     land = 0.0; 
 
-      dtg  = x.year;
-      dtg *= 100; dtg += x.month;
-      dtg *= 100; dtg += x.day;
-      dtg *= 100; dtg += x.hour;
-      dtg *= 100; dtg += x.minute;
+      dtg1  = x.year;
+      dtg1 *= 100; dtg1 += x.month;
+      dtg1 *= 100; dtg1 += x.day;
+
+      dtg2 = x.hour;
+      dtg2 *= 100; dtg2 += x.minute;
 
       nc_put_vara_double(*ncid, varid[0], start, count, &x.clon);
       nc_put_vara_double(*ncid, varid[1], start, count, &x.clat);
       nc_put_vara_float(*ncid, varid[2], start, count, &conc);
       nc_put_vara_int  (*ncid, varid[3], start, count, &qc);
       nc_put_vara_float(*ncid, varid[4], start, count, &land);
-      nc_put_vara_long (*ncid, varid[5], start, count, &dtg);
+      nc_put_vara_int (*ncid, varid[5], start, count, &dtg1);
       nc_put_vara_float(*ncid, varid[6], start, count, &tb[0]);
       nc_put_vara_float(*ncid, varid[7], start, count, &tb[1]);
       nc_put_vara_float(*ncid, varid[8], start, count, &tb[2]);
@@ -207,6 +212,7 @@ void ssmiout_nc_
       nc_put_vara_float(*ncid, varid[10], start, count, &tb[4]);
       nc_put_vara_float(*ncid, varid[11], start, count, &tb[5]);
       nc_put_vara_float(*ncid, varid[12], start, count, &tb[6]);
+      nc_put_vara_int (*ncid, varid[13], start, count, &dtg2);
 
 /* For flat binary: */
       #ifdef BINOUT

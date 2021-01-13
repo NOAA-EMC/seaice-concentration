@@ -13,13 +13,7 @@ LIBS=-l ombf_4 -l bufr_4_DA -l w3nco_4
 
 #Should be no changes below this point---------------------------------
 
-all : ssmi_tol2 ssmisu_tol2 bayes demo 
-
-bayes : bayes.o
-	g++ $<  $(NETCDF_LDFLAGS_C) $(NCEPLIB) $(LIBS) -o $(@)
-
-demo : demo.o
-	g++ $<  $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) $(LIBS) -o $(@)
+all : ssmi_tol2 ssmisu_tol2 
 
 ssmisu_tol2 : ssmisu_algorithm.o filter.o bufr.o skel.o ssmisu_decode.o
 	$(FC) ssmisu_decode.o filter.o skel.o bufr.o ssmisu_algorithm.o  $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) $(LIBS) -o $(@)
@@ -35,4 +29,10 @@ clean :
 	rm *.o
 
 distclean : clean
-	rm ssmis_tol2 bayes demo
+	rm ssmi_tol2 ssmis_tol2 bayes demo
+# ---------------------------------------------------------------------
+bayes : bayes.o
+	g++ $<  $(NETCDF_LDFLAGS_C) $(NCEPLIB) $(LIBS) -o $(@)
+
+demo : demo.o
+	g++ $<  $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) $(LIBS) -o $(@)

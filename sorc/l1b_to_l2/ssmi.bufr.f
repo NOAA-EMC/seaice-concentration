@@ -112,12 +112,12 @@
 !c  SSM/I brightness data.
 !------------- For netcdf -----------------------------
       INTEGER open_nc, ssmiout_nc
-      INTEGER nwrite, ncid, platform, varid(13)
+      INTEGER nwrite, ncid, platform, varid(14)
 !-----------------------------------------------------------------------
 
       icnt = 0
       jcnt = 0
-      iunt = 11
+      iunt = 14
       ount = 51
       inout = 'IN'
       DO j = 1, 3 
@@ -143,7 +143,7 @@
          DO WHILE (ireadsb(iunt).eq.0)
 
            count = count + 1
-           PRINT *,'scan line count ',count
+           !CD PRINT *,'scan line count ',count
 
            CALL UFBINT(IUNT,XIDENT8,9,  1,iret,XIDST)
            DO index = 1, 9

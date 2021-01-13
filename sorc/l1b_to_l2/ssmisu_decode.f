@@ -20,7 +20,7 @@
       INTEGER outunit, creturns, textout
 !------------- For netcdf -----------------------------
       INTEGER open_nc
-      INTEGER nwrite, ncid, platform, varid(13)
+      INTEGER nwrite, ncid, platform, varid(15)
 !------------------------------------------------------
 
       CALL W3TAGB('SSMISU_Decode',0095,0333,0077,'NP11   ')

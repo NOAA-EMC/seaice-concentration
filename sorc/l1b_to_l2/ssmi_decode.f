@@ -1,29 +1,66 @@
-      PROGRAM ssmis
+      PROGRAM ssmi
 ! ---------------------------------------------------------
 !
 !
-! Program to decode the ssmi/su tank
+! Program to decode the ssmi tank
 ! .. and to write out the netcdf L2 information
+! .. including sea ice concentration
+
       IMPLICIT none
-
-      REAL bmiss
-      PARAMETER (bmiss=10.0E6)
-      CHARACTER(8) SUBSET
-      REAL*8 hdr(9),ident(3), ssmischn(4,24)
-
-      INTEGER ichan, jj, ii, isiid, ntank, lubfi
-      INTEGER iorbn, islnm, isaid, iret, JT, IDATE
-      INTEGER mhr, mins, secs, mda, myr, mmo
-      INTEGER icount, err, freq
+      CHARACTER(80)  XIDST,XLCST,BRTST,XL85ST, BR85ST
+      CHARACTER(8) inout,subset
+      REAL     XIDENT(9),xloc(4,64),BRT(2,7,64),temps(7)
+      REAL*8   XIDENT8(9), xloc8(4,64), BRT8(2,7,64), temps8(7)
+      REAL     xloc85(4, 192), brt85(2, 2, 192)
+      REAL*8   xloc858(4, 192), brt858(2, 2, 192)
+      INTEGER index, index2, index3
+      INTEGER iy, id, im, imins, isad, iunt, jcnt, jret, iret
+      INTEGER kret, k2ret, kwrit, k
+      INTEGER kscan, posn, sftg
+      REAL tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7
       REAL xlat, xlon
+      INTEGER isec, iscan, ihr, idate, icnt
+      INTEGER  ireadsb, ireadmg
+      INTEGER creturns, openout, shortout, longout, hiresout
 
-      INTEGER outunit, creturns, textout
+! For ssmi, DMSP F11 to 15
+      REAL hiresobs(4,3)
+      INTEGER i, j, ount, count
+      INTEGER F11, F13, F14, F15, SATNO
+      PARAMETER (F11 = 244)
+      PARAMETER (F13 = 246)
+      PARAMETER (F14 = 247)
+      PARAMETER (F15 = 248)
+      DATA XIDST,XLCST,BRTST,XL85ST, BR85ST
+     1/'SAID YEAR MNTH DAYS HOUR MINU SECO ORBN SCNN               ',
+     2 'CLAT CLON SFTG POSN                                        ',
+     3 'CHNM TMBR                                                  ',
+     4 'CLAT85 CLON85 SFTG85 POSN85                                ',
+     5 'CHNM85 TMBR85                                              '/
+!c  where IUNT is the FORTRAN I/O UNIT NUMBER for the tank of
+!c  SSM/I brightness data.
+
+
+!ssmis      REAL bmiss
+!ssmis      PARAMETER (bmiss=10.0E6)
+!ssmis      CHARACTER(8) SUBSET
+!ssmis      REAL*8 hdr(9),ident(3), ssmischn(4,24)
+!ssmis
+!ssmis      INTEGER ichan, jj, ii, isiid, ntank, lubfi
+!ssmis      INTEGER iorbn, islnm, isaid, iret, JT, IDATE
+!ssmis      INTEGER mhr, mins, secs, mda, myr, mmo
+!ssmis      INTEGER icount, err, freq
+!ssmis      REAL xlat, xlon
+      INTEGER ntank
+!ssmis
 !------------- For netcdf -----------------------------
+      INTEGER outunit, textout
       INTEGER open_nc
+!RG: 13 will change for ssmi
       INTEGER nwrite, ncid, platform, varid(13)
 !------------------------------------------------------
 
-      CALL W3TAGB('SSMISU_Decode',0095,0333,0077,'NP11   ')
+      CALL W3TAGB('SSMI_Decode',0095,0333,0077,'NP11   ')
 
       CALL DATELEN(10)
 
@@ -35,7 +72,9 @@
       textout = 52
 
       outunit  = 51
-      platform = 285
+!      platform = 285
+!platform = 246,7,8
+      platform = 248 !F15
       nwrite   = 0
       creturns = open_nc(outunit, ncid, platform, varid)
       PRINT *,'open_nc returned = ',creturns

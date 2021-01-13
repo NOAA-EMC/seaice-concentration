@@ -6,9 +6,11 @@
 PDY=${PDY:-`date +"%Y%m%d"`}
 HH=${HH:-00}
 PM=${PM:-12}
+EXDIR=${EXDIR:-.}
 
-module load NetCDF prod_envir prod_util
-module load dumpjb bufr_dumplist
+module load EnvVars/1.0.3 ips/19.0.5.281 impi/19.0.5
+module load bufr/11.3.1 NetCDF/4.5.0 w3nco/2.2.0
+module load dumpjb/5.1.0 bufr_dumplist/2.3.0
 
 #Get the day's L1b ssmi-s data
 #  HH is the central hour (UTC)
@@ -20,5 +22,8 @@ dumpjb ${PDY}${HH} ${PM} ssmisu
 #Main work of L1b to L2 netcdf -- ca. 500 seconds on phase 1
 #  n.b.: Most time is spent in decoding the bufr data
 ln -sf ssmisu.ibm fort.11 #input data must be in fortran unit 11
-${EXDIR}/ssmis_tol2 > out
+time ${EXDIR}/ssmisu_tol2.285 > out.285
+time ${EXDIR}/ssmisu_tol2.286 > out.286
 mv l2out.f285.51.nc l2.f285.51.${PDY}.nc
+mv l2out.f286.51.nc l2.f286.51.${PDY}.nc
+

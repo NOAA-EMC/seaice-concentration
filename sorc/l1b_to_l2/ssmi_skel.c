@@ -170,8 +170,9 @@ void ssmiout_nc_
       if (x.tb[j] > 350) bad += 1;
       tb[j] = x.tb[j];
   }
-  //printf("%d %d %f %f  %f %f\n", x.satid, x.year, x.clat, x.clon, x.tb[0], x.tb[6]);
-  //fflush(stdout);
+  /* printf("%d %d %f %f  %f %f\n", x.satid, x.year, x.clat, x.clon, x.tb[0], x.tb[6]);
+  fflush(stdout);
+  */
  
 
   size_t start[NDIMS]; start[0] = (size_t) *nwrites;

@@ -22,8 +22,7 @@ dumpjb ${PDY}${HH} ${PM} ssmisu
 #Main work of L1b to L2 netcdf -- ca. 500 seconds on phase 1
 #  n.b.: Most time is spent in decoding the bufr data
 ln -sf ssmisu.ibm fort.11 #input data must be in fortran unit 11
-time ${EXDIR}/ssmisu_tol2.285 > out.285
-time ${EXDIR}/ssmisu_tol2.286 > out.286
+time ${EXDIR}/ssmisu_tol2 > out.285
 mv l2out.f285.51.nc l2.f285.51.${PDY}.nc
-mv l2out.f286.51.nc l2.f286.51.${PDY}.nc
+mv l2out.f286.52.nc l2.f286.52.${PDY}.nc
 

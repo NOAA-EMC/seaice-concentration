@@ -17,13 +17,12 @@
       INTEGER icount, err, freq
       REAL xlat, xlon
 
-      INTEGER outunit, creturns, textout
+      INTEGER outunit, outunit2, creturns, textout
 !------------- For netcdf -----------------------------
       INTEGER open_nc
       INTEGER nwrite, ncid, platform, varid(15)
+      INTEGER nwrite2, ncid2, platform2, varid2(15)
 !------------------------------------------------------
-
-      CALL W3TAGB('SSMISU_Decode',0095,0333,0077,'NP11   ')
 
       CALL DATELEN(10)
 
@@ -32,7 +31,7 @@
       ntank  = 1
 
       freq = 10 * 1000 !Text output frequency
-      textout = 52
+      textout = 53
 
       outunit  = 51
       platform = 285
@@ -41,6 +40,14 @@
       PRINT *,'open_nc returned = ',creturns
       PRINT *,'ncid = ',ncid
       PRINT *,'varid = ',varid
+
+      outunit2  = 52
+      platform2 = 286
+      nwrite2   = 0
+      creturns = open_nc(outunit2, ncid2, platform2, varid2)
+      PRINT *,'open_nc returned = ',creturns
+      PRINT *,'ncid2 = ',ncid2
+      PRINT *,'varid2 = ',varid2
 
 
       DO JT = 1, ntank
@@ -129,6 +136,8 @@
       !CALL ssmisout(hdr, ident, ssmischn)
       IF (isaid .EQ. platform) THEN
         CALL ssmisout_nc(hdr, ident, ssmischn, ncid, varid, nwrite)
+      ELSE IF (isaid .EQ. platform2) THEN
+        CALL ssmisout_nc(hdr, ident, ssmischn, ncid2, varid2, nwrite2)
       ENDIF
 
 !
@@ -155,11 +164,10 @@
 
 !.................
       CALL close_nc(ncid)
-      PRINT *,'nwrite = ',nwrite
+      CALL close_nc(ncid2)
+      PRINT *,'nwrite, nwrite2 = ',nwrite, nwrite2
 
       WRITE(6,692)icount
   692 FORMAT(1x,'END OF JOB','count= ',i8)
-
-        CALL W3TAGE('DCODNET3')
 
       END

@@ -113,9 +113,7 @@ t85h = icenc.variables["tb_85H"][:]
 #print("icec: ",icec.max(), icec.min() );
 
 all = []
-npts = 10000
-
-#for k in range(0,nobs):
+npts = nobs
 for k in range(0,npts):
   tmp = match(longitude = longitude[k], latitude = latitude[k], 
                 quality = quality[k], land = land[k], icec = icec[k])

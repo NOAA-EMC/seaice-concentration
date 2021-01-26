@@ -44,6 +44,7 @@ class match:
     self.ice_distance = 95.
     self.sst = 95.
     self.ice_sst = 95.
+    self.tb = np.zeros((7))
     #print("done with init", flush=True)
 
   def show(self, fout = sys.stdout):
@@ -53,12 +54,9 @@ class match:
                    "{:7.2f}".format(self.ice_distance), 
           "  ", "{:.2f}".format(self.sst), "{:.2f}".format(self.ice_sst), file=fout)
 
-  def add_l2(self, longitude, latitude, quality, land, icec):
-    self.longitude = longitude
-    self.latitude  = latitude
-    self.quality   = quality
-    self.land      = land
-    self.icec      = icec
+  def add_tb(self, tb):
+    for i in range (0,7):
+      self.tb[i] = tb[i]
 
   def add_oiv2(self, sst, ice_sst):
     j,i = oiv2(self.latitude, self.longitude)
@@ -71,7 +69,12 @@ class match:
     self.ice_post = ice_post[j,i]
     self.ice_distance = ice_distance[j,i]
 
+  def __getitem__(self, i):
+    return(tb[i])
+
 ###############################################################
+
+tb = np.zeros((7))
 
 icenc = Dataset('l2out.f248.51.nc', 'r', format='NETCDF4')
 nobs = len(icenc.dimensions["nobs"])
@@ -106,25 +109,39 @@ t37h = icenc.variables["tb_37H"][:]
 t85v = icenc.variables["tb_85V"][:] 
 t85h = icenc.variables["tb_85H"][:] 
 
-#print("longitudes: ",longitude.max(), longitude.min() );
-#print("latitudes: ",latitude.max(), latitude.min() );
-#print("quality: ",quality.max(), quality.min() );
-#print("land: ",land.max(), land.min() );
-#print("icec: ",icec.max(), icec.min() );
 
 all = []
 npts = nobs
+npts = 10
 for k in range(0,npts):
   tmp = match(longitude = longitude[k], latitude = latitude[k], 
                 quality = quality[k], land = land[k], icec = icec[k])
   all.append(tmp) 
-  #print(k,longitude[k], latitude[k], quality[k], land[k], icec[k])
-  #all[k].show()
-  #tmp.show()
 
-#for k in range(0,len(all)):
-#  print(k,longitude[k], latitude[k], quality[k], land[k], icec[k])
-#  all[k].show()
+  tb[0] = t19v[k]
+  tb[1] = t19h[k]
+  tb[2] = t22v[k]
+  tb[3] = t37v[k]
+  tb[4] = t37h[k]
+  tb[5] = t85v[k]
+  tb[6] = t85h[k]
+  all[k].add_tb(tb)
+
+
+del longitude 
+del latitude 
+del icec 
+del quality 
+del land 
+del dtg1 
+del dtg2 
+del t19v 
+del t19h 
+del t22v 
+del t37v 
+del t37h 
+del t85v 
+del t85h 
 
 print("done creating 'all'", len(all))
 
@@ -138,8 +155,6 @@ print("done creating 'all'", len(all))
 icefix = Dataset('seaice_fixed_fields.nc', 'r', format='NETCDF4')
 nlats = len(icefix.dimensions["nlats"])
 nlons = len(icefix.dimensions["nlons"])
-#print("fixed nlats = ",nlats)
-#print("fixed nlons = ",nlons)
 
 ice_longitude = np.zeros((nlats, nlons),dtype="double") 
 ice_latitude = np.zeros((nlats, nlons),dtype="double") 
@@ -147,66 +162,25 @@ ice_distance = np.zeros((nlats, nlons),dtype="float")
 
 ice_land = np.zeros((nlats, nlons))
 ice_land      = icefix.variables["land"]     [:,:] 
-#print("land: ",ice_land.max(), ice_land.min() )
 
 ice_post = np.zeros((nlats, nlons))
 ice_post      = icefix.variables["posteriori"][:,:] 
-#print("post: ",ice_post.max(), ice_post.min() )
 
 ice_longitude = icefix.variables["longitude"][:,:] 
 ice_latitude  = icefix.variables["latitude"] [:,:] 
 ice_distance  = icefix.variables["distance_to_land"][:,:] 
-ice_distance /= 1000.
-#print("longitudes: ",ice_longitude.max(), ice_longitude.min() )
-#print("latitudes: ",ice_latitude.max(), ice_latitude.min() )
-#print("distance: ",ice_distance.max(), ice_distance.min() )
+ice_distance /= 1000.   #Convert to km
 
 for k in range(0,len(all)):
   all[k].add_icefix(ice_land, ice_post, ice_distance)
-#  if (all[k].ice_land != 157):
-#    all[k].show()
 #exit(0)
 
-
-#Land Flag values:
-#0   -- water
-#157 -- land
-#195 -- coast (a bounding curve runs through the grid cell)
-#
-#Posteriori flag values:
-#2 -- ?
-#158 -- Ocean > 26 C
-#159 -- Ocean > 24 C
-#160 -- Ocean > 22 C
-#161 -- Ocean > 19 C
-#162 -- Ocean > 15 C
-#163 -- Ocean > 9 C
-#164 -- Ocean > 2.15 C 275.3 K
-#165 -- Ocean > -3 C
-#170 -- Inland > 7 C
-#171 -- Inland > 4 C
-#172 -- Inland > 2.15 C
-#173 -- Inland > 0 C
-#174 -- Inland > -3 C
-#224 -- undefined
-#x,edges = np.histogram(ice_land,range=(0,255), bins=255)
-#for i in range (0,255):
-#  if not (x[i] == 0):
-#    print(i,x[i])
-#
-#y,edges = np.histogram(ice_post, range=(0,255), bins=255)
-#for i in range (0,255):
-#  if not (y[i] == 0):
-#    print(i,y[i])
-
-#----------------------------------------------
+#--------------------------------------------------------
 # Use SST from qdoi v2, including its sea ice cover
 sstgrid = Dataset('avhrr-only-v2.20180228.nc', 'r', format='NETCDF4')
 
 sst_nlats = len(sstgrid.dimensions["lat"])
 sst_nlons = len(sstgrid.dimensions["lon"])
-#print("sst_nlats = ",sst_nlats)
-#print("sst_nlons = ",sst_nlons)
 
 sst = np.zeros((sst_nlats, sst_nlons))
 anom = np.zeros((sst_nlats, sst_nlons))
@@ -218,9 +192,6 @@ anom  = sstgrid.variables["anom"] [0,0,:,:]
 err   = sstgrid.variables["err"][0,0,:,:]
 ice_sst   = sstgrid.variables["ice"][0,0,:,:]
 
-#print("sst ",sst.max(), sst.min())
-#print("ice_sst ",ice_sst.max(), ice_sst.min() )
-
 for k in range(0,len(all)):
   all[k].add_oiv2(sst, ice_sst)
 
@@ -230,6 +201,15 @@ for i in range(0,len(all)):
   if (all[i].ice_land != 157):
     all[i].show()
 
+#--------------------------------------------------------
+
+print(all[1][0])
+print(all[1][1])
+print(all[1][2])
+print(all[1][3])
+print(all[1][4])
+print(all[1][5])
+print(all[1][6])
 
   
 

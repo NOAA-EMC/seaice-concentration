@@ -118,7 +118,6 @@ t37h = icenc.variables["tb_37H"][:]
 t85v = icenc.variables["tb_85V"][:] 
 t85h = icenc.variables["tb_85H"][:] 
 
-
 all = []
 npts = nobs
 #npts = 1000
@@ -126,7 +125,6 @@ for k in range(0,npts):
   tmp = match(longitude = longitude[k], latitude = latitude[k], 
                 quality = quality[k], land = land[k], icec = icec[k])
   all.append(tmp) 
-
   tb[0] = t19v[k]
   tb[1] = t19h[k]
   tb[2] = t22v[k]
@@ -187,11 +185,14 @@ for k in range(0,len(all)):
   all[k].add_oiv2(sst, ice_sst)
 
 #---------------------------------------------------------------------
+#----------------------------------------------
 #------------- All collected now, print out : ----------
 
+#fout = open("all_tb","w")
 #for i in range(0,len(all)):
 #  #if (all[i].ice_land != 157):
 #    all[i].show()
+#fout.close()
 
 #--------------------------------------------------------
 del ice_land
@@ -212,28 +213,31 @@ unknown = ma.masked_array(ice_land > -1) # unknown points, which starts as all o
 icemask   = ma.masked_array(icec > 0)
 not_ice = np.logical_not(icemask)
 
-landmask = ma.masked_array(ice_land >  100)
-watermask = ma.masked_array(ice_land <  100)
+landmask = ma.masked_array(ice_land > 100)
+watermask = ma.masked_array(ice_land < 100)
 #Distinguish between water and ice-covered water
 watermask = ma.logical_and(watermask, not_ice)
 
 # Get the indices of the 'true' points
 mland = landmask.nonzero()
 water = watermask.nonzero()
-
 iceindices = icemask.nonzero()
+
 nicepts = len(iceindices[0])
 nlandpts = len(mland[0])
-
 nwaterpts = len(water[0])
-
-
+#---------------------------------------------------------------------
+#  All data read in and apportioned, 
+#     ice, land, water, and unknown pts. masks defined
+#
 #---------------------------------------------------------------------
 print("n ice, land, water, nobs ",nicepts, nlandpts, nwaterpts, nobs)
 print("p ice, land, water, nobs ",nicepts/float(nobs), nlandpts/float(nobs), nwaterpts/float(nobs), nobs)
 pwater = nwaterpts/float(nobs)
 pland  = nlandpts/float(nobs)
 pice   = nicepts/float(nobs)
+
+# Define utilities for doing the assessment:
 
 def bayes(xvec, xcrit, label, unknown, fout = sys.stdout ):
   warm = ma.masked_array(xvec > xcrit)
@@ -247,11 +251,10 @@ def bayes(xvec, xcrit, label, unknown, fout = sys.stdout ):
   pover_water = len(omask.nonzero()[0])/nwaterpts
   pover_ice   = len(imask.nonzero()[0])/nicepts
   if (pwarm > 0):
-    print(label, " hot ", xcrit,
+    print(label, "hot ", xcrit,
       "{:5.3f}".format(pover_ice * pice / pwarm) ,
       "{:5.3f}".format(pover_land * pland / pwarm) ,
       "{:5.3f}".format(pover_water * pwater / pwarm), nwarm, file = fout )
-     
 
   cold = ma.masked_array(xvec < xcrit)
   cold = ma.logical_and(cold, unknown)
@@ -264,21 +267,10 @@ def bayes(xvec, xcrit, label, unknown, fout = sys.stdout ):
   pover_water = len(omask.nonzero()[0])/nwaterpts
   pover_ice   = len(imask.nonzero()[0])/nicepts
   if (pcold > 0):
-    print(label," cold ",xcrit,
+    print(label,"cold",xcrit,
       "{:5.3f}".format(pover_ice * pice / pcold) ,
       "{:5.3f}".format(pover_land * pland / pcold) ,
       "{:5.3f}".format(pover_water * pwater / pcold), ncold )
-
-#----------------------------------------------------------------
-#for thot in range (int(t19v.min()), int(t19v.max() ) ):
-for thot in range (100, 320):
-  bayes(t19v, thot, "t19v", unknown)
-  bayes(t19h, thot, "t19h", unknown)
-  bayes(t22v, thot, "t22v", unknown)
-  bayes(t37v, thot, "t37v", unknown)
-  bayes(t37h, thot, "t37h", unknown)
-  bayes(t85v, thot, "t85v", unknown)
-  bayes(t85h, thot, "t85h", unknown)
 
 def delta(x,y):
   return (x-y)/(x+y)
@@ -288,28 +280,41 @@ def dr(x, y, label, unknown, fout = sys.stdout):
   tc = np.linspace(ratio.min(), ratio.max(), num=100)
   for i in range(0,len(tc)):
     bayes(ratio, tc[i], label, unknown, fout)
+  del ratio
 
-dr(t19v, t19h, "drt19vt19h", unknown)
-dr(t19v, t22v, "drt19vt22v", unknown)
-dr(t19v, t37v, "drt19vt37v", unknown)
-dr(t19v, t37h, "drt19vt37h", unknown)
-dr(t19v, t85v, "drt19vt85v", unknown)
-dr(t19v, t85h, "drt19vt85h", unknown)
-dr(t19h, t22v, "drt19ht22v", unknown)
-dr(t19h, t37v, "drt19ht37v", unknown)
-dr(t19h, t37h, "drt19ht37h", unknown)
-dr(t19h, t85v, "drt19ht85v", unknown)
-dr(t19h, t85h, "drt19ht85h", unknown)
-dr(t22v, t37v, "drt22vt37v", unknown)
-dr(t22v, t37h, "drt22vt37h", unknown)
-dr(t22v, t85v, "drt22vt85v", unknown)
-dr(t22v, t85h, "drt22vt85h", unknown)
-dr(t37v, t37h, "drt37vt37h", unknown)
-dr(t37v, t85v, "drt37vt85v", unknown)
-dr(t37v, t85h, "drt37vt85h", unknown)
-dr(t37h, t85v, "drt37ht85v", unknown)
-dr(t37h, t85h, "drt37ht85h", unknown)
-dr(t85v, t85h, "drt85vt85h", unknown)
+#----------------------------------------------------------------
+#  Commented out because this has already (prior runs) been used to 
+#    find the perfect land and water filters
+#for thot in range (100, 320):
+#  bayes(t19v, thot, "t19v", unknown)
+#  bayes(t19h, thot, "t19h", unknown)
+#  bayes(t22v, thot, "t22v", unknown)
+#  bayes(t37v, thot, "t37v", unknown)
+#  bayes(t37h, thot, "t37h", unknown)
+#  bayes(t85v, thot, "t85v", unknown)
+#  bayes(t85h, thot, "t85h", unknown)
+#
+#dr(t19v, t19h, "drt19vt19h", unknown)
+#dr(t19v, t22v, "drt19vt22v", unknown)
+#dr(t19v, t37v, "drt19vt37v", unknown)
+#dr(t19v, t37h, "drt19vt37h", unknown)
+#dr(t19v, t85v, "drt19vt85v", unknown)
+#dr(t19v, t85h, "drt19vt85h", unknown)
+#dr(t19h, t22v, "drt19ht22v", unknown)
+#dr(t19h, t37v, "drt19ht37v", unknown)
+#dr(t19h, t37h, "drt19ht37h", unknown)
+#dr(t19h, t85v, "drt19ht85v", unknown)
+#dr(t19h, t85h, "drt19ht85h", unknown)
+#dr(t22v, t37v, "drt22vt37v", unknown)
+#dr(t22v, t37h, "drt22vt37h", unknown)
+#dr(t22v, t85v, "drt22vt85v", unknown)
+#dr(t22v, t85h, "drt22vt85h", unknown)
+#dr(t37v, t37h, "drt37vt37h", unknown)
+#dr(t37v, t85v, "drt37vt85v", unknown)
+#dr(t37v, t85h, "drt37vt85h", unknown)
+#dr(t37h, t85v, "drt37ht85v", unknown)
+#dr(t37h, t85h, "drt37ht85h", unknown)
+#dr(t85v, t85h, "drt85vt85h", unknown)
 print(flush=True)
 
 #-----------------------------------------------
@@ -317,34 +322,29 @@ print(flush=True)
 #  Exclude 22v because of F15
 # Land points:
 #satellite-based land mask
-sland_mask = ma.masked_array(t19h > 252)
-tmp = ma.masked_array(t19v > 265 )
+#Start with false everywhere and then 'or' in the trues:
+sland_mask = ma.masked_array(t19h > 3000)
+
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19v > 265 ) )
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19h > 252 ) )
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t37v > 267 ) )
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t37h > 260 ) )
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85v > 281 ) )
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85h > 278 ) )
+tmp = ma.masked_array(delta(t19h, t37v) >  0.07100180784861249 )
 sland_mask = ma.logical_or(sland_mask, tmp)
-tmp = ma.masked_array(t37v > 267 )
+tmp = ma.masked_array(delta(t19v, t19h) <  0.006025966971811622 )
 sland_mask = ma.logical_or(sland_mask, tmp)
-tmp = ma.masked_array(t37h > 260 )
+tmp = ma.masked_array(delta(t37v, t37h) <  0.0024425569507810804 )
 sland_mask = ma.logical_or(sland_mask, tmp)
-tmp = ma.masked_array(t85v > 281 )
-sland_mask = ma.logical_or(sland_mask, tmp)
-tmp = ma.masked_array(t85h > 278 )
-sland_mask = ma.logical_or(sland_mask, tmp)
-tmp = ma.masked_array((t19h - t37v)/(t19h + t37v)  >  0.07100180784861249 )
-sland_mask = ma.logical_or(sland_mask, tmp)
-tmp = ma.masked_array((t19v - t19h)/(t19v + t19h)  <  0.006025966971811622 )
-sland_mask = ma.logical_or(sland_mask, tmp)
-tmp = ma.masked_array((t37v - t37h)/(t37v + t37h)  <  0.0024425569507810804 )
-sland_mask = ma.logical_or(sland_mask, tmp)
-tmp = ma.masked_array((t19v - t85h)/(t19v + t85h)  >  0.24303333867679944 )
+tmp = ma.masked_array(delta(t19v,t85h)  >  0.24303333867679944 )
 sland_mask = ma.logical_or(sland_mask, tmp)
 
 #satellite-based land mask
-tmp = ma.masked_array(t19v < 175)
-sland_mask = ma.logical_or(sland_mask, tmp)
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19v < 175) )
 tmp = ma.masked_array(delta(t37v,t85v) > 0.14189560681280466)
 sland_mask = ma.logical_or(sland_mask, tmp)
 sland_mask = ma.logical_or(sland_mask,  ma.masked_array(delta(t37v,t85h) > 0.17997019000426684) )
-
-
 
 sland_indices = sland_mask.nonzero()
 nsland_pts = len(sland_indices[0])
@@ -352,13 +352,14 @@ print("number of satellite-caught land pts: ",nsland_pts)
 
 # Water points:
 #satellite-based ice-free water mask
-swater_mask = ma.masked_array( (t19v - t85v)/ (t19v + t85v) <  -0.15903521396897055)
-tmp = ma.masked_array( (t37h - t85v)/ (t37h + t85v) <  -0.2969400155724901)
+swater_mask = ma.masked_array(t19h > 3000)
+tmp = ma.masked_array(delta(t19v, t85v) <  -0.15903521396897055)
 swater_mask = ma.logical_or(swater_mask, tmp)
-#satellite-based open water mask:
+tmp = ma.masked_array(delta(t37h, t85v) < -0.2969400155724901)
+swater_mask = ma.logical_or(swater_mask, tmp)
 tmp = ma.masked_array(delta(t37h,t85h) < -0.17274572903459723)
 swater_mask = ma.logical_or(swater_mask, tmp)
-swater_mask = ma.logical_or(swater_mask, ma.masked_array(delta(t19v,t37h) <  -0.008470142881075546) )
+swater_mask = ma.logical_or(swater_mask, ma.masked_array(delta(t19v,t37h) < -0.008470142881075546) )
 swater_mask = ma.logical_or(swater_mask, ma.masked_array(delta(t19v,t85h) < -0.12797022016361506) )
 
 swater_indices = swater_mask.nonzero()
@@ -371,7 +372,7 @@ known = ma.logical_or(swater_mask, sland_mask)
 unknown = ma.logical_not(known)
 unknown_indices = unknown.nonzero()
 nobs = len(unknown_indices[0])
-print("nobs for round 2: ",nobs)
+print("nobs for round 2: ",nobs, flush=True)
 
 landmask = ma.logical_and(landmask , unknown)
 icemask  = ma.logical_and(icemask , unknown)
@@ -382,9 +383,8 @@ nwaterpts = len(watermask.nonzero()[0])
 pwater = nwaterpts/float(nobs)
 pland  = nlandpts/float(nobs)
 pice   = nicepts/float(nobs)
-print("after first pass, nobs, ice, land, water ",nobs, nicepts, nlandpts, nwaterpts, pice, pland, pwater)
+print("after first pass, nobs, ice, land, water ",nobs, nicepts, nlandpts, nwaterpts, pice, pland, pwater, flush=True)
 
- 
 #----------------------------------------------------------------
 #  Repeat original process check on the remaining points --
 #    -- can we improve the identification of land and ice-free water?
@@ -400,38 +400,47 @@ print(t37h.max(), t37h.min() )
 print(t85v.max(), t85v.min() )
 print(t85h.max(), t85h.min() )
 
-for thot in range (100, 320):
-  bayes(t19v, thot, "t19v", unknown)
-  bayes(t19h, thot, "t19h", unknown)
-  bayes(t22v, thot, "t22v", unknown)
-  bayes(t37v, thot, "t37v", unknown)
-  bayes(t37h, thot, "t37h", unknown)
-  bayes(t85v, thot, "t85v", unknown)
-  bayes(t85h, thot, "t85h", unknown)
+fout = open("round2","w")
+for thot in range (96, 316):
+  bayes(t19v, thot, "t19v", unknown, fout)
+  bayes(t19h, thot, "t19h", unknown, fout)
+  bayes(t22v, thot, "t22v", unknown, fout)
+  bayes(t37v, thot, "t37v", unknown, fout)
+  bayes(t37h, thot, "t37h", unknown, fout)
+  bayes(t85v, thot, "t85v", unknown, fout)
+  bayes(t85h, thot, "t85h", unknown, fout)
 
-dr(t19v, t19h, "drt19vt19h", unknown)
-dr(t19v, t22v, "drt19vt22v", unknown)
-dr(t19v, t37v, "drt19vt37v", unknown)
-dr(t19v, t37h, "drt19vt37h", unknown)
-dr(t19v, t85v, "drt19vt85v", unknown)
-dr(t19v, t85h, "drt19vt85h", unknown)
-dr(t19h, t22v, "drt19ht22v", unknown)
-dr(t19h, t37v, "drt19ht37v", unknown)
-dr(t19h, t37h, "drt19ht37h", unknown)
-dr(t19h, t85v, "drt19ht85v", unknown)
-dr(t19h, t85h, "drt19ht85h", unknown)
-dr(t22v, t37v, "drt22vt37v", unknown)
-dr(t22v, t37h, "drt22vt37h", unknown)
-dr(t22v, t85v, "drt22vt85v", unknown)
-dr(t22v, t85h, "drt22vt85h", unknown)
-dr(t37v, t37h, "drt37vt37h", unknown)
-dr(t37v, t85v, "drt37vt85v", unknown)
-dr(t37v, t85h, "drt37vt85h", unknown)
-dr(t37h, t85v, "drt37ht85v", unknown)
-dr(t37h, t85h, "drt37ht85h", unknown)
-dr(t85v, t85h, "drt85vt85h", unknown)
+dr(t19v, t19h, "drt19vt19h", unknown, fout)
+dr(t19v, t22v, "drt19vt22v", unknown, fout)
+dr(t19v, t37v, "drt19vt37v", unknown, fout)
+dr(t19v, t37h, "drt19vt37h", unknown, fout)
+dr(t19v, t85v, "drt19vt85v", unknown, fout)
+dr(t19v, t85h, "drt19vt85h", unknown, fout)
+dr(t19h, t22v, "drt19ht22v", unknown, fout)
+dr(t19h, t37v, "drt19ht37v", unknown, fout)
+dr(t19h, t37h, "drt19ht37h", unknown, fout)
+dr(t19h, t85v, "drt19ht85v", unknown, fout)
+dr(t19h, t85h, "drt19ht85h", unknown, fout)
+dr(t22v, t37v, "drt22vt37v", unknown, fout)
+dr(t22v, t37h, "drt22vt37h", unknown, fout)
+dr(t22v, t85v, "drt22vt85v", unknown, fout)
+dr(t22v, t85h, "drt22vt85h", unknown, fout)
+dr(t37v, t37h, "drt37vt37h", unknown, fout)
+dr(t37v, t85v, "drt37vt85v", unknown, fout)
+dr(t37v, t85h, "drt37vt85h", unknown, fout)
+dr(t37h, t85v, "drt37ht85v", unknown, fout)
+dr(t37h, t85h, "drt37ht85h", unknown, fout)
+dr(t85v, t85h, "drt85vt85h", unknown, fout)
+
+fout.close() 
+#-----------------------------------------------
+fout2 = open("trimmed_tb","w")
+for i in range(0,nobs):
+    all[unknown_indices[0][i] ].show(fout2)
+fout2.close()
 
 #----------------------------------------------------------------
+exit(0)
 
 fout = open("round3","w")
 for thot in range (100, 320):
@@ -471,7 +480,5 @@ print(flush=True,file=fout)
 fout2 = open("trimmed_tb","w")
 for i in range(0,nobs):
     all[unknown_indices[0][i] ].show(fout2)
-
-
-
+fout2.close()
 

@@ -28,6 +28,9 @@ def rg12th(lat, lon):
   i = round( (lon - firstlon)/dlon )
   return (j,i)
 
+def delta(x,y):
+  return (x-y)/(x+y)
+
 #----------------------------------------------
 #matchup :
 #longitude, latitude, quality, land, icec; 
@@ -134,6 +137,8 @@ for k in range(0,npts):
   tb[6] = t85h[k]
   all[k].add_tb(tb)
 
+print("done reading in",flush=True)
+
 #exit(0)
 
 #----------------------------------------------
@@ -162,6 +167,8 @@ ice_distance /= 1000.   #Convert to km
 
 for k in range(0,len(all)):
   all[k].add_icefix(ice_land, ice_post, ice_distance)
+
+print("done adding in ice fixed",flush=True)
 #exit(0)
 
 #--------------------------------------------------------
@@ -184,17 +191,17 @@ ice_sst   = sstgrid.variables["ice"][0,0,:,:]
 for k in range(0,len(all)):
   all[k].add_oiv2(sst, ice_sst)
 
+print("done adding in sst ",flush=True)
 #---------------------------------------------------------------------
 #----------------------------------------------
 #------------- All collected now, print out : ----------
-
 #fout = open("all_tb","w")
 #for i in range(0,len(all)):
 #  #if (all[i].ice_land != 157):
 #    all[i].show()
 #fout.close()
-
 #--------------------------------------------------------
+
 del ice_land
 del icec
 del sst
@@ -210,12 +217,13 @@ for i in range(0,npts):
 # create logical masks:
 unknown = ma.masked_array(ice_land > -1) # unknown points, which starts as all of them
 
-icemask   = ma.masked_array(icec > 0)
-not_ice = np.logical_not(icemask)
-
-landmask = ma.masked_array(ice_land > 100)
+#include coast points as being land (sidelobe issues)
+landmask = ma.masked_array(ice_land >= 157 )
 watermask = ma.masked_array(ice_land < 100)
+icemask   = ma.masked_array(icec > 0)
+
 #Distinguish between water and ice-covered water
+not_ice = np.logical_not(icemask)
 watermask = ma.logical_and(watermask, not_ice)
 
 # Get the indices of the 'true' points
@@ -232,7 +240,8 @@ nwaterpts = len(water[0])
 #
 #---------------------------------------------------------------------
 print("n ice, land, water, nobs ",nicepts, nlandpts, nwaterpts, nobs)
-print("p ice, land, water, nobs ",nicepts/float(nobs), nlandpts/float(nobs), nwaterpts/float(nobs), nobs)
+print("p ice, land, water, nobs ",nicepts/float(nobs), nlandpts/float(nobs), 
+         nwaterpts/float(nobs), nobs, flush=True)
 pwater = nwaterpts/float(nobs)
 pland  = nlandpts/float(nobs)
 pice   = nicepts/float(nobs)
@@ -267,13 +276,10 @@ def bayes(xvec, xcrit, label, unknown, fout = sys.stdout ):
   pover_water = len(omask.nonzero()[0])/nwaterpts
   pover_ice   = len(imask.nonzero()[0])/nicepts
   if (pcold > 0):
-    print(label,"cold",xcrit,
+    print(label,"cold ",xcrit,
       "{:5.3f}".format(pover_ice * pice / pcold) ,
       "{:5.3f}".format(pover_land * pland / pcold) ,
-      "{:5.3f}".format(pover_water * pwater / pcold), ncold )
-
-def delta(x,y):
-  return (x-y)/(x+y)
+      "{:5.3f}".format(pover_water * pwater / pcold), ncold, file = fout )
 
 def dr(x, y, label, unknown, fout = sys.stdout):
   ratio = delta(x,y)
@@ -285,37 +291,39 @@ def dr(x, y, label, unknown, fout = sys.stdout):
 #----------------------------------------------------------------
 #  Commented out because this has already (prior runs) been used to 
 #    find the perfect land and water filters
-#for thot in range (100, 320):
-#  bayes(t19v, thot, "t19v", unknown)
-#  bayes(t19h, thot, "t19h", unknown)
-#  bayes(t22v, thot, "t22v", unknown)
-#  bayes(t37v, thot, "t37v", unknown)
-#  bayes(t37h, thot, "t37h", unknown)
-#  bayes(t85v, thot, "t85v", unknown)
-#  bayes(t85h, thot, "t85h", unknown)
+#fout = open("round1","w")
+#for thot in range (95, 320):
+#  bayes(t19v, thot, "t19v", unknown, fout)
+#  bayes(t19h, thot, "t19h", unknown, fout)
+#  bayes(t22v, thot, "t22v", unknown, fout)
+#  bayes(t37v, thot, "t37v", unknown, fout)
+#  bayes(t37h, thot, "t37h", unknown, fout)
+#  bayes(t85v, thot, "t85v", unknown, fout)
+#  bayes(t85h, thot, "t85h", unknown, fout)
 #
-#dr(t19v, t19h, "drt19vt19h", unknown)
-#dr(t19v, t22v, "drt19vt22v", unknown)
-#dr(t19v, t37v, "drt19vt37v", unknown)
-#dr(t19v, t37h, "drt19vt37h", unknown)
-#dr(t19v, t85v, "drt19vt85v", unknown)
-#dr(t19v, t85h, "drt19vt85h", unknown)
-#dr(t19h, t22v, "drt19ht22v", unknown)
-#dr(t19h, t37v, "drt19ht37v", unknown)
-#dr(t19h, t37h, "drt19ht37h", unknown)
-#dr(t19h, t85v, "drt19ht85v", unknown)
-#dr(t19h, t85h, "drt19ht85h", unknown)
-#dr(t22v, t37v, "drt22vt37v", unknown)
-#dr(t22v, t37h, "drt22vt37h", unknown)
-#dr(t22v, t85v, "drt22vt85v", unknown)
-#dr(t22v, t85h, "drt22vt85h", unknown)
-#dr(t37v, t37h, "drt37vt37h", unknown)
-#dr(t37v, t85v, "drt37vt85v", unknown)
-#dr(t37v, t85h, "drt37vt85h", unknown)
-#dr(t37h, t85v, "drt37ht85v", unknown)
-#dr(t37h, t85h, "drt37ht85h", unknown)
-#dr(t85v, t85h, "drt85vt85h", unknown)
-print(flush=True)
+#dr(t19v, t19h, "drt19vt19h", unknown, fout)
+#dr(t19v, t22v, "drt19vt22v", unknown, fout)
+#dr(t19v, t37v, "drt19vt37v", unknown, fout)
+#dr(t19v, t37h, "drt19vt37h", unknown, fout)
+#dr(t19v, t85v, "drt19vt85v", unknown, fout)
+#dr(t19v, t85h, "drt19vt85h", unknown, fout)
+#dr(t19h, t22v, "drt19ht22v", unknown, fout)
+#dr(t19h, t37v, "drt19ht37v", unknown, fout)
+#dr(t19h, t37h, "drt19ht37h", unknown, fout)
+#dr(t19h, t85v, "drt19ht85v", unknown, fout)
+#dr(t19h, t85h, "drt19ht85h", unknown, fout)
+#dr(t22v, t37v, "drt22vt37v", unknown, fout)
+#dr(t22v, t37h, "drt22vt37h", unknown, fout)
+#dr(t22v, t85v, "drt22vt85v", unknown, fout)
+#dr(t22v, t85h, "drt22vt85h", unknown, fout)
+#dr(t37v, t37h, "drt37vt37h", unknown, fout)
+#dr(t37v, t85v, "drt37vt85v", unknown, fout)
+#dr(t37v, t85h, "drt37vt85h", unknown, fout)
+#dr(t37h, t85v, "drt37ht85v", unknown, fout)
+#dr(t37h, t85h, "drt37ht85h", unknown, fout)
+#dr(t85v, t85h, "drt85vt85h", unknown, fout)
+#print(flush=True, file=fout)
+#fout.close()
 
 #-----------------------------------------------
 #  Next step, pre-filter based on perfect land filters, perfect ice-free ocean filters
@@ -337,53 +345,77 @@ tmp = ma.masked_array(delta(t19v, t19h) <  0.006025966971811622 )
 sland_mask = ma.logical_or(sland_mask, tmp)
 tmp = ma.masked_array(delta(t37v, t37h) <  0.0024425569507810804 )
 sland_mask = ma.logical_or(sland_mask, tmp)
-tmp = ma.masked_array(delta(t19v,t85h)  >  0.24303333867679944 )
+
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19v < 173) )
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85v < 152) )
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85h < 146) )
+
+# Allow some ice, but <= 1%
+tmp = ma.masked_array(delta(t19v, t19h) <  0.018077900915434868 )
 sland_mask = ma.logical_or(sland_mask, tmp)
+tmp = ma.masked_array(delta(t37v, t37h) <  0.012212784753905402 )
+sland_mask = ma.logical_or(sland_mask, tmp)
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85h < 164 ) )
+
+# <= 3%
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85h < 171 ) )
+tmp = ma.masked_array(delta(t19v, t37v) > 0.04663001497586572 )
+sland_mask = ma.logical_or(sland_mask, tmp)
+
 
 #satellite-based land mask
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19v < 175) )
-tmp = ma.masked_array(delta(t37v,t85v) > 0.14189560681280466)
-sland_mask = ma.logical_or(sland_mask, tmp)
-sland_mask = ma.logical_or(sland_mask,  ma.masked_array(delta(t37v,t85h) > 0.17997019000426684) )
-
 sland_indices = sland_mask.nonzero()
 nsland_pts = len(sland_indices[0])
 print("number of satellite-caught land pts: ",nsland_pts)
 
-# Water points:
-#satellite-based ice-free water mask
+# Water points: --------------------------------------------------------
+#perfect satellite-based ice-free water mask
 swater_mask = ma.masked_array(t19h > 3000)
 tmp = ma.masked_array(delta(t19v, t85v) <  -0.15903521396897055)
 swater_mask = ma.logical_or(swater_mask, tmp)
-tmp = ma.masked_array(delta(t37h, t85v) < -0.2969400155724901)
+
+# Perfect not-ice, almost perfectly water:
+tmp = ma.masked_array(delta(t37h, t85h) < -0.17274572903459723)
 swater_mask = ma.logical_or(swater_mask, tmp)
-tmp = ma.masked_array(delta(t37h,t85h) < -0.17274572903459723)
+tmp = ma.masked_array(delta(t19v, t37h) < -0.008470142881075546)
 swater_mask = ma.logical_or(swater_mask, tmp)
-swater_mask = ma.logical_or(swater_mask, ma.masked_array(delta(t19v,t37h) < -0.008470142881075546) )
-swater_mask = ma.logical_or(swater_mask, ma.masked_array(delta(t19v,t85h) < -0.12797022016361506) )
+tmp = ma.masked_array(delta(t19v, t85h) < -0.12797022016361506)
+swater_mask = ma.logical_or(swater_mask, tmp)
+tmp = ma.masked_array(delta(t19v, t85v) < -0.15477002254038147)
+swater_mask = ma.logical_or(swater_mask, tmp)
+
+# Very good not-ice (only 1%), very good water:
+tmp = ma.masked_array(delta(t19v, t85v) < -0.12064849111166867)
+swater_mask = ma.logical_or(swater_mask, tmp)
+tmp = ma.masked_array(delta(t19h, t85h) < -0.2371562842768852)
+swater_mask = ma.logical_or(swater_mask, tmp)
+
 
 swater_indices = swater_mask.nonzero()
 nswater_pts = len(swater_indices[0])
 print("number of satellite-caught water pts: ",nswater_pts)
 
-print("fraction of all points which are known after first pass: ",float(nswater_pts+nsland_pts)/float(nobs))
+print("fraction of all points which are known after first pass: ",
+       float(nswater_pts+nsland_pts)/float(nobs))
 
-known = ma.logical_or(swater_mask, sland_mask)
+# -----------------  Prepare masks for second pass ------------------
+known   = ma.logical_or(swater_mask, sland_mask)
 unknown = ma.logical_not(known)
 unknown_indices = unknown.nonzero()
-nobs = len(unknown_indices[0])
+nobs   = len(unknown_indices[0])
 print("nobs for round 2: ",nobs, flush=True)
 
-landmask = ma.logical_and(landmask , unknown)
-icemask  = ma.logical_and(icemask , unknown)
+landmask  = ma.logical_and(landmask , unknown)
+icemask   = ma.logical_and(icemask , unknown)
 watermask = ma.logical_and(watermask , unknown)
-nicepts = len(icemask.nonzero()[0])
-nlandpts = len(landmask.nonzero()[0])
+nicepts   = len(icemask.nonzero()[0])
+nlandpts  = len(landmask.nonzero()[0])
 nwaterpts = len(watermask.nonzero()[0])
-pwater = nwaterpts/float(nobs)
-pland  = nlandpts/float(nobs)
-pice   = nicepts/float(nobs)
-print("after first pass, nobs, ice, land, water ",nobs, nicepts, nlandpts, nwaterpts, pice, pland, pwater, flush=True)
+pwater   = nwaterpts/float(nobs)
+pland    = nlandpts/float(nobs)
+pice     = nicepts/float(nobs)
+print("after first pass, nobs, ice, land, water ",nobs, nicepts, nlandpts, 
+        nwaterpts, pice, pland, pwater, flush=True)
 
 #----------------------------------------------------------------
 #  Repeat original process check on the remaining points --
@@ -391,17 +423,15 @@ print("after first pass, nobs, ice, land, water ",nobs, nicepts, nlandpts, nwate
 #    -- next step: finding a filter for 'not-ice', maybe land or water,
 #          but definitely not sea ice
 #    -- or next: finding a filter for 'is sea ice'
-print("max, min temps, 2nd pass:")
-print(t19v.max(), t19v.min() )
-print(t19h.max(), t19h.min() )
-print(t22v.max(), t22v.min() )
-print(t37v.max(), t37v.min() )
-print(t37h.max(), t37h.min() )
-print(t85v.max(), t85v.min() )
-print(t85h.max(), t85h.min() )
+#-----------------------------------------------
+#fout2 = open("tb2","w")
+#for i in range(0,nobs):
+#    all[unknown_indices[0][i] ].show(fout2)
+#fout2.close()
+#-----------------------------------------------
 
 fout = open("round2","w")
-for thot in range (96, 316):
+for thot in range (100, 285):
   bayes(t19v, thot, "t19v", unknown, fout)
   bayes(t19h, thot, "t19h", unknown, fout)
   bayes(t22v, thot, "t22v", unknown, fout)
@@ -433,11 +463,6 @@ dr(t37h, t85h, "drt37ht85h", unknown, fout)
 dr(t85v, t85h, "drt85vt85h", unknown, fout)
 
 fout.close() 
-#-----------------------------------------------
-fout2 = open("trimmed_tb","w")
-for i in range(0,nobs):
-    all[unknown_indices[0][i] ].show(fout2)
-fout2.close()
 
 #----------------------------------------------------------------
 exit(0)
@@ -475,10 +500,9 @@ dr(t37h, t85h, "drt37ht85h", unknown, fout)
 dr(t85v, t85h, "drt85vt85h", unknown, fout)
 print(flush=True,file=fout)
 
-
 #-----------------------------------------------
-fout2 = open("trimmed_tb","w")
+fout2 = open("trimmed_tb3","w")
 for i in range(0,nobs):
     all[unknown_indices[0][i] ].show(fout2)
 fout2.close()
-
+#-----------------------------------------------

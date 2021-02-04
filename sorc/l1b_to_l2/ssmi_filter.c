@@ -35,11 +35,15 @@ int tb_filter(float *tb, float *concentration, int *flag) {
   for (j = 0; j < NFREQS; j++) {
     if (tb[j] > thot[j]) {
       is_land = true;
+      #ifdef DEBUG
       printf("land %d %f %f\n",j, tb[j], thot[j]);
+      #endif
     }
     if (tb[j] < tcold[j]) {
       is_land = true;
+      #ifdef DEBUG
       printf("land %d %f %f\n",j, tb[j], tcold[j]);
+      #endif
     }
 
   } /* nfreqs */

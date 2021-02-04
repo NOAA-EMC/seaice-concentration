@@ -73,6 +73,7 @@ int open_nc_(int *unit, int *ncid, int *platform, int *varid) {
   int varid_tb19v, varid_tb19h, varid_tb22v, varid_tb37v, varid_tb37h;
   int varid_tb85v, varid_tb85h;
   int varid_lat, varid_lon, varid_sic, varid_qc, varid_land, varid_dtg1, varid_dtg2;
+  int varid_satid;
   int retcode;
 
   #ifdef BINOUT
@@ -90,6 +91,7 @@ int open_nc_(int *unit, int *ncid, int *platform, int *varid) {
    nc_put_att_int(*ncid, NC_GLOBAL, "polarizations", NC_INT, nfreqs, &polar[0]);
    nc_put_att_float(*ncid, NC_GLOBAL, "frequencies", NC_FLOAT, nfreqs, &freqs[0]);
 /* info for each obs: */
+  nc_def_var(*ncid, "satid", NC_INT, NDIMS, dimids, &varid_satid);
   nc_def_var(*ncid, "longitude", NC_DOUBLE, NDIMS, dimids, &varid_lon);
   nc_def_var(*ncid, "latitude", NC_DOUBLE, NDIMS, dimids, &varid_lat);
   nc_def_var(*ncid, "ice_concentration", NC_FLOAT, NDIMS, dimids, &varid_sic);
@@ -121,6 +123,7 @@ int open_nc_(int *unit, int *ncid, int *platform, int *varid) {
   varid[11] = varid_tb85v;
   varid[12] = varid_tb85h;
   varid[13] = varid_dtg2;
+  varid[14] = varid_satid;
 
   return 0;
 }
@@ -201,6 +204,7 @@ void ssmiout_nc_
       dtg2 = x.hour;
       dtg2 *= 100; dtg2 += x.minute;
 
+      nc_put_vara_int  (*ncid, varid[14], start, count, satno);
       nc_put_vara_double(*ncid, varid[0], start, count, &x.clon);
       nc_put_vara_double(*ncid, varid[1], start, count, &x.clat);
       nc_put_vara_float(*ncid, varid[2], start, count, &conc);

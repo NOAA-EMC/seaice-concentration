@@ -112,7 +112,7 @@
 !c  SSM/I brightness data.
 !------------- For netcdf -----------------------------
       INTEGER open_nc, ssmiout_nc
-      INTEGER nwrite, ncid, platform, varid(14)
+      INTEGER nwrite, ncid, platform, varid(15)
 !-----------------------------------------------------------------------
 
       icnt = 0
@@ -227,26 +227,27 @@
      4          ncid, varid, nwrite)
               !CD PRINT *,'creturns = ',creturns 
 
-!             Now write out the hires info:
-              DO k = 1, 3
-                kwrit = (kscan-1)*3 + k
-                xlat = xloc85(1, kwrit)
-                xlon = xloc85(2, kwrit)
-                sftg = xloc85(3, kwrit)
-                posn = xloc85(4, kwrit)
-                tmp6 = brt85(2, 1, kwrit)
-                tmp7 = brt85(2, 2, kwrit)
-! work here for NC version RG:
-              creturns = ssmiout_nc(
-     1          SATNO, iy,im,id,ihr,imins,isec,iscan, 
-     2          kscan,xlat,xlon,sftg,posn, 
-     3          tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7, 
-     4          ncid, varid, nwrite)
-              !CD PRINT *,'creturns = ',creturns 
-
+! Skip hires as it team1 doesn't use high frequencies
+!!             Now write out the hires info:
+!              DO k = 1, 3
+!                kwrit = (kscan-1)*3 + k
+!                xlat = xloc85(1, kwrit)
+!                xlon = xloc85(2, kwrit)
+!                sftg = xloc85(3, kwrit)
+!                posn = xloc85(4, kwrit)
+!                tmp6 = brt85(2, 1, kwrit)
+!                tmp7 = brt85(2, 2, kwrit)
+!! work here for NC version RG:
+!              creturns = ssmiout_nc(
+!     1          SATNO, iy,im,id,ihr,imins,isec,iscan, 
+!     2          kscan,xlat,xlon,sftg,posn, 
+!     3          tmp1,tmp2,tmp3,tmp4,tmp5,tmp6,tmp7, 
+!     4          ncid, varid, nwrite)
+!              !CD PRINT *,'creturns = ',creturns 
+!
 !old                creturns = hiresout(kwrit, xlat, xlon, sftg, posn, 
 !old     1                              tmp6, tmp7)
-              ENDDO
+!              ENDDO
             ENDDO
 
          ENDIF

@@ -23,11 +23,11 @@ extern float nasa_team(float t19v, float f19h, float t22v, float t37v, float t37
 
 
 
-int l1b_to_l2(ssmipt *a, float *concentration, int *qc, float *land);
+int l1b_to_l2(float *tb, int satno, float clat, float clon, float *concentration, int *qc, float *land) ;
 
 extern int tb_filter(float *tb, float *concentration, int *flag) ;
-extern int waters(float tb1, float tb2, bool alpha, float crit, bool under, float *concentration, int *qc, float *land) ;
-extern int lands (float tb1, float tb2, bool alpha, float crit, bool under, float *concentration, int *qc, float *land) ;
+extern int waters(float tb1, float tb2, float crit, bool under, float *concentration, int *qc, float *land) ;
+extern int lands (float tb1, float tb2, float crit, bool under, float *concentration, int *qc, float *land) ;
 
 /* For the algorithm */
 int bad_low = 0;
@@ -188,10 +188,11 @@ void ssmiout_nc_
   
 /* could be filtering land, water here, then let l1b_to_l2 do concentration/weather filtering */
 /* RG: tmp     nobs = l1b_to_l2(&x, &conc, &qc, &land);
- */
     conc = 1.0;
     qc = 5;
     land = 0.0; 
+ */
+      nobs = l1b_to_l2(&tb[0], *satno, *xlat, *xlon, &conc, &qc, &land);
 
       dtg1  = x.year;
       dtg1 *= 100; dtg1 += x.month;
@@ -235,10 +236,9 @@ void ssmiout_nc_
 
  return;
 }
-int l1b_to_l2(ssmipt *a, float *concentration, int *qc, float *land) {
+int l1b_to_l2(float *tb, int satno, float clat, float clon, float *concentration, int *qc, float *land) {
+/*
   float tb[NFREQS];
-  int nobs;
-
   tb[0] = (float)a->tb[0];
   tb[1] = (float)a->tb[1];
   tb[2] = (float)a->tb[2];
@@ -246,11 +246,23 @@ int l1b_to_l2(ssmipt *a, float *concentration, int *qc, float *land) {
   tb[4] = (float)a->tb[4];
   tb[5] = (float)a->tb[5];
   tb[6] = (float)a->tb[6];
+*/
 
   *concentration = 1.0;
   *qc = 5;      /* 1-5, 5 is worst */
   *land = 1./4. + 1./16.; /* want this to be about 0.30, but do this for exactness */
   int i, j, flag = 0, sum = 0;
+
+  #ifdef DEBUG
+  printf("debug args1 %d %f %f %f %d %f\n",satno, clat, clon, *concentration, *qc, *land);
+  fflush(stdout);
+  printf("debug args2 %f %f\n",tb[0], tb[1]);
+  fflush(stdout);
+  #endif
+
+  #ifdef DEBUG
+  printf("debug_pre land, qc, conc = %f %d %f  %f\n",*land, *qc, *concentration, tb[0]);
+  #endif
 
 /* tb filter: */
    tb_filter(tb, concentration, &flag);
@@ -259,64 +271,50 @@ int l1b_to_l2(ssmipt *a, float *concentration, int *qc, float *land) {
      *qc   = 3;
      sum += 1;
    }
-   else if (flag == MIXED) {
-     *land = 0.50;
-     *qc   = 3;
-     sum += 1;
-   }
+  #ifdef DEBUG
+  printf("debug_h land, qc, conc = %f %d %f  %f\n",*land, *qc, *concentration, tb[0]);
+  #endif
 
 /* for delta filtering: */
-   int w1 = 0, w2 = 0, w3 = 0, w4 = 0;
-   int l1 = 0, l2 = 0, l3 = 0, l4 = 0;
    float crit;
-   bool alpha, under;
+   bool under;
 
 /* Water filters:
- From Sept 23, 2018:
-     j = 2; i = 3; alpha = true; crit = 0.05; under = false;
-     j = 0; i = 5; alpha = true; crit = 0.11; under = true;
-     j = 0; i = 4; alpha = true; crit = 0.28; under = true;
-     j = 3; i = 4; alpha = true; crit = 0.20; under = true;
- From 20 August 2018
-alpha.07:O 2 3  123564 0.073
-alpha.28:U 0 4   61666 0.036
-alpha.20:O 4 7   47025 0.028
-alpha.20:U 3 4   21734 0.013
+Rebuild for F15, different for F13, F14:
 */
+/* 19v, 85v, <  -0.090792151111545
+   19h, 85h,  <  -0.1756696439150608
+/*
+i = 0; j = 5; under = true; crit =  -0.090792151111545;
+     sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
+i = 0; j = 6; under = true; crit = -0.1756696439150608; 
+     sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
 
-     w1 = 0, w2 = 0, w3 = 0, w4 = 0;
-j = 2; i = 3; alpha = true; under = false; crit = 0.07;
-     w1 =  waters(tb[i], tb[j], alpha, crit, under, concentration, qc, land);
-j = 0; i = 4; alpha = true; under = true; crit = 0.28;
-     w2 =  waters(tb[i], tb[j], alpha, crit, under, concentration, qc, land);
-j = 4; i = 7; alpha = true; under = false; crit = 0.20;
-     w3 =  waters(tb[i], tb[j], alpha, crit, under, concentration, qc, land);
-j = 3; i = 4; alpha = true; under = true; crit = 0.20;
-     w4 =  waters(tb[i], tb[j], alpha, crit, under, concentration, qc, land);
+  #ifdef DEBUG
+  printf("debug_i land, qc, conc = %f %d %f  %f\n",*land, *qc, *concentration, tb[0]);
+  #endif
+
 
 /* Land filters:
- From 23 Sep 2018
-     j = 1; i = 2; alpha = false; crit = 0.008; under = true;
-     j = 1; i = 3; alpha = false; crit = 0.002; under = true;
-     j = 4; i = 5; alpha = false; crit = 0.005; under = true;
- From 20 Aug 2018
-beta.005: U 1 2   78593 0.046
-beta.005: U 4 5   65519 0.039
-alpha.002:U 1 3   32038 0.019
+Rebuild for F15, different for F13, F14:
+19v, 19h, < 0.018077900915434868
+19h, 37v, >  0.05150437355041504
 */
-     l1 = 0, l2 = 0, l3 = 0, l4 = 0;
-j = 1; i = 2; alpha = false; under = true; crit = 0.005;
-     l1 =  lands(tb[i], tb[j], alpha, crit, under, concentration, qc, land);
-j = 4; i = 5; alpha = false; under = true; crit = 0.005;
-     l2 =  lands(tb[i], tb[j], alpha, crit, under, concentration, qc, land);
-j = 1; i = 3; alpha = true;  under = true; crit = 0.002;
-     l3 =  lands(tb[i], tb[j], alpha, crit, under, concentration, qc, land);
+
+i = 0; j = 1; under = true; crit = 0.018077900915434868;
+     sum +=  lands(tb[i], tb[j], crit, under, concentration, qc, land);
+i = 1; j = 4; under = false; crit = 0.05150437355041504;
+     sum +=  lands(tb[i], tb[j], crit, under, concentration, qc, land);
 
 /* prep for regular usage of algorithm -- restore land to 0 */
   if ((*land) == (1./4. + 1./16.) ) {
     *land = 0.0;
   }
-  /* printf("skel %f\n",*land); */
+ 
+  #ifdef DEBUG
+  printf("debug_j land, qc, conc = %f %d %f  %f\n",*land, *qc, *concentration, tb[0]);
+  #endif
+
   if (*land != 0.0) return 1;
 /* only proceed if we didn't filter the point already */
 
@@ -326,20 +324,20 @@ j = 1; i = 3; alpha = true;  under = true; crit = 0.002;
   float tlat, tlon;
   float t19v, t19h, t22v, t37v, t37h, t85v, t85h;
   float nasa;
-  int satno, ant = SSMI_ANTENNA;
+  int ant = SSMI_ANTENNA;
   char pole;
 
-  satno = a->satid ;
+  #ifdef DEBUG
+  printf("debug_k land, qc, conc = %f %d %f  %f %f\n",*land, *qc, *concentration, tb[0], t19v);
+  #endif
 
-  tlat = ( (float)a->clat);
-  tlon = ( (float)a->clon);
-  t19v = ( (float)a->tb[SSMI_T19V] );
-  t19h = ( (float)a->tb[SSMI_T19H] );
-  t22v = ( (float)a->tb[SSMI_T22V] );
-  t37v = ( (float)a->tb[SSMI_T37V] );
-  t37h = ( (float)a->tb[SSMI_T37H] );
-  t85v = ( (float)a->tb[SSMI_T85V] );
-  t85h = ( (float)a->tb[SSMI_T85H] );
+  t19v = ( (float)tb[SSMI_T19V] );
+  t19h = ( (float)tb[SSMI_T19H] );
+  t22v = ( (float)tb[SSMI_T22V] );
+  t37v = ( (float)tb[SSMI_T37V] );
+  t37h = ( (float)tb[SSMI_T37H] );
+  t85v = ( (float)tb[SSMI_T85V] );
+  t85h = ( (float)tb[SSMI_T85H] );
   if (tlat > 0) {
     pole = 'n';
   }
@@ -359,6 +357,10 @@ j = 1; i = 3; alpha = true;  under = true; crit = 0.002;
     if (*concentration > 1.  ) *concentration = 1.0;
     if (*concentration < 0.15) *concentration = 0.0;
   }
+
+  #ifdef DEBUG
+  printf("debug_l land, qc, conc = %f %d %f  %f %f\n",*land, *qc, *concentration, tb[0], t19v);
+  #endif
 
   return sum;
 }

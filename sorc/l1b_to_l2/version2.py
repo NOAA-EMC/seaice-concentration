@@ -300,7 +300,6 @@ def dr(x, y, label, unknown, fout = sys.stdout):
 sland_mask  = ma.masked_array(t19h > 3000)
 swater_mask = ma.masked_array(t19h > 3000)
 
-#tmp = ma.masked_array(delta(t19v, t85v) <  -0.10785291682590138)
 #good not-ice (<~ 1.6%), very good not-land (~0.3%), water flag: (98.7%, 1.76 million pts)
 tmp = ma.masked_array(delta(t19v, t85v) <  -0.090792151111545)
 swater_mask = ma.logical_or(swater_mask, tmp)

@@ -10,27 +10,36 @@ typedef int bool;
 #define false (1==0)
 #define true  (1==1)
 
-int tb_filter(float *tb, float *concentration, int *flag) ;
+int tb_filter(float *tb, float *concentration, int *flag, int satno) ;
 
 int waters(float tb1, float tb2, float crit, bool under, float *concentration, int *qc, float *land) ;
 int lands (float tb1, float tb2, float crit, bool under, float *concentration, int *qc, float *land) ;
 
-int tb_filter(float *tb, float *concentration, int *flag) {
+int tb_filter(float *tb, float *concentration, int *flag, int satno) {
 
-/* Derived from F17: 150 GHz, then usual
-  float thot[NFREQS] = {260., 270., 268., 260., 268., 272., 271.} ; 
-  float tcold[NFREQS] = {50., 175., 180., 130., 172., 170., 160.};
-*/
 /* Derived from F15: (50 or 315 are approx ignore) */
                       /* 19v  19h   22v   37v   37h   85v   85h */
-  float thot[NFREQS]  = {264., 252., 315., 262., 251., 272., 264.} ; 
-  float tcold[NFREQS] = {175.,  96.,  50.,  50., 126., 153., 147.};
+  float hot_f15[NFREQS]  = {264., 252., 315., 262., 251., 272., 264.} ; 
+  float cold_f15[NFREQS] = {175.,  96.,  50.,  50., 126., 153., 147.};
+/* For F13, F14: */
+  float hot_f13[NFREQS]  = {270., 263., 270., 267., 262., 270., 263.} ; 
+  float cold_f13[NFREQS] = {176.,  50., 185., 195.,  50., 184., 174.};
 
+  float *thot, *tcold;
   int i, j;
-  bool hot = false, cold = false, cold4 = false, is_land = false, mixed = false;
+  bool hot = false, cold = false, is_land = false;
 
   *flag = 0;
   *concentration = 2.24;
+
+  if (satno == 15 || satno == 248) {
+    thot  = &hot_f15[0];
+    tcold = &cold_f15[0];
+  }
+  else {
+    thot  = &hot_f13[0];
+    tcold = &cold_f13[0];
+  }
 
   for (j = 0; j < NFREQS; j++) {
     if (tb[j] > thot[j]) {
@@ -59,7 +68,9 @@ int tb_filter(float *tb, float *concentration, int *flag) {
 int waters(float tb1, float tb2, float crit, bool under, float *concentration, int *qc, float *land) {
   float dr = (tb1-tb2)/(tb1+tb2);
 
-  printf("entered waters, tb = %f %f %f\n",tb1, tb2, dr); fflush(stdout);
+  #ifdef DEBUG
+  printf("debug: entered waters, tb = %f %f %f\n",tb1, tb2, dr); fflush(stdout);
+  #endif
 /* Filters to flag never-ice water points: */
   if (!under ) {
     if ( dr > crit) {

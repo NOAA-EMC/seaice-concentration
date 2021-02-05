@@ -25,7 +25,7 @@ extern float nasa_team(float t19v, float f19h, float t22v, float t37v, float t37
 
 int l1b_to_l2(float *tb, int satno, float clat, float clon, float *concentration, int *qc, float *land) ;
 
-extern int tb_filter(float *tb, float *concentration, int *flag) ;
+extern int tb_filter(float *tb, float *concentration, int *flag, int satno) ;
 extern int waters(float tb1, float tb2, float crit, bool under, float *concentration, int *qc, float *land) ;
 extern int lands (float tb1, float tb2, float crit, bool under, float *concentration, int *qc, float *land) ;
 
@@ -269,7 +269,7 @@ int l1b_to_l2(float *tb, int satno, float clat, float clon, float *concentration
   #endif
 
 /* tb filter: */
-   tb_filter(tb, concentration, &flag);
+   tb_filter(tb, concentration, &flag, satno);
    if (flag == LAND) {
      *land = 0.99;
      *qc   = 3;
@@ -284,31 +284,56 @@ int l1b_to_l2(float *tb, int satno, float clat, float clon, float *concentration
    bool under;
 
 /* Water filters:
-Rebuild for F15, different for F13, F14:
 */
-/* 19v, 85v, <  -0.090792151111545
-   19h, 85h,  <  -0.1756696439150608
-/*
-i = 0; j = 5; under = true; crit =  -0.090792151111545;
+  if (satno == 15 || satno == 248) {
+     /* Rebuild for F15, different for F13, F14: */
+     /* 19v, 85v, <  -0.090792151111545
+        19h, 85h,  <  -0.1756696439150608
+     */
+     i = 0; j = 5; under = true; crit =  -0.090792151111545;
      sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
-i = 0; j = 6; under = true; crit = -0.1756696439150608; 
+     i = 0; j = 6; under = true; crit = -0.1756696439150608; 
      sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
-
+  }
+  else {
+     /* F13, F14: */
+/* 37v, 85v, <  -0.08223462165004075
+   19v, 22v, <  -0.045881619056065914
+   37h, 85h, <  -0.17385640469464386
+   19v, 85v, <  -0.13226512947467844
+   19v, 37v, <  -0.05464559974092431
+*/
+    under = true;
+    i = 3; j = 5; crit = -0.08223462165004075;
+     sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
+    i = 0; j = 2; crit = -0.045881619056065914;
+     sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
+    i = 4; j = 6; crit = -0.17385640469464386;
+     sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
+    i = 0; j = 5; crit = -0.13226512947467844;
+     sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
+    i = 0; j = 3; crit =  -0.05464559974092431;
+     sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
+  }
   #ifdef DEBUG
   printf("debug_i land, qc, conc = %f %d %f  %f\n",*land, *qc, *concentration, tb[0]);
   #endif
 
 
 /* Land filters:
-Rebuild for F15, different for F13, F14:
-19v, 19h, < 0.018077900915434868
-19h, 37v, >  0.05150437355041504
+     Rebuild for F15, different for F13, F14:
+     19v, 19h, < 0.018077900915434868
+     19h, 37v, >  0.05150437355041504
 */
-
-i = 0; j = 1; under = true; crit = 0.018077900915434868;
+  if (satno == 15 || satno == 248) {
+     i = 0; j = 1; under = true; crit = 0.018077900915434868;
      sum +=  lands(tb[i], tb[j], crit, under, concentration, qc, land);
-i = 1; j = 4; under = false; crit = 0.05150437355041504;
+     i = 1; j = 4; under = false; crit = 0.05150437355041504;
      sum +=  lands(tb[i], tb[j], crit, under, concentration, qc, land);
+  }
+  else {
+    /* no further land filter for F13, F14 */
+  }
 
 /* prep for regular usage of algorithm -- restore land to 0 */
   if ((*land) == (1./4. + 1./16.) ) {

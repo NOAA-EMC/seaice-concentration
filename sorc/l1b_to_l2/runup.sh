@@ -1,14 +1,14 @@
 #!/bin/bash --login
 #####
-#BSUB -J l2runup
+#BSUB -J l2_2001
 #BSUB -q "dev"
 #BSUB -P RTO-T2O
-# #BSUB -W 7:59
-#BSUB -W 0:09
+#BSUB -W 7:59
+# #BSUB -W 0:09
 #BSUB -o l2runup.%J
 #BSUB -e l2runup.%J
 #BSUB -R "affinity[core(1)]"
-#  #BSUB -R "rusage[mem=128]"
+#  #BSUB -R "rusage[mem=1024]"
 #####
 
 #Get a day's SSMIS L1b information and write out with concentration in NetCDF L2
@@ -26,14 +26,14 @@ module load EnvVars/1.0.3 ips/19.0.5.281 impi/19.0.5
 module load bufr/11.3.1 NetCDF/4.5.0 w3nco/2.2.0
 module load dumpjb/5.1.0 bufr_dumplist/2.3.0
 
-export PDY=20181230
+export PDY=20010101
 
 x=$$
 mkdir -p /gpfs/dell2/ptmp/wx21rg/runup.$x
 cd /gpfs/dell2/ptmp/wx21rg/runup.$x
 
 set -x
-while [ $PDY -le 20181231 ]
+while [ $PDY -le 20011231 ]
 do
 
   export DCOM=${DCOMROOT}/$RGTAG/$PDY

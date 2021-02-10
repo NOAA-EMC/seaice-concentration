@@ -1,6 +1,6 @@
 #!/bin/bash --login
 #####
-#BSUB -J l2_2001
+#BSUB -J l2_2000
 #BSUB -q "dev"
 #BSUB -P RTO-T2O
 #BSUB -W 7:59
@@ -26,19 +26,19 @@ module load EnvVars/1.0.3 ips/19.0.5.281 impi/19.0.5
 module load bufr/11.3.1 NetCDF/4.5.0 w3nco/2.2.0
 module load dumpjb/5.1.0 bufr_dumplist/2.3.0
 
-export PDY=20010101
+export PDY=20000101
 
 x=$$
 mkdir -p /gpfs/dell2/ptmp/wx21rg/runup.$x
 cd /gpfs/dell2/ptmp/wx21rg/runup.$x
 
 set -x
-while [ $PDY -le 20011231 ]
+while [ $PDY -le 20121231 ]
 do
 
   export DCOM=${DCOMROOT}/$RGTAG/$PDY
 
-  time ${EXDIR}/getday_ssmis.sh
+  time ${EXDIR}/getday_ssmi.sh
 
   PDY=`expr $PDY + 1`
   PDY=`/u/Robert.Grumbine/bin/dtgfix3 $PDY`

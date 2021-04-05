@@ -64,4 +64,8 @@ do
   ./makeall.sh
   cd ..
 done
+
+if [ ! -d ../exec ] ; then
+  mkdir ../exec
+fi
 ./toexec cp

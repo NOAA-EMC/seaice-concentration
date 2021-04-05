@@ -1,7 +1,9 @@
-export code_ver=v4.3.0
+export code_ver=v4.3.6
 export mmablib_ver=v3.5.0
-export obsproc_dump_ver=v3.1.0
-export obsproc_shared_bufr_dumplist_ver=v1.0.0
+export obsproc_dump_ver=v5.0.1
+export obsproc_shared_bufr_dumplist_ver=v2.0.1
+export grib_util_ver=1.1.0
+export gempak_ver=7.3.3
 
 #Note that the following are included for notional purposes only.  
 #  They are reference numbers to fixed field versions.  In principle,
@@ -11,4 +13,7 @@ export seaice_geography_ver=v3.0.0
 export ssmi_algorithm_ver=v3.0.0
 export amsr_algorithm_ver=v2.0.0
 export ssmis_algorithm_ver=v1.0.0
+
+#For test, remove when implementing
+#export HOMEobsproc_dump=/gpfs/dell1/nco/ops/nwprod/obsproc_dump.${obsproc_dump_ver}
 

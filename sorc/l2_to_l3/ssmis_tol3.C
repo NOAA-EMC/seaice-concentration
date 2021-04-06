@@ -9,11 +9,11 @@
 #define ERR(e) {printf("Error: %s\n", nc_strerror(e)); exit(ERRCODE);}
 
 #include "ncepgrids.h"
-#include "icessmi.h"
+#include "icessmis.h"
 #include "icegrids.h"
 
 void get_nc(char *fname, psgrid<float> &north, psgrid<float> &south);
-void append(grid2<ssmi_tmp> &x, int index, float t19v, float t19h, float t22v, float t37v, float t37h, float t85v, float t85h, float conc) ;
+void append(grid2<ssmis_tmp> &x, int index, float t19v, float t19h, float t22v, float t37v, float t37h, float t92v, float t92h, float conc) ;
 
 template <class T>
 void enter(mvector<T> &param, T *x) ;
@@ -40,13 +40,12 @@ int main(int argc, char *argv[]) {
   fout = fopen(argv[3], "w");
   sconc.binout(fout);
   fclose(fout);
+  
 
   return 0;
 }
 
 void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
-//
-
 // For netcdf:
   int i, ncid, varid, retval;
   int idp;
@@ -73,7 +72,7 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   mvector<int> satid(lenp), quality(lenp);
 //  mvector<int> dtg1(lenp), dtg2(lenp);
   mvector<float> conc(lenp), land_flag(lenp);
-  mvector<float> t19v(lenp), t19h(lenp), t22v(lenp), t37v(lenp), t37h(lenp), t85v(lenp), t85h(lenp);
+  mvector<float> t19v(lenp), t19h(lenp), t22v(lenp), t37v(lenp), t37h(lenp), t92v(lenp), t92h(lenp);
 
 // get locations:
   retval = nc_inq_varid(ncid, "latitude", &varid); if (retval != 0) ERR(retval);
@@ -88,9 +87,9 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   printf("lon range: %e %e\n",dlon.maximum(), dlon.minimum() );
 
 // satid, quality, ignore dtg -- presumption of being taken care of already
-  retval = nc_inq_varid(ncid, "satid", &varid); if (retval != 0) ERR(retval);
-  retval = nc_get_var_int(ncid, varid, ix); if (retval != 0) ERR(retval); 
-  enter(satid, ix);
+  //retval = nc_inq_varid(ncid, "satid", &varid); if (retval != 0) ERR(retval);
+  //retval = nc_get_var_int(ncid, varid, ix); if (retval != 0) ERR(retval); 
+  //enter(satid, ix);
   retval = nc_inq_varid(ncid, "quality", &varid); if (retval != 0) ERR(retval);
   retval = nc_get_var_int(ncid, varid, ix); if (retval != 0) ERR(retval);
   enter(quality, ix);
@@ -111,12 +110,12 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   retval = nc_inq_varid(ncid, "tb_37H", &varid); if (retval != 0) ERR(retval);
   retval = nc_get_var_float(ncid, varid, fx); if (retval != 0) ERR(retval);
   enter(t37h, fx);
-  retval = nc_inq_varid(ncid, "tb_85V", &varid); if (retval != 0) ERR(retval);
+  retval = nc_inq_varid(ncid, "tb_92V", &varid); if (retval != 0) ERR(retval);
   retval = nc_get_var_float(ncid, varid, fx); if (retval != 0) ERR(retval);
-  enter(t85v, fx);
-  retval = nc_inq_varid(ncid, "tb_85H", &varid); if (retval != 0) ERR(retval);
+  enter(t92v, fx);
+  retval = nc_inq_varid(ncid, "tb_92H", &varid); if (retval != 0) ERR(retval);
   retval = nc_get_var_float(ncid, varid, fx); if (retval != 0) ERR(retval);
-  enter(t85h, fx);
+  enter(t92h, fx);
   printf("t19v range: %e %e\n",t19v.maximum(), t19v.minimum() );
 
 // concentration, land flag:
@@ -136,8 +135,8 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   free(doublex);
 
 // Now work on constructing L3: -----------------------------------------
-  grid2<ssmi_tmp> ntmp(north.xpoints(), north.ypoints() );
-  grid2<ssmi_tmp> stmp(south.xpoints(), south.ypoints() );
+  grid2<ssmis_tmp> ntmp(north.xpoints(), north.ypoints() );
+  grid2<ssmis_tmp> stmp(south.xpoints(), south.ypoints() );
 
   grid2<int> ncount(north.xpoints(), north.ypoints() );
   grid2<int> scount(south.xpoints(), south.ypoints() );
@@ -160,7 +159,7 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
         //  ll.lat, ll.lon, locn.i, locn.j, quality[i], conc[i], land_flag[i]);
         if (quality[i] == 4 || quality[i] == 1) {
           index = locn.i+locn.j*ntmp.xpoints();
-          append(ntmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t85v[i], t85h[i], conc[i]);
+          append(ntmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t92v[i], t92h[i], conc[i]);
           ncount[locn] += 1;
           north[locn]  += conc[i] * 100.;
         }
@@ -173,7 +172,7 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
         //  ll.lat, ll.lon, locs.i, locs.j, quality[i], conc[i], land_flag[i]);
         if (quality[i] == 4 || quality[i] == 1) {
           index = locs.i+locs.j*stmp.xpoints();
-          append(stmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t85v[i], t85h[i], conc[i]);
+          append(stmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t92v[i], t92h[i], conc[i]);
           scount[locs] += 1;
           south[locs]  += conc[i] * 100.;
         }
@@ -184,6 +183,7 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   printf("ncount max %d %d %d\n",ncount.gridmax(), ncount.gridmin(), ncount.average() );
   printf("scount max %d %d %d\n",scount.gridmax(), scount.gridmin(), scount.average() );
 
+  int undef = 0;
   for (locn.j = 0; locn.j < north.ypoints(); locn.j++) {
   for (locn.i = 0; locn.i < north.xpoints(); locn.i++) {
     if (ncount[locn] != 0) {
@@ -191,6 +191,7 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
     }
     else {
       north[locn] = 224.;
+      undef++;
     }
   }
   }
@@ -201,9 +202,12 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
     }
     else {
       south[locs] = 224.;
+      undef++;
     }
   }
   }
+  printf("%d undefined points\n",undef);
+
   palette<unsigned char> gg(19,65);
   north.xpm("n.xpm",7,gg);
   south.xpm("s.xpm",7,gg);
@@ -233,29 +237,15 @@ void enter(grid2<float> &param, float *x) {
 
   return;
 }
-void append(grid2<ssmi_tmp> &x, int index, float t19v, float t19h, float t22v, float t37v, float t37h, float t85v, float t85h, float conc) {
-// n.b.: from icessmi.h:
-//  typedef struct { unsigned int t19v : 24;
-//                   unsigned int t19h : 24;
-//                   unsigned int t22v : 24;
-//                   unsigned int t37v : 24;
-//                   unsigned int t37h : 24;
-//                   unsigned int t85v : 24;
-//                   unsigned int t85h : 24;
-//                   unsigned int conc_bar  :  16;
-//                   unsigned int hires_bar :  16;
-//                   unsigned int count     :   8;
-//                   unsigned int weather_count : 8; /* Added 30 April 2004 */
-//                   unsigned int old_conc_bar  :  16; /* Added 23 Sep 2005 */
-//                 } ssmi_tmp;
+void append(grid2<ssmis_tmp> &x, int index, float t19v, float t19h, float t22v, float t37v, float t37h, float t92v, float t92h, float conc) {
   if (x[index].count == 0) {
     x[index].t19v = (unsigned int) (0.5+t19v*100);
     x[index].t19h = (unsigned int) (0.5+t19h*100);
     x[index].t22v = (unsigned int) (0.5+t22v*100);
     x[index].t37v = (unsigned int) (0.5+t37v*100);
     x[index].t37h = (unsigned int) (0.5+t37h*100);
-    x[index].t85v = (unsigned int) (0.5+t85v*100);
-    x[index].t85h = (unsigned int) (0.5+t85h*100);
+    x[index].t92v = (unsigned int) (0.5+t92v*100);
+    x[index].t92h = (unsigned int) (0.5+t92h*100);
     x[index].conc_bar = (int) (0.5+conc*100);
     x[index].count = 1;
   }
@@ -266,8 +256,8 @@ void append(grid2<ssmi_tmp> &x, int index, float t19v, float t19h, float t22v, f
     x[index].t22v += (unsigned int) (0.5+t22v*100);
     x[index].t37v += (unsigned int) (0.5+t37v*100);
     x[index].t37h += (unsigned int) (0.5+t37h*100);
-    x[index].t85v += (unsigned int) (0.5+t85v*100);
-    x[index].t85h += (unsigned int) (0.5+t85h*100);
+    x[index].t92v += (unsigned int) (0.5+t92v*100);
+    x[index].t92h += (unsigned int) (0.5+t92h*100);
     x[index].count += 1;
   }
 

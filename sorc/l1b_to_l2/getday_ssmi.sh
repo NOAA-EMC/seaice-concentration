@@ -9,9 +9,9 @@ PM=${PM:-12}
 EXDIR=${EXDIR:-.}
 OUTDIR=${OUTDIR:-/u/Robert.Grumbine/noscrub/l2}
 
-module load EnvVars/1.0.3 ips/19.0.5.281 impi/19.0.5
-module load bufr/11.3.1 NetCDF/4.5.0 w3nco/2.2.0
-module load dumpjb/5.1.0 bufr_dumplist/2.3.0
+#module load EnvVars/1.0.3 ips/19.0.5.281 impi/19.0.5
+#module load bufr/11.3.1 NetCDF/4.5.0 w3nco/2.2.0
+#module load dumpjb/5.1.0 bufr_dumplist/2.3.0
 #env | grep -i dcom > ~/dcoms
 
 set -x

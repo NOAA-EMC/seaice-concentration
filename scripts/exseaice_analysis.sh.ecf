@@ -85,6 +85,9 @@ msg="HAS BEGUN!"
 postmsg "$jlogfile" "$msg"
 ########################################
 
+mailbody=mailbody.txt
+rm -f $mailbody
+
 #----------------------------------------------------------
 # noice, imsice -- for disaster preparedness
 #   noice  --> make field for case there is no ice information at all
@@ -113,26 +116,50 @@ fi
 
 export pgm=dumpjb1
 . prep_step
-#$NWROOTprod/obsproc_dump.${obsproc_dump_ver}/ush/dumpjb ${PDY}00 12 ssmit
 
 echo trying to execute $USHobsproc_dump/dumpjb ${PDY}00 12 ssmit
 $USHobsproc_dump/dumpjb ${PDY}00 12 ssmit
-export err=$?;err_chk
+export err=$?
+if [ $err -ne 0 ] ; then
+  msg="WARNING:  Continuing without ssmit data"
+  postmsg "$jlogfile" "$msg"
+  echo "********************************************************************" >> $mailbody
+  echo "*** WARNING:  dumpjb returned status $err.  Continue without ssmit. " >> $mailbody
+  echo "********************************************************************" >> $mailbody
+fi
 touch ssmit.ibm # ensures that file exists in rare event that dump is empty
 
 export pgm=dumpjb2
 . prep_step
-#$NWROOTprod/obsproc_dump.${obsproc_dump_ver}/ush/dumpjb ${PDY}00 12 ssmisu
 $USHobsproc_dump/dumpjb ${PDY}00 12 ssmisu
-export err=$?;err_chk
+export err=$?
+if [ $err -ne 0 ] ; then
+  msg="WARNING:  Continuing without ssmiu data"
+  postmsg "$jlogfile" "$msg"
+  echo "********************************************************************" >> $mailbody
+  echo "*** WARNING:  dumpjb returned status $err.  Continue without ssmisu." >> $mailbody
+  echo "********************************************************************" >> $mailbody
+fi
 touch ssmisu.ibm # ensures that file exists in rare event that dump is empty
 
 export pgm=dumpjb3
 . prep_step
-#$NWROOTprod/obsproc_dump.${obsproc_dump_ver}/ush/dumpjb ${PDY}00 12 amsr2
 $USHobsproc_dump/dumpjb ${PDY}00 12 amsr2
-export err=$?;err_chk
+export err=$?
+if [ $err -ne 0 ] ; then
+  msg="WARNING:  Continuing without amsr2"
+  postmsg "$jlogfile" "$msg"
+  echo "********************************************************************" >> $mailbody
+  echo "*** WARNING:  dumpjb returned status $err.  Continue without amsr2. " >> $mailbody
+  echo "********************************************************************" >> $mailbody
+fi
 touch amsr2.ibm # ensures that file exists in rare event that dump is empty
+
+# send email if any dumpjb calls returned non-zero status
+  if [ -s "$mailbody" ] ; then
+     subject="$job degraded due to missing data"
+     mail.py -s "$subject" < $mailbody
+  fi
 
 #----------------------------------------------------------
 #Process the bufr output into something readable
@@ -494,10 +521,10 @@ fi
 
 if [ $SENDCOM = "YES" ]
 then
-  cp wmonorthpsg.${PDY}.grb ${PCOMROOT}/mrf/seaice.t${cyc}z.wmonorthpsg.${job}
-  cp wmosouthpsg.${PDY}.grb ${PCOMROOT}/mrf/seaice.t${cyc}z.wmosouthpsg.${job}
-  $DBNROOT/bin/dbn_alert GRIB_LOW $NET $job  ${PCOMROOT}/mrf/seaice.t${cyc}z.wmonorthpsg.${job}
-  $DBNROOT/bin/dbn_alert GRIB_LOW $NET $job  ${PCOMROOT}/mrf/seaice.t${cyc}z.wmosouthpsg.${job}
+  cp wmonorthpsg.${PDY}.grb ${WMOOUT}/seaice.t${cyc}z.wmonorthpsg.${job}
+  cp wmosouthpsg.${PDY}.grb ${WMOOUT}/seaice.t${cyc}z.wmosouthpsg.${job}
+  $DBNROOT/bin/dbn_alert GRIB_LOW $NET $job  ${WMOOUT}/seaice.t${cyc}z.wmonorthpsg.${job}
+  $DBNROOT/bin/dbn_alert GRIB_LOW $NET $job  ${WMOOUT}/seaice.t${cyc}z.wmosouthpsg.${job}
 fi
 
 echo completed the L2 and L3 analyses
@@ -771,8 +798,8 @@ $EXECseaice_analysis/seaice_edge fill5min.$PDY $FGLAND5MIN seaice_edge_${PDY}.km
 
   if [ $SENDCOM = "YES" ]
   then
-    cp wmoglobice.${PDY}.grb ${PCOMROOT}/mrf/seaice.t${cyc}z.wmoglobice.${job}
-    cp grib2_awips_seaice.t${cyc}z.5min.grb ${PCOMROOT}/mrf/grib2_awips_seaice.t${cyc}z.5min.grb
+    cp wmoglobice.${PDY}.grb ${WMOOUT}/seaice.t${cyc}z.wmoglobice.${job}
+    cp grib2_awips_seaice.t${cyc}z.5min.grb ${WMOOUT}/grib2_awips_seaice.t${cyc}z.5min.grb
   fi
 
   ##############################
@@ -781,8 +808,8 @@ $EXECseaice_analysis/seaice_edge fill5min.$PDY $FGLAND5MIN seaice_edge_${PDY}.km
   
   if [ $SENDDBN = "YES" ]
   then
-    $DBNROOT/bin/dbn_alert GRIB_LOW $NET $job ${PCOMROOT}/mrf/seaice.t${cyc}z.wmoglobice.${job}
-    $DBNROOT/bin/dbn_alert GRIB_LOW $NET $job ${PCOMROOT}/mrf/grib2_awips_seaice.t${cyc}z.5min.grb
+    $DBNROOT/bin/dbn_alert GRIB_LOW $NET $job ${WMOOUT}/seaice.t${cyc}z.wmoglobice.${job}
+    $DBNROOT/bin/dbn_alert GRIB_LOW $NET $job ${WMOOUT}/grib2_awips_seaice.t${cyc}z.5min.grb
   fi
 
 else

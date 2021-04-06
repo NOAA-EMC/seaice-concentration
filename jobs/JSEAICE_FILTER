@@ -23,15 +23,15 @@ cd $DATA
 export pgmout="OUTPUT.${pid}"
 
 export cycle=t${cyc}z
-export NET=omb
+export NET=${NET:-omb}
 
 #################################################
 # Specify job's execution areas (directory paths)
 #################################################
-export EXECseaice_analysis=$HOMEseaice_analysis/exec
-export FIXseaice_analysis=$HOMEseaice_analysis/fix
-export PARMseaice_analysis=$HOMEseaice_analysis/parm
-export USHseaice_analysis=$HOMEseaice_analysis/ush
+export EXECseaice_analysis=${EXECseaice_analysis:-$HOMEseaice_analysis/exec}
+export FIXseaice_analysis=${FIXseaice_analysis:-$HOMEseaice_analysis/fix}
+export PARMseaice_analysis=${PARMseaice_analysis:-$HOMEseaice_analysis/parm}
+export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
 
 #########################################
 # Run setpdy and initialize PDY variables
@@ -42,12 +42,11 @@ if [ -z $PDY ] ; then
 fi
 echo FILTER pdy = $PDY
 
-export RUN=sice
-export COMIN=${COMROOT}/omb/${envir}/${RUN}.${PDY}
-export COMINm1=${COMROOT}/omb/${envir}/${RUN}.${PDYm1}
-export COMOUT=${COMROOT}/omb/${envir}/${RUN}.${PDY}
-export DCOM=$DCOMROOT/prod/$PDY
-echo DCOMROOT: $DCOMROOT
+export RUN=${RUN:-sice}
+export COMIN=${COMIN:-${COMROOT}/omb/${envir}/${RUN}.${PDY}}
+export COMINm1=${COMINm1:-${COMROOT}/omb/${envir}/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-${COMROOT}/omb/${envir}/${RUN}.${PDY}}
+export DCOM=${DCOM:-$DCOMROOT/prod/$PDY}
 
 mkdir -p $COMOUT
 env
@@ -61,5 +60,9 @@ err_chk
 #####################################
 
 cat $pgmout
+
+#if [ "$KEEPDATA" != "YES" ] ; then
+#  rm -rf $DATA
+#fi
 
 date

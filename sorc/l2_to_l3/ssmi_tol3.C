@@ -132,6 +132,9 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   int index;
   ncount.set( 0);
   scount.set( 0);
+  north.set( (float) 0.);
+  south.set( (float) 0.);
+
   for (i = 0; i < lenp; i++) {
     ll.lat = dlat[i];
     ll.lon = dlon[i];
@@ -139,21 +142,27 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
     if (ll.lat > 0) {
       locn = north.locate(ll);
       if (north.in(locn)) {
-        printf("in north %f %f  %3d %3d quality %d conc %f land %f\n",ll.lat, ll.lon, locn.i, locn.j, quality[i], conc[i], land_flag[i]);
-        // append(north, ntmp, tb_1-7, ice_conc, ...)
-        index = locn.i+locn.j*ntmp.xpoints();
-        append(ntmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t85v[i], t85h[i], conc[i]);
-        ncount[locn] += 1;
+        //debug printf("in north %f %f  %3d %3d quality %d conc %f land %f\n",
+        //  ll.lat, ll.lon, locn.i, locn.j, quality[i], conc[i], land_flag[i]);
+        if (quality[i] == 4 || quality[i] == 1) {
+          index = locn.i+locn.j*ntmp.xpoints();
+          append(ntmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t85v[i], t85h[i], conc[i]);
+          ncount[locn] += 1;
+          north[locn]  += conc[i] * 100.;
+        }
       }
     }
     else {
       locs = south.locate(ll);
       if (south.in(locs)) {
-        printf("in south %f %f  %3d %3d quality %d conc %f land %f\n",ll.lat, ll.lon, locs.i, locs.j, quality[i], conc[i], land_flag[i]);
-        // append(south, stmp, tb_1-7, ice_conc, ...)
-        index = locs.i+locs.j*stmp.xpoints();
-        append(stmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t85v[i], t85h[i], conc[i]);
-        scount[locs] += 1;
+        //debug printf("in south %f %f  %3d %3d quality %d conc %f land %f\n",
+        //  ll.lat, ll.lon, locs.i, locs.j, quality[i], conc[i], land_flag[i]);
+        if (quality[i] == 4 || quality[i] == 1) {
+          index = locs.i+locs.j*stmp.xpoints();
+          append(stmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t85v[i], t85h[i], conc[i]);
+          scount[locs] += 1;
+          south[locs]  += conc[i] * 100.;
+        }
       }
     }
   }
@@ -161,9 +170,34 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   printf("ncount max %d %d %d\n",ncount.gridmax(), ncount.gridmin(), ncount.average() );
   printf("scount max %d %d %d\n",scount.gridmax(), scount.gridmin(), scount.average() );
 
+  for (locn.j = 0; locn.j < north.ypoints(); locn.j++) {
+  for (locn.i = 0; locn.i < north.xpoints(); locn.i++) {
+    if (ncount[locn] != 0) {
+      north[locn] /= ncount[locn];
+    }
+    else {
+      north[locn] = 224.;
+    }
+  }
+  }
+  for (locs.j = 0; locs.j < south.ypoints(); locs.j++) {
+  for (locs.i = 0; locs.i < south.xpoints(); locs.i++) {
+    if (scount[locs] != 0) {
+      south[locs] /= scount[locs];
+    }
+    else {
+      south[locs] = 224.;
+    }
+  }
+  }
+  palette<unsigned char> gg(19,65);
+  north.xpm("n.xpm",7,gg);
+  south.xpm("s.xpm",7,gg);
+
 
   return;
 }
+// --------------------------------------------------------------------
 template <class T>
 void enter(mvector<T> &param, T *x) {
   for (int i = 0; i < param.xpoints(); i++) {

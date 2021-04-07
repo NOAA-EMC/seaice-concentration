@@ -39,7 +39,7 @@ seaice_psgnorth.fd/seaice_psgnorth12 \
 seaice_grib2.fd/seaice_grib2 \
 seaice_psgsouth.fd/seaice_psgsouth12 \
 seaice_psgnorth.fd/seaice_psgnorth \
-seaice_psgsouth.fd/seaice_psgsouth
+seaice_psgsouth.fd/seaice_psgsouth 
 do
   $cmd general/$ex ../exec
 done
@@ -53,4 +53,8 @@ avhrr/seaice_avhrrfilter.Cd/seaice_avhrrfilter \
 avhrr/seaice_avhrrbufr.fd/seaice_avhrrbufr \
 amsr2/seaice_iceamsr2.Cd/seaice_iceamsr2 \
 amsr2/seaice_amsrbufr.fd/seaice_amsrbufr \
+l1b_to_l2/ssmi_tol2 \
+l1b_to_l2/ssmisu_tol2 \
+l2_to_l3/ssmi_tol3 \
+l2_to_l3/ssmis_tol3 \
 ../exec

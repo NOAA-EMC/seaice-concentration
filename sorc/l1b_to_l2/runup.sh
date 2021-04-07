@@ -36,7 +36,7 @@ mkdir -p /gpfs/dell2/ptmp/wx21rg/runup.$x
 cd /gpfs/dell2/ptmp/wx21rg/runup.$x
 
 set -x
-while [ $PDY -le 20210331 ]
+while [ $PDY -le `date +"%Y%m%d"` ]
 do
 
   export DCOM=${DCOMROOT}/$RGTAG/$PDY

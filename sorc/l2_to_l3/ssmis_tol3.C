@@ -54,12 +54,12 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
 
 // open netcdf file:
   retval = nc_open(fname, NC_NOWRITE, &ncid); if (retval != 0) ERR(retval);
-  printf("ncid, retval = %d %d\n",ncid, retval); fflush(stdout);
+  //debug printf("ncid, retval = %d %d\n",ncid, retval); fflush(stdout);
 
 // find dimension:
   retval = nc_inq_dim(ncid, idp, obname, &lenp);
   if (retval != 0) ERR(retval);
-  printf("variable name and size: %s %ld\n",obname, lenp); fflush(stdout);
+  //debug printf("variable name and size: %s %ld\n",obname, lenp); fflush(stdout);
 
   float *fx;
   int *ix;
@@ -83,8 +83,8 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   retval = nc_get_var_double(ncid, varid, doublex); if (retval != 0) ERR(retval); 
   enter(dlon, doublex);
 
-  printf("lat range: %e %e\n",dlat.maximum(), dlat.minimum() );
-  printf("lon range: %e %e\n",dlon.maximum(), dlon.minimum() );
+  //debug printf("lat range: %e %e\n",dlat.maximum(), dlat.minimum() );
+  //debug printf("lon range: %e %e\n",dlon.maximum(), dlon.minimum() );
 
 // satid, quality, ignore dtg -- presumption of being taken care of already
   //retval = nc_inq_varid(ncid, "satid", &varid); if (retval != 0) ERR(retval);
@@ -116,7 +116,7 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   retval = nc_inq_varid(ncid, "tb_92H", &varid); if (retval != 0) ERR(retval);
   retval = nc_get_var_float(ncid, varid, fx); if (retval != 0) ERR(retval);
   enter(t92h, fx);
-  printf("t19v range: %e %e\n",t19v.maximum(), t19v.minimum() );
+  //debug printf("t19v range: %e %e\n",t19v.maximum(), t19v.minimum() );
 
 // concentration, land flag:
   retval = nc_inq_varid(ncid, "ice_concentration", &varid); if (retval != 0) ERR(retval); 
@@ -125,7 +125,7 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   retval = nc_inq_varid(ncid, "land_flag", &varid); if (retval != 0) ERR(retval);
   retval = nc_get_var_float(ncid, varid, fx); if (retval != 0) ERR(retval);
   enter(land_flag, fx);
-  printf("conc range: %e %e\n",conc.maximum(), conc.minimum() );
+  //debug printf("conc range: %e %e\n",conc.maximum(), conc.minimum() );
 
 // close when all info has been read in:
   retval = nc_close(ncid); if (retval != 0) ERR(retval);
@@ -208,9 +208,9 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   }
   printf("%d undefined points\n",undef);
 
-  palette<unsigned char> gg(19,65);
-  north.xpm("n.xpm",7,gg);
-  south.xpm("s.xpm",7,gg);
+  //debug palette<unsigned char> gg(19,65);
+  //debug north.xpm("n.xpm",7,gg);
+  //debug south.xpm("s.xpm",7,gg);
 
 
   return;

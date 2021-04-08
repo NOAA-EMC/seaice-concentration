@@ -3,7 +3,7 @@
 #BSUB -J aice_2021
 #BSUB -q "dev"
 #BSUB -P RTO-T2O
-#BSUB -W 7:59
+#BSUB -W 0:59
 # #BSUB -W 0:09
 #BSUB -o aice.%J
 #BSUB -e aice.%J
@@ -15,12 +15,14 @@
 #-----------------------------------------------------------------------------
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz loading modules zzzzzzzzzzzzzzzzzzzzzzz
 module purge
+module load EnvVars/1.0.3
 module load ips/19.0.5.281 impi/19.0.5
 module load prod_envir/1.1.0
 module load prod_util/1.1.5
 module load grib_util/1.1.1
 module load bufr_dumplist/2.3.0
 module load dumpjb/5.1.0
+module load imagemagick/6.9.9-25
 module list
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 

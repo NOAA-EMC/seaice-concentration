@@ -289,11 +289,24 @@ int l1b_to_l2(float *tb, int satno, float clat, float clon, float *concentration
      /* Rebuild for F15, different for F13, F14: */
      /* 19v, 85v, <  -0.090792151111545
         19h, 85h,  <  -0.1756696439150608
-     */
+        Early 2000's version
      i = 0; j = 5; under = true; crit =  -0.090792151111545;
      sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
      i = 0; j = 6; under = true; crit = -0.1756696439150608; 
      sum +=  waters(tb[i], tb[j], crit, under, concentration, qc, land);
+     */
+     /* Rebuild for F15, different for F13, F14: 
+        (t37v, t85v) < -0.08223462165004075)
+        (t37h, t85h) < -0.18216759628719753)
+        (t37v, t85h) < -0.05941281460150324)
+      8 April 2021
+     */
+     i = 3; j = 5; crit = -0.08223462165004075; under = true; 
+     sum += waters(tb[i], tb[j], crit, under, concentration, qc, land);
+     i = 4; j = 6; crit = -0.18216759628719753; under = true;
+     sum += waters(tb[i], tb[j], crit, under, concentration, qc, land);
+     i = 3; j = 6; crit = -0.05941281460150324; under = true;
+     sum += waters(tb[i], tb[j], crit, under, concentration, qc, land);
   }
   else {
      /* F13, F14: */
@@ -321,14 +334,14 @@ int l1b_to_l2(float *tb, int satno, float clat, float clon, float *concentration
 
 
 /* Land filters:
-     Rebuild for F15, different for F13, F14:
+     Rebuild for F15
      19v, 19h, < 0.018077900915434868
      19h, 37v, >  0.05150437355041504
 */
   if (satno == 15 || satno == 248) {
-     i = 0; j = 1; under = true; crit = 0.018077900915434868;
+     i = 0; j = 1; under = true; crit = 0.011795428064134385;
      sum +=  lands(tb[i], tb[j], crit, under, concentration, qc, land);
-     i = 1; j = 4; under = false; crit = 0.05150437355041504;
+     i = 3; j = 4; under = false; crit = 0.007027243122910009;
      sum +=  lands(tb[i], tb[j], crit, under, concentration, qc, land);
   }
   else {

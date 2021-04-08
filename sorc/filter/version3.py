@@ -24,8 +24,8 @@ def rg12th(lat, lon):
   firstlon = dlon/2.
   if (lon < 0):
     lon += 360.
-  j = round( (lat - firstlat)/dlat )
-  i = round( (lon - firstlon)/dlon )
+  j = int(round( (lat - firstlat)/dlat ))
+  i = int(round( (lon - firstlon)/dlon ))
   return (j,i)
 
 def delta(x,y):

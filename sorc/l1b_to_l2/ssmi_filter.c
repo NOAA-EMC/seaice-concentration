@@ -18,9 +18,10 @@ int lands (float tb1, float tb2, float crit, bool under, float *concentration, i
 int tb_filter(float *tb, float *concentration, int *flag, int satno) {
 
 /* Derived from F15: (50 or 315 are approx ignore) */
-                      /* 19v  19h   22v   37v   37h   85v   85h */
-  float hot_f15[NFREQS]  = {264., 252., 315., 262., 251., 272., 264.} ; 
-  float cold_f15[NFREQS] = {175.,  96.,  50.,  50., 126., 153., 147.};
+                          /* 19v  19h   22v   37v   37h   85v   85h */
+  float hot_f15[NFREQS]  = {268., 259., 315., 265., 257., 264., 264.} ; 
+  float cold_f15[NFREQS] = {175.,  96.,  50., 184., 126., 163., 156.};
+
 /* For F13, F14: */
   float hot_f13[NFREQS]  = {270., 263., 270., 267., 262., 270., 263.} ; 
   float cold_f13[NFREQS] = {176.,  50., 185., 195.,  50., 184., 174.};

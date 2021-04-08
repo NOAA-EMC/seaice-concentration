@@ -158,7 +158,8 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
       if (north.in(locn)) {
         //debug printf("in north %f %f  %3d %3d quality %d conc %f land %f\n",
         //  ll.lat, ll.lon, locn.i, locn.j, quality[i], conc[i], land_flag[i]);
-        if (quality[i] == 4 || quality[i] == 1) {
+        //if (quality[i] == 4 || quality[i] == 1) {
+        if (quality[i] == 1) {
           index = locn.i+locn.j*ntmp.xpoints();
           append(ntmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t85v[i], t85h[i], conc[i]);
           ncount[locn] += 1;
@@ -171,7 +172,8 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
       if (south.in(locs)) {
         //debug printf("in south %f %f  %3d %3d quality %d conc %f land %f\n",
         //  ll.lat, ll.lon, locs.i, locs.j, quality[i], conc[i], land_flag[i]);
-        if (quality[i] == 4 || quality[i] == 1) {
+        //if (quality[i] == 4 || quality[i] == 1) {
+        if (quality[i] == 1) {
           index = locs.i+locs.j*stmp.xpoints();
           append(stmp, index, t19v[i], t19h[i], t22v[i], t37v[i], t37h[i], t85v[i], t85h[i], conc[i]);
           scount[locs] += 1;

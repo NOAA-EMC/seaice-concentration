@@ -41,7 +41,11 @@ seaice_psgsouth.fd/seaice_psgsouth12 \
 seaice_psgnorth.fd/seaice_psgnorth \
 seaice_psgsouth.fd/seaice_psgsouth 
 do
-  $cmd general/$ex ../exec
+  if [ -f general/$ex ] ; then
+    $cmd general/$ex ../exec
+  else
+    echo could not find $ex ERROR
+  fi
 done
 
 $cmd \

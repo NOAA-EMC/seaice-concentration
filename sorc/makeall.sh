@@ -22,9 +22,9 @@ else
 #on a system with module software, such as wcoss
   module purge
   module use `pwd`/modulefiles
-  module load seaice_analysis/4.3.0
+  module load seaice_analysis/4.4.0
   if [ $? -ne 0 ] ; then
-    echo some problem trying to load seaice_analysis/4.3.0
+    echo some problem trying to load seaice_analysis/4.4.0
     #NCO Compilation modules
     module load EnvVars/1.0.3 ips/19.0.5.281  impi/19.0.5
     #NCO build libraries for grib, bufr, ...
@@ -35,6 +35,7 @@ else
     module load g2/3.2.0
     module load zlib/1.2.11
     module load bufr/11.3.1
+    module load NetCDF/4.5.0
 
   fi
   module list
@@ -55,6 +56,7 @@ fi
 export mmablib_ver=${MMAB_VER:-v3.5.0}
 
 set -xe
+#set -x
 
 . ../versions/seaice_analysis.ver
 
@@ -70,3 +72,6 @@ if [ ! -d ../exec ] ; then
   mkdir ../exec
 fi
 ./toexec cp
+
+#clean up
+rm */makeall.mk

@@ -1,6 +1,7 @@
 #!/bin/sh
 
-set -xae
+#set -xae
+set -xa
 # #### 31 March 2015 ******************************
 # SETUP AVHRR DATA RETRIEVAL for SEAICE CONCENTRATION ANALYSIS filter
 # ###########################################
@@ -43,9 +44,9 @@ fi
 echo FILTER pdy = $PDY
 
 export RUN=${RUN:-sice}
-export COMIN=${COMIN:-${COMROOT}/omb/${envir}/${RUN}.${PDY}}
-export COMINm1=${COMINm1:-${COMROOT}/omb/${envir}/${RUN}.${PDYm1}}
-export COMOUT=${COMOUT:-${COMROOT}/omb/${envir}/${RUN}.${PDY}}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+export COMINm1=${COMINm1:-${COMROOT}/${NET}/${envir}/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export DCOM=${DCOM:-$DCOMROOT/prod/$PDY}
 
 mkdir -p $COMOUT

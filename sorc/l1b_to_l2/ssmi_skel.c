@@ -233,9 +233,9 @@ void ssmiout_nc_
 
       *nwrites += 1;
     }
-    else {
-      printf("nerr = %d\n",nerr);
-    }
+    /* else {
+    debug  printf("nerr = %d\n",nerr);
+    } */
   }
 
  return;

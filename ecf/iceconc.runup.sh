@@ -30,12 +30,12 @@ echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 #NCO refers to these as 'job card' variables
 set -x
 
-tagm=20210405
-tag=20210406
-end=20210408
+tagm=20210408
+tag=20210409
+end=20210409
 
 export HOMEbase=/u/Robert.Grumbine/rgdev
-export seaice_analysis_ver=v4.3.0
+export seaice_analysis_ver=v4.4.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 cd $HOMEseaice_analysis/ecf

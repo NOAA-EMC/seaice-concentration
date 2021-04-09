@@ -26,7 +26,7 @@ set -xe
 #NCO refers to these as 'job card' variables
 
 export HOMEbase=/u/Robert.Grumbine/rgdev
-export seaice_analysis_ver=v4.3.0
+export seaice_analysis_ver=v4.4.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 cd $HOMEseaice_analysis/ecf/

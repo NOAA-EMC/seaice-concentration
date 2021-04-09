@@ -21,9 +21,10 @@ if [ $? -ne 0 ] ; then
 else
 #on a system with module software, such as wcoss
   module purge
-  module --ignore-cache load "./seaice_analysis.modulefile"
+  module use `pwd`/modulefiles
+  module load seaice_analysis/4.3.0
   if [ $? -ne 0 ] ; then
-    echo some problem trying to load ./seaice_analysis.modulefile
+    echo some problem trying to load seaice_analysis/4.3.0
     #NCO Compilation modules
     module load EnvVars/1.0.3 ips/19.0.5.281  impi/19.0.5
     #NCO build libraries for grib, bufr, ...
@@ -57,11 +58,15 @@ set -xe
 
 . ../versions/seaice_analysis.ver
 
-for d in general amsr2 ssmi ssmis avhrr 
+for d in general amsr2 ssmi ssmis avhrr l1b_to_l2 l2_to_l3
 do
   cp makeall.mk $d
   cd $d
   ./makeall.sh
   cd ..
 done
+
+if [ ! -d ../exec ] ; then
+  mkdir ../exec
+fi
 ./toexec cp

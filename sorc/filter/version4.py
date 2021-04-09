@@ -6,90 +6,55 @@ import netCDF4
 from netCDF4 import Dataset
 
 #----------------------------------------------
-def oiv2(lat, lon):
-  dlat = 0.25
-  dlon = 0.25
-  firstlat = -89.875
-  firstlon = 0.125
-  if (lon < 0):
-    lon += 360.
-  j = round( (lat - firstlat)/dlat )
-  i = round( (lon - firstlon)/dlon )
-  return (j,i)
-
-def rg12th(lat, lon):
-  dlat = -1./12.
-  dlon = 1./12.
-  firstlat = 90. - dlat/2.
-  firstlon = dlon/2.
-  if (lon < 0):
-    lon += 360.
-  j = int(round( (lat - firstlat)/dlat ))
-  i = int(round( (lon - firstlon)/dlon ))
-  return (j,i)
-
-def delta(x,y):
-  return (x-y)/(x+y)
-
+from tools import *
 #----------------------------------------------
-#matchup :
-#longitude, latitude, quality, land, icec; 
-#    ice_land, ice_post, ice_distance; sst, ice_sst
-class match:
+## Define utilities for doing the assessment:
 
-  def __init__(self, satid=248, latitude = 95., longitude = 95., icec = 95., land = 95, quality = 95, ice_land = 95, ice_post = 95, ice_distance = 95., sst = 95., ice_sst = 95.):
-    self.satid = satid
-    self.latitude = latitude
-    self.longitude = longitude
-    self.icec = icec
-    self.land = land
-    self.quality = quality
-    self.ice_land = 95
-    self.ice_post = 95
-    self.ice_distance = 95.
-    self.sst = 95.
-    self.ice_sst = 95.
-    self.tb = np.zeros((7))
-    #print("done with init", flush=True)
+def bayes(xvec, xcrit, label, unknown, fout = sys.stdout ):
+  warm = ma.masked_array(xvec > xcrit)
+  warm = ma.logical_and(warm, unknown)
+  nwarm = len(warm.nonzero()[0]) 
+  lmask = np.logical_and(landmask, warm)
+  imask = np.logical_and(icemask, warm)
+  omask = np.logical_and(watermask, warm)
+  pwarm = float(nwarm)/float(nobs)
+  pover_land  = len(lmask.nonzero()[0])/nlandpts
+  pover_water = len(omask.nonzero()[0])/nwaterpts
+  pover_ice   = len(imask.nonzero()[0])/nicepts
+  if (pwarm > 0):
+    print(label, "hot ", xcrit,
+      "{:5.3f}".format(pover_ice * pice / pwarm) ,
+      "{:5.3f}".format(pover_land * pland / pwarm) ,
+      "{:5.3f}".format(pover_water * pwater / pwarm), nwarm, file = fout )
 
-  def show(self, fout = sys.stdout):
-    print(satid, "{:9.4f}".format(self.longitude), "{:8.4f}".format(self.latitude), 
-               "{:.2f}".format(self.icec), "{:.2f}".format(self.land), self.quality, 
-          "{:3d}".format(self.ice_land), "{:3d}".format(self.ice_post), 
-                   "{:7.2f}".format(self.ice_distance), 
-          "  ", "{:.2f}".format(self.sst), "{:.2f}".format(self.ice_sst), 
-          "  ", "{:6.2f}".format(self.tb[0]),
-           "{:6.2f}".format(self.tb[1]),
-           "{:6.2f}".format(self.tb[2]),
-           "{:6.2f}".format(self.tb[3]),
-           "{:6.2f}".format(self.tb[4]),
-           "{:6.2f}".format(self.tb[5]),
-           "{:6.2f}".format(self.tb[6]),
-          file=fout)
+  cold = ma.masked_array(xvec < xcrit)
+  cold = ma.logical_and(cold, unknown)
+  ncold = len(cold.nonzero()[0]) 
+  lmask = np.logical_and(landmask, cold)
+  imask = np.logical_and(icemask, cold)
+  omask = np.logical_and(watermask, cold)
+  pcold = float(ncold)/float(nobs)
+  pover_land  = len(lmask.nonzero()[0])/nlandpts
+  pover_water = len(omask.nonzero()[0])/nwaterpts
+  pover_ice   = len(imask.nonzero()[0])/nicepts
+  if (pcold > 0):
+    print(label,"cold ",xcrit,
+      "{:5.3f}".format(pover_ice * pice / pcold) ,
+      "{:5.3f}".format(pover_land * pland / pcold) ,
+      "{:5.3f}".format(pover_water * pwater / pcold), ncold, file = fout )
 
-  def add_tb(self, tb):
-    for i in range (0,7):
-      self.tb[i] = tb[i]
+def dr(x, y, label, unknown, fout = sys.stdout):
+  ratio = delta(x,y)
+  tc = np.linspace(ratio.min(), ratio.max(), num=100)
+  for i in range(0,len(tc)):
+    bayes(ratio, tc[i], label, unknown, fout)
+  del ratio
 
-  def add_oiv2(self, sst, ice_sst):
-    j,i = oiv2(self.latitude, self.longitude)
-    self.sst = sst[j,i]
-    self.ice_sst = ice_sst[j,i]
-
-  def add_icefix(self, ice_land, ice_post, ice_distance):
-    j,i = rg12th(self.latitude, self.longitude)
-    self.ice_land = ice_land[j,i]
-    self.ice_post = ice_post[j,i]
-    self.ice_distance = ice_distance[j,i]
-
-  def __getitem__(self, i):
-    return(tb[i])
-
-###############################################################
-
+##----------------------------------------------
+#
 tb = np.zeros((7))
 
-icenc = Dataset('l2out.f248.51.nc', 'r', format='NETCDF4')
+icenc = Dataset(sys.argv[1], 'r', format='NETCDF4')
 nobs = len(icenc.dimensions["nobs"])
 print("nobs = ",nobs)
 longitude = np.zeros((nobs)) 
@@ -140,13 +105,6 @@ for k in range(0,npts):
   all[k].add_tb(tb)
 
 print("done reading in",flush=True)
-# create logical masks:
-#unknown = ma.masked_array(ice_land > -1) # unknown points, which starts as all of them
-unknown = ma.masked_array(satid != 248) # unknown points, which is anything not F15
-known = ma.logical_not(unknown)
-print("unknown, known lens: ",len(unknown.nonzero()[0]), len(known.nonzero()[0])  , flush=True)
-nobs = len(unknown.nonzero()[0])
-
 #exit(0)
 
 #----------------------------------------------
@@ -163,26 +121,36 @@ ice_latitude = np.zeros((nlats, nlons),dtype="double")
 ice_distance = np.zeros((nlats, nlons),dtype="float") 
 
 ice_land = np.zeros((nlats, nlons))
-ice_land      = icefix.variables["land"]     [:,:] 
+ice_land = icefix.variables["land"]     [:,:] 
 
 ice_post = np.zeros((nlats, nlons))
-ice_post      = icefix.variables["posteriori"][:,:] 
+ice_post = icefix.variables["posteriori"][:,:] 
 
 ice_longitude = icefix.variables["longitude"][:,:] 
 ice_latitude  = icefix.variables["latitude"] [:,:] 
 ice_distance  = icefix.variables["distance_to_land"][:,:] 
 ice_distance /= 1000.   #Convert to km
 
+#debug print("adding icefix to matchup", flush=True)
 for k in range(0,len(all)):
   all[k].add_icefix(ice_land, ice_post, ice_distance)
-
-print("done adding in ice fixed",flush=True)
+#debug print("done adding in ice fixed",flush=True)
 #exit(0)
+
+# create logical masks:
+unknown = ma.masked_array(satid > -1) # unknown points, which starts as all of them
+#unknown = ma.masked_array(satid != 248) # unknown points, which is anything not F15
+known = ma.logical_not(unknown)
+print("unknown, known lens: ",len(unknown.nonzero()[0]), len(known.nonzero()[0])  , flush=True)
+nobs = len(unknown.nonzero()[0])
+if (nobs == 0):
+  print("no observations to work with nobs npts: ",nobs, npts)
+  exit(1)
 
 #--------------------------------------------------------
 # Use SST from qdoi v2, including its sea ice cover
 #sstgrid = Dataset('avhrr-only-v2.20180228.nc', 'r', format='NETCDF4')
-sstgrid = Dataset('avhrr-only.nc', 'r', format='NETCDF4')
+sstgrid = Dataset(sys.argv[2], 'r', format='NETCDF4')
 sst_nlats = len(sstgrid.dimensions["lat"])
 sst_nlons = len(sstgrid.dimensions["lon"])
 
@@ -195,7 +163,8 @@ ice_sst   = sstgrid.variables["ice"][0,0,:,:]
 for k in range(0,len(all)):
   all[k].add_oiv2(sst, ice_sst)
 
-print("done adding in sst ",flush=True)
+#debug print("done adding in sst ",flush=True)
+#exit(0)
 #---------------------------------------------------------------------
 #------------- All collected now, print out : ----------
 #fout = open("all_tb","w")
@@ -217,17 +186,16 @@ for i in range(0,npts):
   icec[i] = all[i].ice_sst
   sst[i]  = all[i].sst
 
-
 #include coast points as being land (sidelobe issues)
 icemask   = ma.masked_array(icec > 0)
 landmask  = ma.masked_array(ice_land >= 157 )
 watermask = ma.masked_array(ice_land < 100)
-icemask = ma.logical_and(icemask, unknown)
-landmask = ma.logical_and(landmask, unknown)
+icemask   = ma.logical_and(icemask, unknown)
+landmask  = ma.logical_and(landmask, unknown)
 watermask = ma.logical_and(watermask, unknown)
 
 #Distinguish between water and ice-covered water
-not_ice = np.logical_not(icemask)
+not_ice   = np.logical_not(icemask)
 watermask = ma.logical_and(watermask, not_ice)
 
 # Get the indices of the 'true' points
@@ -250,83 +218,42 @@ pwater = nwaterpts/float(nobs)
 pland  = nlandpts/float(nobs)
 pice   = nicepts/float(nobs)
 
-# Define utilities for doing the assessment:
-
-def bayes(xvec, xcrit, label, unknown, fout = sys.stdout ):
-  warm = ma.masked_array(xvec > xcrit)
-  warm = ma.logical_and(warm, unknown)
-  nwarm = len(warm.nonzero()[0]) 
-  lmask = np.logical_and(landmask, warm)
-  imask = np.logical_and(icemask, warm)
-  omask = np.logical_and(watermask, warm)
-  pwarm = float(nwarm)/float(nobs)
-  pover_land  = len(lmask.nonzero()[0])/nlandpts
-  pover_water = len(omask.nonzero()[0])/nwaterpts
-  pover_ice   = len(imask.nonzero()[0])/nicepts
-  if (pwarm > 0):
-    print(label, "hot ", xcrit,
-      "{:5.3f}".format(pover_ice * pice / pwarm) ,
-      "{:5.3f}".format(pover_land * pland / pwarm) ,
-      "{:5.3f}".format(pover_water * pwater / pwarm), nwarm, file = fout )
-
-  cold = ma.masked_array(xvec < xcrit)
-  cold = ma.logical_and(cold, unknown)
-  ncold = len(cold.nonzero()[0]) 
-  lmask = np.logical_and(landmask, cold)
-  imask = np.logical_and(icemask, cold)
-  omask = np.logical_and(watermask, cold)
-  pcold = float(ncold)/float(nobs)
-  pover_land  = len(lmask.nonzero()[0])/nlandpts
-  pover_water = len(omask.nonzero()[0])/nwaterpts
-  pover_ice   = len(imask.nonzero()[0])/nicepts
-  if (pcold > 0):
-    print(label,"cold ",xcrit,
-      "{:5.3f}".format(pover_ice * pice / pcold) ,
-      "{:5.3f}".format(pover_land * pland / pcold) ,
-      "{:5.3f}".format(pover_water * pwater / pcold), ncold, file = fout )
-
-def dr(x, y, label, unknown, fout = sys.stdout):
-  ratio = delta(x,y)
-  tc = np.linspace(ratio.min(), ratio.max(), num=100)
-  for i in range(0,len(tc)):
-    bayes(ratio, tc[i], label, unknown, fout)
-  del ratio
-
 #----------------------------------------------------------------
 fout = open("round1","w")
 for thot in range (75, 315):
   bayes(t19v, thot, "t19v", unknown, fout)
   bayes(t19h, thot, "t19h", unknown, fout)
-  bayes(t22v, thot, "t22v", unknown, fout)
   bayes(t37v, thot, "t37v", unknown, fout)
   bayes(t37h, thot, "t37h", unknown, fout)
   bayes(t85v, thot, "t85v", unknown, fout)
   bayes(t85h, thot, "t85h", unknown, fout)
+#  bayes(t22v, thot, "t22v", unknown, fout)
 
 dr(t19v, t19h, "drt19vt19h", unknown, fout)
-dr(t19v, t22v, "drt19vt22v", unknown, fout)
 dr(t19v, t37v, "drt19vt37v", unknown, fout)
 dr(t19v, t37h, "drt19vt37h", unknown, fout)
 dr(t19v, t85v, "drt19vt85v", unknown, fout)
 dr(t19v, t85h, "drt19vt85h", unknown, fout)
-dr(t19h, t22v, "drt19ht22v", unknown, fout)
 dr(t19h, t37v, "drt19ht37v", unknown, fout)
 dr(t19h, t37h, "drt19ht37h", unknown, fout)
 dr(t19h, t85v, "drt19ht85v", unknown, fout)
 dr(t19h, t85h, "drt19ht85h", unknown, fout)
-dr(t22v, t37v, "drt22vt37v", unknown, fout)
-dr(t22v, t37h, "drt22vt37h", unknown, fout)
-dr(t22v, t85v, "drt22vt85v", unknown, fout)
-dr(t22v, t85h, "drt22vt85h", unknown, fout)
 dr(t37v, t37h, "drt37vt37h", unknown, fout)
 dr(t37v, t85v, "drt37vt85v", unknown, fout)
 dr(t37v, t85h, "drt37vt85h", unknown, fout)
 dr(t37h, t85v, "drt37ht85v", unknown, fout)
 dr(t37h, t85h, "drt37ht85h", unknown, fout)
 dr(t85v, t85h, "drt85vt85h", unknown, fout)
-fout.close()
+# 22v not usable from f15
+#dr(t19v, t22v, "drt19vt22v", unknown, fout)
+#dr(t19h, t22v, "drt19ht22v", unknown, fout)
+#dr(t22v, t37v, "drt22vt37v", unknown, fout)
+#dr(t22v, t37h, "drt22vt37h", unknown, fout)
+#dr(t22v, t85v, "drt22vt85v", unknown, fout)
+#dr(t22v, t85h, "drt22vt85h", unknown, fout)
 
-exit(0)
+fout.close()
+#exit(0)
 
 #----------------------------------------------------------------
 
@@ -338,49 +265,31 @@ exit(0)
 #Start with false everywhere and then 'or' in the trues:
 sland_mask  = ma.masked_array(t19h > 3000)
 swater_mask = ma.masked_array(t19h > 3000)
-sland_mask = ma.logical_or(sland_mask, known)
+sland_mask  = ma.logical_or(sland_mask, known)
 swater_mask = ma.logical_or(swater_mask, known)
 
-# tb filters, perfect not-ice, very good land:
-#hot side:
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19v > 270))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19h > 263))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t22v > 270))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t37v > 267))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t37h > 262))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85v > 270))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85h > 263))
-# Cold side:
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19v < 176))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t22v < 185))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t37v < 195))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85v < 184))
-sland_mask = ma.logical_or(sland_mask, ma.masked_array(t85h < 170))
-
-
-# dr filters, perfect not-ice, very good water:
-tmp = ma.masked_array(delta(t37v, t85v) <  -0.08223462165004075)
+# perfect not-ice, very good water:
+tmp = ma.masked_array(delta(t37v, t85v) < -0.08223462165004075)
 swater_mask = ma.logical_or(swater_mask, tmp)
-tmp = ma.masked_array(delta(t19v, t22v) <  -0.05371907187832736)
+tmp = ma.masked_array(delta(t37h, t85h) < -0.18216759628719753)
 swater_mask = ma.logical_or(swater_mask, tmp)
-tmp = ma.masked_array(delta(t37h, t85h) < -0.17385640469464386)
-swater_mask = ma.logical_or(swater_mask, tmp)
-tmp = ma.masked_array(delta(t19v, t85v) < -0.14244067066847677)
+tmp = ma.masked_array(delta(t37v, t85h) < -0.05941281460150324)
 swater_mask = ma.logical_or(swater_mask, tmp)
 
-#very good not-ice, very good water
-tmp = ma.masked_array(t19v >= 176 )
-tmp = ma.logical_and(tmp, t19v < 191)
-swater_mask = ma.logical_or(swater_mask, tmp)
-swater_mask = ma.logical_or(swater_mask, t19h < 126)
+# perfect not-ice, mixed land/water
+swater_mask = ma.logical_or(swater_mask, ma.masked_array(t85v > 264))
+swater_mask = ma.logical_or(swater_mask, ma.masked_array(t85h > 264))
 
-tmp = ma.masked_array(delta(t19v, t22v) <  -0.045881619056065914) #extends above
-swater_mask = ma.logical_or(swater_mask, tmp)
-tmp = ma.masked_array(delta(t19v, t37v) < -0.05464559974092431)
-swater_mask = ma.logical_or(swater_mask, tmp)
-tmp = ma.masked_array(delta(t19v, t85v) < -0.13226512947467844) #extends above
-swater_mask = ma.logical_or(swater_mask, tmp)
-
+# perfect not-ice, very good land:
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t37v > 265))
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t37h > 257))
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19v > 268))
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t19h > 259))
+tmp = ma.masked_array(delta(t19v, t19h) < 0.011795428064134385)
+sland_mask = ma.logical_or(sland_mask, tmp)
+tmp = ma.masked_array(delta(t37v, t37h) < 0.007027243122910009)
+sland_mask = ma.logical_or(sland_mask, tmp)
+sland_mask = ma.logical_or(sland_mask, ma.masked_array(t37v < 184))
 
 #satellite-based land mask
 sland_indices = sland_mask.nonzero()
@@ -418,73 +327,53 @@ print("after first pass, nobs, ice, land, water ",nobs, nicepts, nlandpts,
 #          but definitely not sea ice
 #    -- or next: finding a filter for 'is sea ice'
 #-----------------------------------------------
-#fout2 = open("tb2","w")
-#for i in range(0,nobs):
-#    all[unknown_indices[0][i] ].show(fout2)
-#fout2.close()
+fout2 = open("tb2","w")
+
+tmp = np.zeros((7,nobs))
+
+for i in range(0,nobs):
+    all[unknown_indices[0][i] ].show(fout2)
+    for j in range(0,7):
+      tmp[j,i] = all[unknown_indices[0][i] ].tb[j]
+
+for j in range (0,6):
+  for k in range (j+1,7):
+    print(j,k, np.corrcoef(tmp[j], tmp[k]) )
+
+fout2.close()
 #-----------------------------------------------
 
 fout = open("round2","w")
-for thot in range (125, 275):
+for thot in range (75, 315):
   bayes(t19v, thot, "t19v", unknown, fout)
   bayes(t19h, thot, "t19h", unknown, fout)
-  bayes(t22v, thot, "t22v", unknown, fout)
+#  bayes(t22v, thot, "t22v", unknown, fout)
   bayes(t37v, thot, "t37v", unknown, fout)
   bayes(t37h, thot, "t37h", unknown, fout)
   bayes(t85v, thot, "t85v", unknown, fout)
   bayes(t85h, thot, "t85h", unknown, fout)
 
 dr(t19v, t19h, "drt19vt19h", unknown, fout)
-dr(t19v, t22v, "drt19vt22v", unknown, fout)
 dr(t19v, t37v, "drt19vt37v", unknown, fout)
 dr(t19v, t37h, "drt19vt37h", unknown, fout)
 dr(t19v, t85v, "drt19vt85v", unknown, fout)
 dr(t19v, t85h, "drt19vt85h", unknown, fout)
-dr(t19h, t22v, "drt19ht22v", unknown, fout)
 dr(t19h, t37v, "drt19ht37v", unknown, fout)
 dr(t19h, t37h, "drt19ht37h", unknown, fout)
 dr(t19h, t85v, "drt19ht85v", unknown, fout)
 dr(t19h, t85h, "drt19ht85h", unknown, fout)
-dr(t22v, t37v, "drt22vt37v", unknown, fout)
-dr(t22v, t37h, "drt22vt37h", unknown, fout)
-dr(t22v, t85v, "drt22vt85v", unknown, fout)
-dr(t22v, t85h, "drt22vt85h", unknown, fout)
 dr(t37v, t37h, "drt37vt37h", unknown, fout)
 dr(t37v, t85v, "drt37vt85v", unknown, fout)
 dr(t37v, t85h, "drt37vt85h", unknown, fout)
 dr(t37h, t85v, "drt37ht85v", unknown, fout)
 dr(t37h, t85h, "drt37ht85h", unknown, fout)
 dr(t85v, t85h, "drt85vt85h", unknown, fout)
+# 22v not usable from F15, but is otherwise
+#dr(t19v, t22v, "drt19vt22v", unknown, fout)
+#dr(t19h, t22v, "drt19ht22v", unknown, fout)
+#dr(t22v, t37v, "drt22vt37v", unknown, fout)
+#dr(t22v, t37h, "drt22vt37h", unknown, fout)
+#dr(t22v, t85v, "drt22vt85v", unknown, fout)
+#dr(t22v, t85h, "drt22vt85h", unknown, fout)
 
 fout.close() 
-#
-#----------------------------------------------------------------
-from algorithms import *
-
-#tie points -- added to algorithms
-
-fout = open("unknown","w")
-
-for k in range(0,len(unknown_indices[0])):
-  i = unknown_indices[0][k]
-  x = all[unknown_indices[0][k]]
-  if (x.latitude > 0):
-    CT = nasa(t19v[i], t19h[i], t37v[i], tiepts_nh)
-  else:
-    CT = nasa(t19v[i], t19h[i], t37v[i], tiepts_sh)
-  CT=min(1.,CT)
-
-  print("{:9.4f}".format(x.longitude), "{:8.4f}".format(x.latitude),
-        "{:.2f}".format(x.land), 
-        "{:3d}".format(x.ice_land), "{:3d}".format(x.ice_post),
-        "{:7.2f}".format(x.ice_distance),
-        "  ", "{:.2f}".format(x.sst), "{:.2f}".format(x.ice_sst),
-        "  ", "{:6.2f}".format(x.tb[0]),
-           "{:6.2f}".format(x.tb[1]),
-           "{:6.2f}".format(x.tb[2]),
-           "{:6.2f}".format(x.tb[3]),
-           "{:6.2f}".format(x.tb[4]),
-           "{:6.2f}".format(x.tb[5]),
-           "{:6.2f}".format(x.tb[6]),
-           CT, CT - x.ice_sst,
-          file=fout)

@@ -26,10 +26,10 @@ export NET=omb
 #################################################
 # Specify job's execution areas (directory paths)
 #################################################
-export EXECseaice_analysis=$HOMEseaice_analysis/exec
-export FIXseaice_analysis=$HOMEseaice_analysis/fix
-export PARMseaice_analysis=$HOMEseaice_analysis/parm
-export USHseaice_analysis=$HOMEseaice_analysis/ush
+export EXECseaice_analysis=${EXECseaice_analysis:-$HOMEseaice_analysis/exec}
+export FIXseaice_analysis=${FIXseaice_analysis:-$HOMEseaice_analysis/fix}
+export PARMseaice_analysis=${PARMseaice_analysis:-$HOMEseaice_analysis/parm}
+export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
 
 #########################################
 # Run setpdy and initialize PDY variables
@@ -37,21 +37,29 @@ export USHseaice_analysis=$HOMEseaice_analysis/ush
 setpdy.sh
 . ./PDY
 
-export RUN=sice
-export COMIN=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}
-export COMINm1=${COMROOT}/${NET}/${envir}/${RUN}.${PDYm1}
-export COMOUT=${COMROOT}/${NET}/${envir}/${RUN}.${PDY}
+export RUN=${RUN:-sice}
+export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+export COMINm1=${COMINm1:-${COMROOT}/${NET}/${envir}/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
+export WMOOUT=${WMOOUT:-${COMOUT}/wmo}
 
-export COMINsst=${COMINsst_base}/sst.${PDY}
-export COMINsstm1=${COMINsst_base}/sst.${PDYm1}
+#export COMINsst_base=${COMINsst_base:-$(compath.py gfs/prod/sst)}
+export COMINsst_base=`compath.py gfs/prod/sst`
+export COMINsst=${COMINsst:-${COMINsst_base}.${PDY}}
+export COMINsstm1=${COMINsstm1:-${COMINsst_base}.${PDYm1}}
+#
+#export COMINsst=${COMINsst_base}/sst.${PDY}
+#export COMINsstm1=${COMINsst_base}/sst.${PDYm1}
 
-export DCOM=$DCOMROOT/prod/$PDY
-export DCOMm1=$DCOMROOT/prod/$PDYm1
+export DCOM=${DCOM:-$DCOMROOT/prod/$PDY}
+export DCOMm1=${DCOMm1:-$DCOMROOT/prod/$PDYm1}
 
 #NCO request for this var to be defined in J
-export USHobsproc_dump=${HOMEobsproc_dump}/ush
+export HOMEobsproc_dump=${HOMEobsproc_dump:-$NWROOT/obsproc_dump.${obsproc_dump_ver}}
+export USHobsproc_dump=${USHobsproc_dump:-${HOMEobsproc_dump}/ush}
+export HOMEobsproc_shared_bufr_dumplist=${HOMEobsproc_shared_bufr_dumplist:-$NWROOT/obsproc_shared/bufr_dumplist.${obsproc_shared_bufr_dumplist_ver}}
 
-mkdir -p $COMOUT
+mkdir -p $COMOUT $WMOOUT
 env
 
 #####################################

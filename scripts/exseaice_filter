@@ -3,7 +3,10 @@
 #Parameters have been set up by J job
 #Robert Grumbine
 
-set -xe
+# Note that the analysis job can run without any contents in the output from this.
+# That is what the 'touch' at the end is ensuring.
+
+set -x
 
 #Note, tanks are:
   #export XLFUNIT_11=/dcom/us007003/$PDY/b012/xx012 -- navy SST tank

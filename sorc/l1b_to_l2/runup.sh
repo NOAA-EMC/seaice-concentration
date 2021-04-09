@@ -1,6 +1,6 @@
 #!/bin/bash --login
 #####
-#BSUB -J l2_2000
+#BSUB -J l2_2021
 #BSUB -q "dev"
 #BSUB -P RTO-T2O
 #BSUB -W 7:59
@@ -17,28 +17,32 @@
 export PDY=${PDY:-`date +"%Y%m%d"`}
 export HH=${HH:-00}
 export PM=${PM:-12}
-export DCOMROOT=/u/Robert.Grumbine/noscrub/legacy/
+export DCOMROOT=/u/Robert.Grumbine/noscrub/satellites/
 export RGTAG=prod
 export EXDIR=/u/Robert.Grumbine/rgdev/concentration/sorc/l1b_to_l2/
 export OUTDIR=/u/Robert.Grumbine/noscrub/l2
 
+echo starting on modules
 module load EnvVars/1.0.3 ips/19.0.5.281 impi/19.0.5
 module load bufr/11.3.1 NetCDF/4.5.0 w3nco/2.2.0
-module load dumpjb/5.1.0 bufr_dumplist/2.3.0
+module load bufr_dumplist/2.3.0
+module load dumpjb/5.1.0
+module list
 
-export PDY=20000101
+export PDY=20210201
 
 x=$$
 mkdir -p /gpfs/dell2/ptmp/wx21rg/runup.$x
 cd /gpfs/dell2/ptmp/wx21rg/runup.$x
 
 set -x
-while [ $PDY -le 20121231 ]
+while [ $PDY -le `date +"%Y%m%d"` ]
 do
 
   export DCOM=${DCOMROOT}/$RGTAG/$PDY
 
   time ${EXDIR}/getday_ssmi.sh
+  time ${EXDIR}/getday_ssmis.sh
 
   PDY=`expr $PDY + 1`
   PDY=`/u/Robert.Grumbine/bin/dtgfix3 $PDY`

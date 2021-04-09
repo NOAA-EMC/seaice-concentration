@@ -3,7 +3,7 @@
 #BSUB -J aice_2021
 #BSUB -q "dev"
 #BSUB -P RTO-T2O
-#BSUB -W 0:59
+#BSUB -W 2:59
 # #BSUB -W 0:09
 #BSUB -o aice.%J
 #BSUB -e aice.%J
@@ -30,9 +30,9 @@ echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 #NCO refers to these as 'job card' variables
 set -x
 
-tagm=20210402
-tag=20210403
-end=20210404
+tagm=20210405
+tag=20210406
+end=20210408
 
 export HOMEbase=/u/Robert.Grumbine/rgdev
 export seaice_analysis_ver=v4.3.0

@@ -38,9 +38,15 @@ export HOMEbase=/u/Robert.Grumbine/rgdev
 export seaice_analysis_ver=v4.4.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
-cd $HOMEseaice_analysis/ecf
-. ./jobcards
+#Use this to override system in favor of my archive:
+export DCOMROOT=/u/Robert.Grumbine/noscrub/satellites/
+export RGTAG=prod
+export my_archive=true
 
+cd $HOMEseaice_analysis/ecf
+
+export COMINsst_base=/u/Robert.Grumbine/noscrub/sst/prod/sst
+. ./jobcards
 
 if [ -z $obsproc_dump_ver ] ; then
   echo null obsproc_dump_ver
@@ -52,22 +58,17 @@ fi
 #DBN stuff -- now in jobcards
 ########################################################
 
-
 #--------------------------------------------------------------------------------------
 #The actual running of stuff
-
-#Use this to override system in favor of my archive:
-export DCOMROOT=/u/Robert.Grumbine/noscrub/satellites/
-export RGTAG=prod
-
-export PDY=20210201
 
 while [ $tag -le $end ]
 do
   export PDY=$tag
   export PDYm1=$tagm
 
-  export DCOM=${DCOMROOT}/$RGTAG/$PDY
+  if [ $my_archive == "true" ] ; then
+    export DCOM=${DCOMROOT}/$RGTAG/$PDY
+  fi
 
   export job=seaice_filter
   export DATA=$DATAROOT/${job}.${pid}

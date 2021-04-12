@@ -20,9 +20,7 @@ export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 export MODULEPATH_ROOT=/usrx/local/prod/modulefiles
 
-export COMINsst_base=`compath.py gfs`
-export COMINsst_base=${COMINsst_base}/prod/
-echo COMINsst_base = $COMINsst_base
+export COMINsst_base=${COMINsst_base:-`compath.py gfs`}
 
 #Important that these be after compaty.py
 export RUN_ENVIR=not_nco
@@ -52,7 +50,6 @@ else
   export SENDCOM=YES
 
   #export COMROOT=/u/Robert.Grumbine/noscrub/com/${NET}/${envir}
-  export COMINsst_base=/u/Robert.Grumbine/noscrub/sst/
 fi
 
 ########################################################

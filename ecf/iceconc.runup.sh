@@ -56,10 +56,18 @@ fi
 #--------------------------------------------------------------------------------------
 #The actual running of stuff
 
+#Use this to override system in favor of my archive:
+export DCOMROOT=/u/Robert.Grumbine/noscrub/satellites/
+export RGTAG=prod
+
+export PDY=20210201
+
 while [ $tag -le $end ]
 do
   export PDY=$tag
   export PDYm1=$tagm
+
+  export DCOM=${DCOMROOT}/$RGTAG/$PDY
 
   export job=seaice_filter
   export DATA=$DATAROOT/${job}.${pid}

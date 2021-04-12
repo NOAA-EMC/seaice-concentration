@@ -254,17 +254,24 @@ cp $FIXseaice_analysis/seaice_TBccark.tab .
 cp $FIXseaice_analysis/seaice_TBccant.tab .
 
 startmsg
-satno=248
-time $EXECseaice_analysis/seaice_seaissmi delta $FNLAND127 $FSLAND127 \
-           n3ssmi.$PDY s3ssmi.$PDY ssminorth12.$PDY ssmisouth12.$PDY \
-           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
+#satno=248
+#time $EXECseaice_analysis/seaice_seaissmi delta $FNLAND127 $FSLAND127 \
+#           n3ssmi.$PDY s3ssmi.$PDY ssminorth12.$PDY ssmisouth12.$PDY \
+#           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
 export err=$?;err_chk
 
 # New version:
+export pgm=ssmi_tol2
+. prep_step
 ln -sf ssmit.ibm fort.14
 $EXECseaice_analysis/ssmi_tol2 
+export err=$?;err_chk
 #produces l2out.f248.51.nc
+
+export pgm=ssmi_tol3
+. prep_step
 $EXECseaice_analysis/ssmi_tol3 l2out.f248.51.nc nmap.${PDY}.f15 smap.${PDY}.f15
+export err=$?;err_chk
 
 #----------------------------------------------------------
 # Run the analysis on the SSMI-S datafiles
@@ -289,27 +296,35 @@ cp $FIXseaice_analysis/seaice_TBccark.tab.ssmisu .
 cp $FIXseaice_analysis/seaice_TBccant.tab.ssmisu .
 echo ssmisu.bufr > delta
 
+#startmsg
+#satno=285
+#time $EXECseaice_analysis/seaice_seaissmis delta $FNLAND127 $FSLAND127 \
+#           n3ssmis.$PDY s3ssmis.$PDY ssmisnorth12.$PDY ssmissouth12.$PDY \
+#           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
+#export err=$?;err_chk
+#
+#startmsg
+#satno=286
+#time $EXECseaice_analysis/seaice_seaissmis delta $FNLAND127 $FSLAND127 \
+#           n3ssmis18.$PDY s3ssmis18.$PDY ssmisnorth1218.$PDY ssmissouth1218.$PDY \
+#           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
+#export err=$?;err_chk
+
+
+export pgm=ssmi_tol3
+. prep_step
 startmsg
-satno=285
-time $EXECseaice_analysis/seaice_seaissmis delta $FNLAND127 $FSLAND127 \
-           n3ssmis.$PDY s3ssmis.$PDY ssmisnorth12.$PDY ssmissouth12.$PDY \
-           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
-export err=$?;err_chk
-
-startmsg
-satno=286
-time $EXECseaice_analysis/seaice_seaissmis delta $FNLAND127 $FSLAND127 \
-           n3ssmis18.$PDY s3ssmis18.$PDY ssmisnorth1218.$PDY ssmissouth1218.$PDY \
-           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
-export err=$?;err_chk
-
-
 ln -sf ssmisu.ibm fort.11
 $EXECseaice_analysis/ssmisu_tol2 
 #produces l2out.f285.51.nc, l2out.f286.52.nc
+export err=$?;err_chk
 
+export pgm=ssmi_tol3
+. prep_step
+startmsg
 $EXECseaice_analysis/ssmisu_tol3 l2out.f285.51.nc nmap.${PDY}.f17 smap.${PDY}.f17
 $EXECseaice_analysis/ssmisu_tol3 l2out.f286.52.nc nmap.${PDY}.f18 smap.${PDY}.f18
+export err=$?;err_chk
 
 
 #----------------------------------------------------------
@@ -583,13 +598,13 @@ qc="false"
 echo qc, cominsst, cominsstm1:
 echo $qc $COMINsst $COMINsstm1
 
-if [ -s $COMINsst/rtgssthr_grb_0.083 ] ; then
-  cp $COMINsst/rtgssthr_grb_0.083 oned
+if [ -s $COMINsst/rtgssthr_grb_0.083.grib2 ] ; then
+  cp $COMINsst/rtgssthr_grb_0.083.grib2 oned
   qc="true"
 else
-  if [ -s $COMINsstm1/rtgssthr_grb_0.083 ]
+  if [ -s $COMINsstm1/rtgssthr_grb_0.083.grib2 ]
   then 
-    cp $COMINsstm1/rtgssthr_grb_0.083 oned
+    cp $COMINsstm1/rtgssthr_grb_0.083.grib2 oned
     qc="true"
   fi
 fi
@@ -615,7 +630,7 @@ then
   export pgm=seaice_filtanal
   . prep_step
 
-  $WGRIB oned | grep TMP | $WGRIB -i oned -o sst -nh -bin
+  $WGRIB2 oned | grep TMP | $WGRIB2 -i oned -order we:ns -bin sst 
   if [ ! -s sst ]
   then
     echo failed to get an sst field!

@@ -52,7 +52,7 @@ else
   export SENDCOM=YES
 
   #export COMROOT=/u/Robert.Grumbine/noscrub/com/${NET}/${envir}
-  #export COMINsst_base=/u/Robert.Grumbine/noscrub/com/gfs/prod
+  export COMINsst_base=/u/Robert.Grumbine/noscrub/sst/
 fi
 
 ########################################################

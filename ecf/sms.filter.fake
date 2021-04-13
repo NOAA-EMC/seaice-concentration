@@ -1,10 +1,11 @@
 #!/bin/sh
-set -xe
+#set -xe
+set -x
 
 #Set up something like ecf environment for calling J job
 export cyc=${cyc:-00}
 export envir=${envir:-developer}
-export seaice_analysis_ver=${seaice_analysis_ver:-v4.3.0}
+export seaice_analysis_ver=${seaice_analysis_ver:-v4.4.0}
 export job=${job:-seaice_filter}
 
 #Now call J job, which will call the ex

@@ -161,22 +161,26 @@ touch amsr2.ibm # ensures that file exists in rare event that dump is empty
      mail.py -s "$subject" < $mailbody
   fi
 
-#----------------------------------------------------------
-#Process the bufr output into something readable
-#----------------------------------------------------------
-
+#--------------------------------------------------------------------
+#Process the bufr output into something readable: bufr --> l1b
+#--------------------------------------------------------------------
 ##################Decode SSMI data
 export pgm=seaice_ssmibufr
 . prep_step
 
 ln -sf ssmit.ibm fort.14
-
 touch bufrout
-#ln -sf bufrout fort.51
 
 startmsg
 $EXECseaice_analysis/seaice_ssmibufr >> $pgmout 2> errfile
-export err=$?;err_chk
+export err=$?
+if [ $err -ne 0 ] ; then
+  msg="WARNING:  Continuing without ssmibufr"
+  postmsg "$jlogfile" "$msg"
+  echo "********************************************************************" >> $mailbody
+  echo "*** WARNING:  ssmibufr returned status $err.  Continue without ssmi " >> $mailbody
+  echo "********************************************************************" >> $mailbody
+fi
 
 echo bufrout > delta
 mv fort.51 bufrout
@@ -191,7 +195,14 @@ ln -sf ssmisu.ibm fort.11
 startmsg
 $EXECseaice_analysis/seaice_ssmisubufr >> $pgmout 2> errfile
 mv fort.51 ssmisu.bufr
-export err=$?;err_chk
+export err=$?
+if [ $err -ne 0 ] ; then
+  msg="WARNING:  Continuing without ssmisubufr"
+  postmsg "$jlogfile" "$msg"
+  echo "********************************************************************" >> $mailbody
+  echo "*** WARNING:  ssmisubufr returned status $err.  Continue without ssmisu " >> $mailbody
+  echo "********************************************************************" >> $mailbody
+fi
 
 ##################Decode AMSR2 data
 export pgm=seaice_amsrbufr
@@ -208,11 +219,20 @@ $EXECseaice_analysis/seaice_amsrbufr >> $pgmout 2> errfile
 mv fort.52 amsr2.bufr
 export err=$?;err_chk
 if [ $err -ne 0 ] ; then
-  echo exiting after amsrbufr error $err
-  exit
+  msg="WARNING:  Continuing without amsr2bufr"
+  postmsg "$jlogfile" "$msg"
+  echo "********************************************************************" >> $mailbody
+  echo "*** WARNING:  amsr2bufr returned status $err.  Continue without amsr2 " >> $mailbody
+  echo "********************************************************************" >> $mailbody
 fi
 
-#----------------------------------------------------------
+#---------------------------------------------------------------------
+# Translate from l1b to l2 in ssmi, ssmis
+# AMSR2 remains straight shot l1b to l3
+# Robert Grumbine 9 April 2021
+#---------------------------------------------------------------------
+
+#---------------------------------------------------------------------
 # Run the analysis on the files
 # Input files =  delta, $FIXseaice_analysis/seaice_nland127.map, $FIXseaice_analysis/seaice_sland127.map
 # Output files = n3ssmi.$PDY, s3ssmi.$PDY, ssminorth.$PDY, ssmisouth.$PDY
@@ -234,36 +254,23 @@ cp $FIXseaice_analysis/seaice_TBccark.tab .
 cp $FIXseaice_analysis/seaice_TBccant.tab .
 
 startmsg
-satno=248
-time $EXECseaice_analysis/seaice_seaissmi delta $FNLAND127 $FSLAND127 \
-           n3ssmi.$PDY s3ssmi.$PDY ssminorth12.$PDY ssmisouth12.$PDY \
-           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
+#satno=248
+#time $EXECseaice_analysis/seaice_seaissmi delta $FNLAND127 $FSLAND127 \
+#           n3ssmi.$PDY s3ssmi.$PDY ssminorth12.$PDY ssmisouth12.$PDY \
+#           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
 export err=$?;err_chk
 
-#----------------------------------------------------------
-# Run the L3 analysis on the AMSR files
-# Input files =  amsr.bufr, $FIXseaice_analysis/seaice_nland127.map, $FIXseaice_analysis/seaice_sland127.map
-# Output files = n3amsr.$PDY, s3amsr.$PDY, amsr2north.$PDY, amsr2south.$PDY
-#New 1 May 2009 -- amsre
-#New 16 Aug 2017 -- amsr2
-#----------------------------------------------------------
-#
-cp $FIXseaice_analysis/seaice_TBthark.tab.amsr2 .
-cp $FIXseaice_analysis/seaice_TBthant.tab.amsr2 .
-cp $FIXseaice_analysis/seaice_TBowark.tab.amsr2 .
-cp $FIXseaice_analysis/seaice_TBowant.tab.amsr2 .
-cp $FIXseaice_analysis/seaice_TBfyark.tab.amsr2 .
-cp $FIXseaice_analysis/seaice_TBfyant.tab.amsr2 .
-cp $FIXseaice_analysis/seaice_TBccark.tab.amsr2 .
-cp $FIXseaice_analysis/seaice_TBccant.tab.amsr2 .
-#
-#
-export pgm=seaice_iceamsr2
+# New version:
+export pgm=ssmi_tol2
 . prep_step
-startmsg
-time $EXECseaice_analysis/seaice_iceamsr2 amsr2.bufr $FNLAND127 $FSLAND127 \
-           namsr2.$PDY samsr2.$PDY amsr2north6.$PDY amsr2south6.$PDY \
-           $FGSHHS $FDIST >> $pgmout 2>errfile
+ln -sf ssmit.ibm fort.14
+$EXECseaice_analysis/ssmi_tol2 
+export err=$?;err_chk
+#produces l2out.f248.51.nc
+
+export pgm=ssmi_tol3
+. prep_step
+$EXECseaice_analysis/ssmi_tol3 l2out.f248.51.nc nmap.${PDY}.f15 smap.${PDY}.f15
 export err=$?;err_chk
 
 #----------------------------------------------------------
@@ -289,38 +296,82 @@ cp $FIXseaice_analysis/seaice_TBccark.tab.ssmisu .
 cp $FIXseaice_analysis/seaice_TBccant.tab.ssmisu .
 echo ssmisu.bufr > delta
 
+#startmsg
+#satno=285
+#time $EXECseaice_analysis/seaice_seaissmis delta $FNLAND127 $FSLAND127 \
+#           n3ssmis.$PDY s3ssmis.$PDY ssmisnorth12.$PDY ssmissouth12.$PDY \
+#           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
+#export err=$?;err_chk
+#
+#startmsg
+#satno=286
+#time $EXECseaice_analysis/seaice_seaissmis delta $FNLAND127 $FSLAND127 \
+#           n3ssmis18.$PDY s3ssmis18.$PDY ssmisnorth1218.$PDY ssmissouth1218.$PDY \
+#           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
+#export err=$?;err_chk
+
+
+export pgm=ssmi_tol3
+. prep_step
 startmsg
-satno=285
-time $EXECseaice_analysis/seaice_seaissmis delta $FNLAND127 $FSLAND127 \
-           n3ssmis.$PDY s3ssmis.$PDY ssmisnorth12.$PDY ssmissouth12.$PDY \
-           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
+ln -sf ssmisu.ibm fort.11
+$EXECseaice_analysis/ssmisu_tol2 
+#produces l2out.f285.51.nc, l2out.f286.52.nc
 export err=$?;err_chk
 
+export pgm=ssmi_tol3
+. prep_step
 startmsg
-satno=286
-time $EXECseaice_analysis/seaice_seaissmis delta $FNLAND127 $FSLAND127 \
-           n3ssmis18.$PDY s3ssmis18.$PDY ssmisnorth1218.$PDY ssmissouth1218.$PDY \
-           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
+$EXECseaice_analysis/ssmisu_tol3 l2out.f285.51.nc nmap.${PDY}.f17 smap.${PDY}.f17
+$EXECseaice_analysis/ssmisu_tol3 l2out.f286.52.nc nmap.${PDY}.f18 smap.${PDY}.f18
 export err=$?;err_chk
+
+
+#----------------------------------------------------------
+# Run the L1b --> L3 analysis on the AMSR files
+# Input files =  amsr.bufr, $FIXseaice_analysis/seaice_nland127.map, $FIXseaice_analysis/seaice_sland127.map
+# Output files = n3amsr.$PDY, s3amsr.$PDY, amsr2north.$PDY, amsr2south.$PDY
+#New 1 May 2009 -- amsre
+#New 16 Aug 2017 -- amsr2
+#----------------------------------------------------------
+#
+cp $FIXseaice_analysis/seaice_TBthark.tab.amsr2 .
+cp $FIXseaice_analysis/seaice_TBthant.tab.amsr2 .
+cp $FIXseaice_analysis/seaice_TBowark.tab.amsr2 .
+cp $FIXseaice_analysis/seaice_TBowant.tab.amsr2 .
+cp $FIXseaice_analysis/seaice_TBfyark.tab.amsr2 .
+cp $FIXseaice_analysis/seaice_TBfyant.tab.amsr2 .
+cp $FIXseaice_analysis/seaice_TBccark.tab.amsr2 .
+cp $FIXseaice_analysis/seaice_TBccant.tab.amsr2 .
+#
+#
+export pgm=seaice_iceamsr2
+. prep_step
+startmsg
+time $EXECseaice_analysis/seaice_iceamsr2 amsr2.bufr $FNLAND127 $FSLAND127 \
+           namsr2.$PDY samsr2.$PDY amsr2north6.$PDY amsr2south6.$PDY \
+           $FGSHHS $FDIST >> $pgmout 2>errfile
+export err=$?;err_chk
+
 
 #---------------------------------------------------------
-#
 # Blend the AMSRE, SSMI, SSMI-S ice concentration analyses
+#  -- supercollated L3
 # 
 # 27 July 2011: Modification, change umask to init in output names
 #               the posteriori filter will produce the umask files
 # 30 March 2012: use names directly (above), add ssmis
+#RG add amsr2 to blend 2017
 #---------------------------------------------------------
-#RG add amsr2 to blend
 
 export pgm=seaice_blend
 startmsg
-$EXECseaice_analysis/seaice_blend amsr2north6.$PDY ssminorth12.$PDY \
-                                  ssmisnorth12.$PDY ssmisnorth1218.$PDY \
-                                                initnorth12.$PDY \
-                       amsr2south6.$PDY ssmisouth12.$PDY ssmissouth12.$PDY \
-                                        ssmissouth1218.$PDY initsouth12.$PDY \
-                       $FNLAND127 $FSLAND127 noice.$PDY imseaice_analysis.$PDY >> $pgmout 2> errfile
+$EXECseaice_analysis/seaice_blend \
+  amsr2north6.$PDY nmap.${PDY}.f15 nmap.${PDY}.f17 nmap.${PDY}.f18 \
+    initnorth12.$PDY \
+  amsr2south6.$PDY smap.${PDY}.f15 smap.${PDY}.f17 smap.${PDY}.f18 \
+    initsouth12.$PDY \
+  $FNLAND127 $FSLAND127 noice.$PDY imseaice_analysis.$PDY >> $pgmout 2> errfile
 export err=$?;err_chk
 
 #----------- End of Blending process ---------------------
@@ -406,6 +457,11 @@ then
   cp ssmissouth1218.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmissouth1218
   cp amsr2north6.${PDY}   ${COMOUT}/seaice.t${cyc}z.amsr2north6.${PDY}
   cp amsr2south6.${PDY}   ${COMOUT}/seaice.t${cyc}z.amsr2south6.${PDY}
+#L2 ice files
+  cp l2out.* ${COMOUT}
+#L3 -- new
+  cp nmap.${PDY}.f1[578] ${COMOUT}
+  cp smap.${PDY}.f1[578] ${COMOUT}
 
   #Summary files 
   cp umasknorth12.$PDY  ${COMOUT}/seaice.t${cyc}z.umasknorth12
@@ -530,7 +586,7 @@ fi
 echo completed the L2 and L3 analyses
 
 #-----------------------------------------------------------
-# Construct the modeller's global sea ice grid
+# Construct the modeller's global sea ice grid -- L4
 #-----------------------------------------------------------
 # QC denotes whether or not it will be possible to produce the
 # SST-quality controlled sea ice grids for modellers.
@@ -542,13 +598,13 @@ qc="false"
 echo qc, cominsst, cominsstm1:
 echo $qc $COMINsst $COMINsstm1
 
-if [ -s $COMINsst/rtgssthr_grb_0.083 ] ; then
-  cp $COMINsst/rtgssthr_grb_0.083 oned
+if [ -s $COMINsst/rtgssthr_grb_0.083.grib2 ] ; then
+  cp $COMINsst/rtgssthr_grb_0.083.grib2 oned
   qc="true"
 else
-  if [ -s $COMINsstm1/rtgssthr_grb_0.083 ]
+  if [ -s $COMINsstm1/rtgssthr_grb_0.083.grib2 ]
   then 
-    cp $COMINsstm1/rtgssthr_grb_0.083 oned
+    cp $COMINsstm1/rtgssthr_grb_0.083.grib2 oned
     qc="true"
   fi
 fi
@@ -574,7 +630,7 @@ then
   export pgm=seaice_filtanal
   . prep_step
 
-  $WGRIB oned | grep TMP | $WGRIB -i oned -o sst -nh -bin
+  $WGRIB2 oned | grep TMP | $WGRIB2 -i oned -order we:ns -bin sst 
   if [ ! -s sst ]
   then
     echo failed to get an sst field!

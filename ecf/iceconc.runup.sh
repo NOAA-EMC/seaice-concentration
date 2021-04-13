@@ -23,6 +23,7 @@ module load grib_util/1.1.1
 module load bufr_dumplist/2.3.0
 module load dumpjb/5.1.0
 module load imagemagick/6.9.9-25
+module load lsf/10.1 #for internal job management, i.e., bkill
 module list
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 
@@ -30,17 +31,23 @@ echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 #NCO refers to these as 'job card' variables
 set -x
 
-tagm=20210405
-tag=20210406
-end=20210408
+tagm=20210408
+tag=20210409
+end=20210409
 
 export HOMEbase=/u/Robert.Grumbine/rgdev
-export seaice_analysis_ver=v4.3.0
+export seaice_analysis_ver=v4.4.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
-cd $HOMEseaice_analysis/ecf
-. ./jobcards
+#Use this to override system in favor of my archive:
+export DCOMROOT=/u/Robert.Grumbine/noscrub/satellites/
+export RGTAG=prod
+export my_archive=true
 
+cd $HOMEseaice_analysis/ecf
+
+export COMINsst_base=/u/Robert.Grumbine/noscrub/sst/prod/sst
+. ./jobcards
 
 if [ -z $obsproc_dump_ver ] ; then
   echo null obsproc_dump_ver
@@ -52,7 +59,6 @@ fi
 #DBN stuff -- now in jobcards
 ########################################################
 
-
 #--------------------------------------------------------------------------------------
 #The actual running of stuff
 
@@ -60,6 +66,10 @@ while [ $tag -le $end ]
 do
   export PDY=$tag
   export PDYm1=$tagm
+
+  if [ $my_archive == "true" ] ; then
+    export DCOM=${DCOMROOT}/$RGTAG/$PDY
+  fi
 
   export job=seaice_filter
   export DATA=$DATAROOT/${job}.${pid}

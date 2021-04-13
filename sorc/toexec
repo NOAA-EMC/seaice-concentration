@@ -41,7 +41,11 @@ seaice_psgsouth.fd/seaice_psgsouth12 \
 seaice_psgnorth.fd/seaice_psgnorth \
 seaice_psgsouth.fd/seaice_psgsouth 
 do
-  $cmd general/$ex ../exec
+  if [ -f general/$ex ] ; then
+    $cmd general/$ex ../exec
+  else
+    echo could not find $ex ERROR
+  fi
 done
 
 $cmd \
@@ -56,5 +60,5 @@ amsr2/seaice_amsrbufr.fd/seaice_amsrbufr \
 l1b_to_l2/ssmi_tol2 \
 l1b_to_l2/ssmisu_tol2 \
 l2_to_l3/ssmi_tol3 \
-l2_to_l3/ssmis_tol3 \
+l2_to_l3/ssmisu_tol3 \
 ../exec

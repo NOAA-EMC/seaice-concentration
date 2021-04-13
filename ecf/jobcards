@@ -3,7 +3,6 @@
 # Bring the various environment-sensitive definitions out of J jobs and to here:
 #NCO refers to these as 'job card' variables
 if [ -z $LMOD_FAMILY_COMPILER ] ; then
-  echo $LMOD_FAMILY_COMPILER
   module load ips/19.0.5.281 impi/19.0.5
   module load prod_envir/1.1.0
   module load prod_util/1.1.5
@@ -17,7 +16,6 @@ fi
 
 #set -xe
 set -x
-echo enter jobcards dcom $DCOMROOT $DCOM $PDY
 
 export HOMEbase=/u/Robert.Grumbine/rgdev
 export seaice_analysis_ver=v4.4.0
@@ -76,4 +74,3 @@ else
   fi
 fi
 ########################################################
-echo leave jobcards dcom $DCOMROOT $DCOM $PDY

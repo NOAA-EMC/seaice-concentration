@@ -23,6 +23,7 @@ module load grib_util/1.1.1
 module load bufr_dumplist/2.3.0
 module load dumpjb/5.1.0
 module load imagemagick/6.9.9-25
+module load lsf/10.1 #for internal job management, i.e., bkill
 module list
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 

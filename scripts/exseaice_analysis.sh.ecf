@@ -48,6 +48,7 @@ echo "          Oct 2004 - Convert to CCS Phase II "
 ########################################################################
 
 set -x
+echo entering ex script dcom $DCOMROOT $DCOM $PDY
 
 ### Definition of the Fix fields:
 export FNLAND=${FNLAND:-${FIXseaice_analysis}/seaice_nland.map}

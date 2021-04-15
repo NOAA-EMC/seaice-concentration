@@ -12,7 +12,7 @@
 #include "icessmis.h"
 #include "icegrids.h"
 
-void get_nc(char *fname, psgrid<float> &north, psgrid<float> &south);
+int get_nc(char *fname, psgrid<float> &north, psgrid<float> &south);
 void append(grid2<ssmis_tmp> &x, int index, float t19v, float t19h, float t22v, float t37v, float t37h, float t92v, float t92h, float conc) ;
 
 template <class T>
@@ -26,13 +26,21 @@ int main(int argc, char *argv[]) {
   southhigh<float> south;
   northhigh<unsigned char> nconc;
   southhigh<unsigned char> sconc;
+  int retcode;
 
 ///////// NETCDF gets ///////////////////////////////////////////
-  get_nc(argv[1], north, south);
+  retcode = get_nc(argv[1], north, south);
 
 //// write out the uchar maps:
-  conv(north, nconc);
-  conv(south, sconc);
+  if (retcode == 0) {
+    conv(north, nconc);
+    conv(south, sconc);
+  }
+  else {
+    nconc.set(224);
+    sconc.set(224);
+  }
+
   fout = fopen(argv[2], "w");
   nconc.binout(fout);
   fclose(fout);
@@ -45,7 +53,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
+int get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
 // For netcdf:
   int i, ncid, varid, retval;
   int idp;
@@ -60,6 +68,10 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   retval = nc_inq_dim(ncid, idp, obname, &lenp);
   if (retval != 0) ERR(retval);
   //debug printf("variable name and size: %s %ld\n",obname, lenp); fflush(stdout);
+  if (lenp == 0) {
+    printf("no data for SSMI-S l2 file %s, exiting\n",fname);
+    return 1;
+  } 
 
   float *fx;
   int *ix;
@@ -213,7 +225,7 @@ void  get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   //debug south.xpm("s.xpm",7,gg);
 
 
-  return;
+  return 0;
 }
 // --------------------------------------------------------------------
 template <class T>

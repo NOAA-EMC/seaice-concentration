@@ -20,20 +20,30 @@ set -x
 #Note that date is PDYm1 -- this gives full calendar day of data 
 if [ ! -f $COMOUT/land.$PDYm1 ] ; then
   echo working on land $PDYm1
-  ln -sf ${DCOMROOT}/prod/$PDY/b021/xx054 fort.11
-  touch fort.51
-  time $EXECseaice_analysis/seaice_avhrrbufr
-  cp fort.51 $COMOUT/land.$PDYm1
-  rm fort.51
+  if [ -f ${DCOMROOT}/prod/$PDY/b021/xx054 ] ; then
+    ln -sf ${DCOMROOT}/prod/$PDY/b021/xx054 fort.11
+    touch fort.51
+    time $EXECseaice_analysis/seaice_avhrrbufr
+    cp fort.51 $COMOUT/land.$PDYm1
+    rm fort.51
+  else
+    echo No avhrr 'land' file, continuing without it
+    touch $COMOUT/land.$PDYm1
+  fi
 fi
 
 if [ ! -f $COMOUT/seas.$PDYm1 ] ; then
   echo working on seas $PDYm1
-  ln -sf ${DCOMROOT}/prod/$PDY/b021/xx053 fort.11
-  time $EXECseaice_analysis/seaice_avhrrbufr 
-  touch fort.51
-  cp fort.51 $COMOUT/seas.$PDYm1
-  rm fort.51
+  if [ -f ${DCOMROOT}/prod/$PDY/b021/xx053 ] ; then
+    ln -sf ${DCOMROOT}/prod/$PDY/b021/xx053 fort.11
+    time $EXECseaice_analysis/seaice_avhrrbufr 
+    touch fort.51
+    cp fort.51 $COMOUT/seas.$PDYm1
+    rm fort.51
+  else
+    echo No avhrr 'seas' file, continuing without it
+    touch $COMOUT/seas.$PDYm1
+  fi
 fi
 
 if [ ! -f $COMOUT/land.$PDYm1 ] ; then

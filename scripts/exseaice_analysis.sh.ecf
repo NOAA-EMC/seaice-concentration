@@ -438,23 +438,23 @@ if [ $SENDCOM = "YES" ]
 then
   # Raw files -- L3 -- on per-instrument basis
 #L3 with tb etc.
-  cp n3ssmi.$PDY  ${COMOUT}/seaice.t${cyc}z.n3ssmi
-  cp s3ssmi.$PDY  ${COMOUT}/seaice.t${cyc}z.s3ssmi
-  cp n3ssmis.$PDY  ${COMOUT}/seaice.t${cyc}z.n3ssmis
-  cp s3ssmis.$PDY  ${COMOUT}/seaice.t${cyc}z.s3ssmis
-  cp n3ssmis18.$PDY  ${COMOUT}/seaice.t${cyc}z.n3ssmis18
-  cp s3ssmis18.$PDY  ${COMOUT}/seaice.t${cyc}z.s3ssmis18
+  #cp n3ssmi.$PDY  ${COMOUT}/seaice.t${cyc}z.n3ssmi
+  #cp s3ssmi.$PDY  ${COMOUT}/seaice.t${cyc}z.s3ssmi
+  #cp n3ssmis.$PDY  ${COMOUT}/seaice.t${cyc}z.n3ssmis
+  #cp s3ssmis.$PDY  ${COMOUT}/seaice.t${cyc}z.s3ssmis
+  #cp n3ssmis18.$PDY  ${COMOUT}/seaice.t${cyc}z.n3ssmis18
+  #cp s3ssmis18.$PDY  ${COMOUT}/seaice.t${cyc}z.s3ssmis18
   cp namsr2.${PDY}_hr ${COMOUT}/seaice.t${cyc}z.namsr2.${PDY}_hr
   cp namsr2.${PDY}_lr ${COMOUT}/seaice.t${cyc}z.namsr2.${PDY}_lr
   cp samsr2.${PDY}_hr ${COMOUT}/seaice.t${cyc}z.samsr2.${PDY}_hr
   cp samsr2.${PDY}_lr ${COMOUT}/seaice.t${cyc}z.samsr2.${PDY}_lr
 #L3 ice conc only
-  cp ssminorth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssminorth12
-  cp ssmisouth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmisouth12
-  cp ssmisnorth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmisnorth12
-  cp ssmissouth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmissouth12
-  cp ssmisnorth1218.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmisnorth1218
-  cp ssmissouth1218.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmissouth1218
+  #cp ssminorth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssminorth12
+  #cp ssmisouth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmisouth12
+  #cp ssmisnorth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmisnorth12
+  #cp ssmissouth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmissouth12
+  #cp ssmisnorth1218.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmisnorth1218
+  #cp ssmissouth1218.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmissouth1218
   cp amsr2north6.${PDY}   ${COMOUT}/seaice.t${cyc}z.amsr2north6.${PDY}
   cp amsr2south6.${PDY}   ${COMOUT}/seaice.t${cyc}z.amsr2south6.${PDY}
 #L2 ice files

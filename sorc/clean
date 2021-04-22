@@ -1,0 +1,55 @@
+#!/bin/sh
+
+find . -type f -name '*.o' -exec rm {} \;
+
+for ex in  \
+seaice_icegrid.Cd/seaice_icegrid \
+seaice_edge.Cd/seaice_edge \
+seaice_xpm.Cd/seaice_globalxpm \
+seaice_xpm.Cd/seaice_global5minxpm \
+seaice_xpm.Cd/seaice_southxpm \
+seaice_xpm.Cd/seaice_northxpm \
+seaice_reduce.Cd/seaice_global_reduce \
+seaice_xpm.Cd/seaice_south12xpm \
+seaice_xpm.Cd/seaice_north12xpm \
+seaice_blend.Cd/seaice_blend \
+seaice_posteriori.Cd/seaice_posteriori_30min.x \
+seaice_posteriori.Cd/seaice_posteriori_5min.x \
+seaice_reduce.Cd/seaice_south_reduce \
+seaice_reduce.Cd/seaice_north_reduce \
+seaice_reduce.Cd/seaice_south2_reduce \
+seaice_reduce.Cd/seaice_north2_reduce \
+seaice_monitor.Cd/seaice_monitor_c12th \
+seaice_regions.Cd/seaice_regions.south \
+seaice_regions.Cd/seaice_regions.north \
+seaice_regions.Cd/seaice_regions.southhigh \
+seaice_regions.Cd/seaice_regions.northhigh \
+seaice_filtanal.Cd/seaice_filtanal \
+seaice_imsice.Cd/imsice_gl \
+seaice_imsice.Cd/imsice \
+seaice_noice.Cd/noice \
+seaice_noice.Cd/noice_gl \
+seaice_ice2grib.fd/seaice_ice2grib \
+seaice_ice2grib.fd/seaice_ice2grib5min \
+seaice_psgnorth.fd/seaice_psgnorth12 \
+seaice_grib2.fd/seaice_grib2 \
+seaice_psgsouth.fd/seaice_psgsouth12 \
+seaice_psgnorth.fd/seaice_psgnorth \
+seaice_psgsouth.fd/seaice_psgsouth 
+do
+  if [ -f general/$ex ] ; then
+    rm general/$ex 
+  fi
+done
+
+rm \
+ssmis/seaice_ssmisubufr.fd/seaice_ssmisubufr \
+ssmi/seaice_ssmibufr.fd/seaice_ssmibufr \
+avhrr/seaice_avhrrfilter.Cd/seaice_avhrrfilter \
+avhrr/seaice_avhrrbufr.fd/seaice_avhrrbufr \
+amsr2/seaice_iceamsr2.Cd/seaice_iceamsr2 \
+amsr2/seaice_amsrbufr.fd/seaice_amsrbufr \
+l1b_to_l2/ssmi_tol2 \
+l1b_to_l2/ssmisu_tol2 \
+l2_to_l3/ssmi_tol3 \
+l2_to_l3/ssmisu_tol3 \

@@ -16,7 +16,8 @@ workdir="${DATA}/ICE_EDGE_VGF"
 mkdir ${workdir}
 cd ${workdir}
 
-sh ${utilscript}/setup.sh
+#XXW sh ${utilscript}/setup.sh
+setup.sh
 
 mdl=ice
 gdfile=$COMOUT/ice_${PDY}${cyc}

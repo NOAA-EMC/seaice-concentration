@@ -17,6 +17,9 @@ module load prod_util/1.1.5
 module load grib_util/1.1.1
 module load bufr_dumplist/2.3.0
 module load dumpjb/5.1.0
+module load NetCDF/4.5.0
+module load lsf/10.1
+
 module list
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 
@@ -26,7 +29,7 @@ set -xe
 #NCO refers to these as 'job card' variables
 
 export HOMEbase=/u/Robert.Grumbine/rgdev
-export seaice_analysis_ver=v4.3.0
+export seaice_analysis_ver=v4.4.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 cd $HOMEseaice_analysis/ecf/

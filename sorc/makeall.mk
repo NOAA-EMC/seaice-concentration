@@ -18,19 +18,20 @@ FOPTS=-c -O2 $(MMAB_INC)
 
 ##Home desk:
 #FC=gfortran
-###FOPTS=-c -std=f95 -O2 -I$(MMAB_INC) $(NETCDF_INCLUDE)
+#FOPTS=-c -std=f95 -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
+#FOPTS=-c -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
 
 FLD=$(FC)
 FLDFLAGS=
+
+CC=gcc
+COPTS=-c -ansi -O2 -DLINUX $(MMAB_INC) $(NETCDF_INCLUDE)
 
 CPP=g++
 #CPPOPTS= -c -ansi -Wall -O2 -DLINUX -DCPLUS -I$(MMAB_INC) $(NETCDF_INCLUDE)
 CPPOPTS= -c -ansi -Wall -O2 -DLINUX -DCPLUS $(MMAB_INC) $(NETCDF_INCLUDE)
 CPPLD=g++
 CPPLDFLAGS=-lombf_4 -lombc_4
-
-CC=gcc
-COPTS=-c -ansi -O2 -DLINUX $(MMAB_INC) $(NETCDF_INCLUDE)
 
 #Building elements
 %.o: %.C

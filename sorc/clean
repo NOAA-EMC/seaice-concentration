@@ -1,10 +1,6 @@
 #!/bin/sh
 
-export cmd='cp -p'
-if [ $# -ne 0 ] ; then
-  export cmd=$*
-fi
-echo $cmd
+find . -type f -name '*.o' -exec rm {} \;
 
 for ex in  \
 seaice_icegrid.Cd/seaice_icegrid \
@@ -42,16 +38,12 @@ seaice_psgnorth.fd/seaice_psgnorth \
 seaice_psgsouth.fd/seaice_psgsouth 
 do
   if [ -f general/$ex ] ; then
-    $cmd general/$ex ../exec
-  else
-    echo could not find $ex ERROR
+    rm general/$ex 
   fi
 done
 
-$cmd \
-ssmis/seaice_seaissmisu.cd/seaice_seaissmis \
+rm \
 ssmis/seaice_ssmisubufr.fd/seaice_ssmisubufr \
-ssmi/seaice_seaissmi.cd/seaice_seaissmi \
 ssmi/seaice_ssmibufr.fd/seaice_ssmibufr \
 avhrr/seaice_avhrrfilter.Cd/seaice_avhrrfilter \
 avhrr/seaice_avhrrbufr.fd/seaice_avhrrbufr \
@@ -61,4 +53,3 @@ l1b_to_l2/ssmi_tol2 \
 l1b_to_l2/ssmisu_tol2 \
 l2_to_l3/ssmi_tol3 \
 l2_to_l3/ssmisu_tol3 \
-../exec

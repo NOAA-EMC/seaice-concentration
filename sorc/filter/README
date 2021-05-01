@@ -1,0 +1,32 @@
+Sea ice fixed fields in netcdf
+
+The fields aren't narrated fully in the netcdf files themselves at this point.
+Contents are: 
+    5 arcmin lat-long grid
+    latitude, longitude of the grid cell centers, in double precision 
+        (nominally; it's actually single converted to double)
+    land mask flags (from seaice_gland5min, TN 301)
+    posteriori filters (from seaice_posteriori_5min; TN 282)
+    distance to land (in meters, Tech Note 301)
+
+Land Flag values:
+0   -- water
+157 -- land
+195 -- coast (a bounding curve runs through the grid cell)
+
+Posteriori flag values (temperatures are minimum observed in 30 years 9/1981 to 8/2011):
+2 -- ?
+158 -- Ocean > 26 C
+159 -- Ocean > 24 C
+160 -- Ocean > 22 C
+161 -- Ocean > 19 C
+162 -- Ocean > 15 C
+163 -- Ocean > 9 C
+164 -- Ocean > 2.15 C 275.3 K
+165 -- Ocean > -3 C
+170 -- Inland > 7 C
+171 -- Inland > 4 C
+172 -- Inland > 2.15 C
+173 -- Inland > 0 C
+174 -- Inland > -3 C
+224 -- undefined 

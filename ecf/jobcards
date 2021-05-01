@@ -1,27 +1,29 @@
 #!/bin/sh
 
-
 # Bring the various environment-sensitive definitions out of J jobs and to here:
 #NCO refers to these as 'job card' variables
-module load ips/19.0.5.281 impi/19.0.5
-module load prod_envir/1.1.0
-module load prod_util/1.1.5
-module load grib_util/1.1.1
-module load bufr_dumplist/2.3.0
-module load dumpjb/5.1.0
-module list
+if [ -z $LMOD_FAMILY_COMPILER ] ; then
+  module load ips/19.0.5.281 impi/19.0.5
+  module load prod_envir/1.1.0
+  module load prod_util/1.1.5
+  module load grib_util/1.1.1
+  module load bufr_dumplist/2.3.0
+  module load dumpjb/5.1.0
+  module load NetCDF/4.5.0
+  module load lsf/10.1
+  module list
+fi
 
-set -xe
+#set -xe
+set -x
 
 export HOMEbase=/u/Robert.Grumbine/rgdev
-export seaice_analysis_ver=v4.3.0
+export seaice_analysis_ver=v4.4.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 export MODULEPATH_ROOT=/usrx/local/prod/modulefiles
 
-export COMINsst_base=`compath.py gfs`
-export COMINsst_base=${COMINsst_base}/prod/
-echo COMINsst_base = $COMINsst_base
+export COMINsst_base=${COMINsst_base:-`compath.py gfs/prod/sst`}
 
 #Important that these be after compaty.py
 export RUN_ENVIR=not_nco
@@ -51,7 +53,6 @@ else
   export SENDCOM=YES
 
   #export COMROOT=/u/Robert.Grumbine/noscrub/com/${NET}/${envir}
-  #export COMINsst_base=/u/Robert.Grumbine/noscrub/com/gfs/prod
 fi
 
 ########################################################

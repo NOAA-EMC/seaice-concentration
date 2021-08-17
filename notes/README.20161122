@@ -1,0 +1,33 @@
+Super-brief guide to contents:
+
+Directories used/needed for/by operations:
+  3 Mar  4 05:00 parm/
+  5 Mar  4 05:00 gempak/
+  3 Aug 22 13:13 exec/
+  3 Aug 22 14:03 jobs/
+  3 Aug 22 15:24 fix/
+  9 Aug 22 15:24 sorc/
+  3 Aug 22 15:24 versions/
+  3 Aug 22 17:16 ush/
+  3 Aug 22 17:33 scripts/
+  3 Aug 23 13:18 ecf/
+
+Implementation and troubleshooting notes:
+  3 May 27 15:36 notes/
+
+
+For developer ---------------------------------------------------
+
+Science Notes
+ 13 May 31 13:19 reference/
+
+Developments that tend to need to be repeated:
+  3 Mar  4 05:00 weafilt/
+  3 Aug 18 11:39 patch2/
+  3 Aug 22 15:24 qclimits/
+
+Miscellaneous utilities used in diagnosing system results:
+  3 Aug 22 15:24 loose/
+
+Robert Grumbine 23 Aug 2016
+Update 22 Nov 2016

@@ -3,7 +3,7 @@
 include ../makeall.mk
 
 #Linux
-LIBS=$(MMAB_LIB) -lombc_4 -lombf_4 -lm
+LIBS=$(MMAB_LIB) $(MMAB_LIBF4) -lm
  
 #Should be no changes below this point---------------------------------
 seaice_seaissmis : ssmis.main.o

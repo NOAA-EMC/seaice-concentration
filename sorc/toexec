@@ -49,9 +49,7 @@ do
 done
 
 $cmd \
-ssmis/seaice_seaissmisu.cd/seaice_seaissmis \
 ssmis/seaice_ssmisubufr.fd/seaice_ssmisubufr \
-ssmi/seaice_seaissmi.cd/seaice_seaissmi \
 ssmi/seaice_ssmibufr.fd/seaice_ssmibufr \
 avhrr/seaice_avhrrfilter.Cd/seaice_avhrrfilter \
 avhrr/seaice_avhrrbufr.fd/seaice_avhrrbufr \

@@ -20,8 +20,8 @@ module load mmab/3.5.0
 
 ## setenv BASE /nwpara2/lib
 ##setenv BASE ~/para/mmablib/v3.5.0
-setenv BASE $MMAB_BASE
-setenv MMAB_LIB $MMAB_BASE
+#setenv BASE $MMAB_BASE
+#setenv MMAB_LIB $MMAB_BASE
 
 
 #NCO build libraries for grib, bufr, ...

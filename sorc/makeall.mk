@@ -3,17 +3,16 @@
 SHELL=/bin/sh
 
 #Demand that these be set in environment:
-#BASE=$(BASE)
+#MMAB_BASE=$(MMAB_BASE)
 #VER=$(MMAB_VER)
-MMAB_INC=-I $(BASE)/$(VER)/include/
-MMAB_LN=$(BASE)/$(VER)/include/
-MMAB_LIB=-L $(BASE)/$(VER)/
-MMAB_SRC=$(BASE)/$(VER)/sorc/
+#MMAB_INC=-I $(MMAB_BASE)/$(VER)/include/
+#MMAB_LIB=-L $(MMAB_BASE)/$(VER)/
+#MMAB_SRC=$(MMAB_BASE)/$(VER)/sorc/
 
 #------------------- should need no changes below here ------------------------
 #Compilers and their options
 FC=ifort
-FOPTS=-c -O2 $(MMAB_INC)
+FOPTS=-c -O2 -I $(MMAB_INC)
 #FOPTS=-c -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
 
 ##Home desk:
@@ -22,16 +21,16 @@ FOPTS=-c -O2 $(MMAB_INC)
 #FOPTS=-c -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
 
 FLD=$(FC)
-FLDFLAGS=
+FLDFLAGS=$(MMAB_LIBF4)
 
 CC=gcc
-COPTS=-c -ansi -O2 -DLINUX $(MMAB_INC) $(NETCDF_INCLUDE)
+COPTS=-c -ansi -O2 -DLINUX -I $(MMAB_INC) $(NETCDF_INCLUDE)
 
 CPP=g++
 #CPPOPTS= -c -ansi -Wall -O2 -DLINUX -DCPLUS -I$(MMAB_INC) $(NETCDF_INCLUDE)
-CPPOPTS= -c -ansi -Wall -O2 -DLINUX -DCPLUS $(MMAB_INC) $(NETCDF_INCLUDE)
+CPPOPTS= -c -ansi -Wall -O2 -DLINUX -DCPLUS -I $(MMAB_INC) $(NETCDF_INCLUDE)
 CPPLD=g++
-CPPLDFLAGS=-lombf_4 -lombc_4
+CPPLDFLAGS=$(MMAB_LIBF4)
 
 #Building elements
 %.o: %.C

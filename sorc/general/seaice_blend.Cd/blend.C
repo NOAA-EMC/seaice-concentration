@@ -6,6 +6,12 @@
 // 30 March 2012: Extend to having 3 inputs -- AMSR, SSMI, SSMI-S -- per hemiphere.
 // 16 August 2017: Change to AMSR2, and SSMIS-17, 18
 
+void blend(metricgrid<unsigned char> &namsr2,
+           metricgrid<unsigned char> &nssmis17, metricgrid<unsigned char> &nssmis18, 
+           metricgrid<unsigned char> &nout) ;
+void blend2(metricgrid<unsigned char> &namsr2,
+           metricgrid<unsigned char> &nssmis17, metricgrid<unsigned char> &nssmis18, 
+           metricgrid<unsigned char> &nout) ;
 void blend(metricgrid<unsigned char> &namsr2, metricgrid<unsigned char> &nssmi, 
            metricgrid<unsigned char> &nssmis17, metricgrid<unsigned char> &nssmis18, 
            metricgrid<unsigned char> &nout) ;
@@ -162,14 +168,14 @@ int main(int argc, char *argv[]) {
 //////////////////////////////////////////////////////////////////////////
 
 // now have all inputs
-  blend(namsr2, nssmi, nssmis17, nssmis18, nout);
-  blend2(namsr2, nssmi, nssmis17, nssmis18, nout2);
+  blend(namsr2, nssmis17, nssmis18, nout);
+  blend2(namsr2, nssmis17, nssmis18, nout2);
   if (!somedata(nout) ) {
     splice(noice, imsice, nout);
   }
 
-  blend(samsr2, sssmi, sssmis17, sssmis18, sout);
-  blend2(samsr2, sssmi, sssmis17, sssmis18, sout2);
+  blend(samsr2, sssmis17, sssmis18, sout);
+  blend2(samsr2, sssmis17, sssmis18, sout2);
   if (!somedata(sout) ) {
     splice(noice, imsice, sout);
   }
@@ -187,6 +193,96 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 /////////////// Blenders /////////////////////////////////////////////////////
+void blend(metricgrid<unsigned char> &namsr2, 
+           metricgrid<unsigned char> &nssmis17, metricgrid<unsigned char> &nssmis18,
+           metricgrid<unsigned char> &nout) {
+  ijpt loc, loc2;
+//  latpt ll;
+  grid2<int> tmp(nout.xpoints(), nout.ypoints() );
+  grid2<int> c(nout.xpoints(), nout.ypoints() );
+
+  tmp.set(0);
+  c.set(0);
+
+  for (loc.j = 0; loc.j < namsr2.ypoints(); loc.j++) {
+  for (loc.i = 0; loc.i < namsr2.xpoints(); loc.i++) {
+    // Pre-bound:
+    if (namsr2[loc] > 100 && namsr2[loc] <= 128) namsr2[loc] = 100;
+    if (namsr2[loc] <= 100) {
+      #ifdef VERBOSE
+        ll = namsr2.locate(loc);
+        loc2 = nout.locate(ll);
+        if (loc2.i < 0 || loc2.i > nout.xpoints()-1 || loc2.j < 0 || loc2.j > nout.ypoints()-1) {
+          printf("loc2 failed %d %d vs. orig %d %d\n",loc2.i, loc2.j, loc.i, loc.j);
+          fflush(stdout);
+          if (loc2.i > nout.xpoints()-1) loc2.i = nout.xpoints()-1;
+          if (loc2.j > nout.ypoints()-1) loc2.j = nout.ypoints()-1;
+        }
+      #endif
+
+      loc2.i = loc.i/2;
+      loc2.j = loc.j/2; // this is a cheat -- we know that northhigh2 is identically 2x
+      c[loc2]++; 
+      tmp[loc2] += namsr2[loc];
+    }
+  }
+  }
+
+  for (loc.j = 0; loc.j < nout.ypoints(); loc.j++) {
+  for (loc.i = 0; loc.i < nout.xpoints(); loc.i++) {
+    // Pre-bound:
+    if (nssmis17[loc] > 100 && nssmis17[loc] <= 128) nssmis17[loc] = 100;
+    if (nssmis18[loc] > 100 && nssmis18[loc] <= 128) nssmis18[loc] = 100;
+
+    if (nssmis17[loc] <= 100) {
+      c[loc]++; tmp[loc] += nssmis17[loc];
+    }
+    if (nssmis18[loc] <= 100) {
+      c[loc]++; tmp[loc] += nssmis18[loc];
+    }
+
+
+    if (c[loc] != 0) {
+      nout[loc] = (int) (((float) tmp[loc] / (float) c[loc]) + 0.5 );
+    }
+    else {
+      nout[loc] = NO_DATA;
+    }
+
+// Ensure properly bounded from below:
+    if (nout[loc] < MIN_CONC) nout[loc] = 0;
+  }
+  }
+
+  return;
+}
+
+// Do a blending in sequence of guessed better to worser instruments:
+void blend2(metricgrid<unsigned char> &namsr2, 
+            metricgrid<unsigned char> &nssmis17,  metricgrid<unsigned char> &nssmis18,
+            metricgrid<unsigned char> &nout) {
+  ijpt loc;
+
+  for (loc.j = 0; loc.j < nout.ypoints(); loc.j++) {
+  for (loc.i = 0; loc.i < nout.xpoints(); loc.i++) {
+    if (namsr2[loc] <= 100) {
+      nout[loc] = namsr2[loc];
+    }
+    else if (nssmis17[loc] <= 100 ) {
+      nout[loc] = nssmis17[loc];
+    }
+    else if (nssmis18[loc] <= 100 ) {
+      nout[loc] = nssmis18[loc];
+    }
+    else {
+      nout[loc] = NO_DATA;
+    }
+  }
+  }
+
+  return;
+}
+// ------------------- 3 inputs
 void blend(metricgrid<unsigned char> &namsr2, metricgrid<unsigned char> &nssmi, 
            metricgrid<unsigned char> &nssmis17, metricgrid<unsigned char> &nssmis18,
            metricgrid<unsigned char> &nout) {

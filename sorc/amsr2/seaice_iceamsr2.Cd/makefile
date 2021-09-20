@@ -15,5 +15,5 @@ OBJS = seaice_iceamsr2.o
 #	$(CPP) $(CPPOPTS) $< -o $(@)
 
 seaice_iceamsr2 :  $(OBJS)
-	$(CPPLD) $(CPPLDFLAGS) $(OBJS) -o $(@) $(MMAB_LIB) -lombf_4
+	$(CPPLD) $(CPPLDFLAGS) $(OBJS) -o $(@) $(MMAB_LIBF4) 
 

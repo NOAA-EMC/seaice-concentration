@@ -114,20 +114,22 @@ if [ -z $obsproc_dump_ver ] ; then
   export obsproc_shared_bufr_dumplist_ver=v1.4.0
 fi
 
-export pgm=dumpjb1
-. prep_step
 
-echo trying to execute $USHobsproc_dump/dumpjb ${PDY}00 12 ssmit
-$USHobsproc_dump/dumpjb ${PDY}00 12 ssmit
-export err=$?
-if [ $err -ne 0 ] ; then
-  msg="WARNING:  Continuing without ssmit data"
-  postmsg "$jlogfile" "$msg"
-  echo "********************************************************************" >> $mailbody
-  echo "*** WARNING:  dumpjb returned status $err.  Continue without ssmit. " >> $mailbody
-  echo "********************************************************************" >> $mailbody
-fi
-touch ssmit.ibm # ensures that file exists in rare event that dump is empty
+# The last SSMI instrument died 9 August 2021. These lines kept here as comments 
+#   for when historical re-runs are done before that date.  Robert Grumbine
+#export pgm=dumpjb1
+#. prep_step
+#echo trying to execute $USHobsproc_dump/dumpjb ${PDY}00 12 ssmit
+#$USHobsproc_dump/dumpjb ${PDY}00 12 ssmit
+#export err=$?
+#if [ $err -ne 0 ] ; then
+#  msg="WARNING:  Continuing without ssmit data"
+#  postmsg "$jlogfile" "$msg"
+#  echo "********************************************************************" >> $mailbody
+#  echo "*** WARNING:  dumpjb returned status $err.  Continue without ssmit. " >> $mailbody
+#  echo "********************************************************************" >> $mailbody
+#fi
+#touch ssmit.ibm # ensures that file exists in rare event that dump is empty
 
 export pgm=dumpjb2
 . prep_step
@@ -165,25 +167,27 @@ touch amsr2.ibm # ensures that file exists in rare event that dump is empty
 #Process the bufr output into something readable: bufr --> l1b
 #--------------------------------------------------------------------
 ##################Decode SSMI data
-export pgm=seaice_ssmibufr
-. prep_step
-
-ln -sf ssmit.ibm fort.14
-touch bufrout
-
-startmsg
-$EXECseaice_analysis/seaice_ssmibufr >> $pgmout 2> errfile
-export err=$?
-if [ $err -ne 0 ] ; then
-  msg="WARNING:  Continuing without ssmibufr"
-  postmsg "$jlogfile" "$msg"
-  echo "********************************************************************" >> $mailbody
-  echo "*** WARNING:  ssmibufr returned status $err.  Continue without ssmi " >> $mailbody
-  echo "********************************************************************" >> $mailbody
-fi
-
-echo bufrout > delta
-mv fort.51 bufrout
+# The last SSMI instrument died 9 August 2021. These lines kept here as comments 
+#   for when historical re-runs are done before that date.  Robert Grumbine
+#export pgm=seaice_ssmibufr
+#. prep_step
+#
+#ln -sf ssmit.ibm fort.14
+#touch bufrout
+#
+#startmsg
+#$EXECseaice_analysis/seaice_ssmibufr >> $pgmout 2> errfile
+#export err=$?
+#if [ $err -ne 0 ] ; then
+#  msg="WARNING:  Continuing without ssmibufr"
+#  postmsg "$jlogfile" "$msg"
+#  echo "********************************************************************" >> $mailbody
+#  echo "*** WARNING:  ssmibufr returned status $err.  Continue without ssmi " >> $mailbody
+#  echo "********************************************************************" >> $mailbody
+#fi
+#
+#echo bufrout > delta
+#mv fort.51 bufrout
 
 ##################Decode SSMI-S data
 export pgm=seaice_ssmisubufr
@@ -240,38 +244,40 @@ fi
 #				   $refyear : 4 digit year
 #				   248      : satellite number (248 = F15)
 #----------------------------------------------------------
-
-#Process SSMI data to analyst (L3) grids
-export pgm=seaice_seaissmi
-. prep_step
-
-cp $FIXseaice_analysis/seaice_TBthark.tab .
-cp $FIXseaice_analysis/seaice_TBowark.tab .
-cp $FIXseaice_analysis/seaice_TBowant.tab .
-cp $FIXseaice_analysis/seaice_TBfyark.tab .
-cp $FIXseaice_analysis/seaice_TBfyant.tab .
-cp $FIXseaice_analysis/seaice_TBccark.tab .
-cp $FIXseaice_analysis/seaice_TBccant.tab .
-
-startmsg
-#satno=248
-#time $EXECseaice_analysis/seaice_seaissmi delta $FNLAND127 $FSLAND127 \
-#           n3ssmi.$PDY s3ssmi.$PDY ssminorth12.$PDY ssmisouth12.$PDY \
-#           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
-export err=$?;err_chk
-
-# New version:
-export pgm=ssmi_tol2
-. prep_step
-ln -sf ssmit.ibm fort.14
-$EXECseaice_analysis/ssmi_tol2 
-export err=$?;err_chk
-#produces l2out.f248.51.nc
-
-export pgm=ssmi_tol3
-. prep_step
-$EXECseaice_analysis/ssmi_tol3 l2out.f248.51.nc nmap.${PDY}.f15 smap.${PDY}.f15
-export err=$?;err_chk
+## The last SSMI instrument died 9 August 2021. These lines kept here as comments 
+##   for when historical re-runs are done before that date.  Robert Grumbine
+#
+##Process SSMI data to analyst (L3) grids
+#export pgm=seaice_seaissmi
+#. prep_step
+#
+#cp $FIXseaice_analysis/seaice_TBthark.tab .
+#cp $FIXseaice_analysis/seaice_TBowark.tab .
+#cp $FIXseaice_analysis/seaice_TBowant.tab .
+#cp $FIXseaice_analysis/seaice_TBfyark.tab .
+#cp $FIXseaice_analysis/seaice_TBfyant.tab .
+#cp $FIXseaice_analysis/seaice_TBccark.tab .
+#cp $FIXseaice_analysis/seaice_TBccant.tab .
+#
+#startmsg
+##satno=248
+##time $EXECseaice_analysis/seaice_seaissmi delta $FNLAND127 $FSLAND127 \
+##           n3ssmi.$PDY s3ssmi.$PDY ssminorth12.$PDY ssmisouth12.$PDY \
+##           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
+#export err=$?;err_chk
+#
+## New version:
+#export pgm=ssmi_tol2
+#. prep_step
+#ln -sf ssmit.ibm fort.14
+#$EXECseaice_analysis/ssmi_tol2 
+#export err=$?;err_chk
+##produces l2out.f248.51.nc
+#
+#export pgm=ssmi_tol3
+#. prep_step
+#$EXECseaice_analysis/ssmi_tol3 l2out.f248.51.nc nmap.${PDY}.f15 smap.${PDY}.f15
+#export err=$?;err_chk
 
 #----------------------------------------------------------
 # Run the analysis on the SSMI-S datafiles

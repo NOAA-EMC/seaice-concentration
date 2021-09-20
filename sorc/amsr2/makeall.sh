@@ -2,8 +2,8 @@
 
 pwd=`pwd`;
 
-if [ -z $BASE ] ; then
-  echo BASE for mmablib has not been defined
+if [ -z $MMAB_BASE ] ; then
+  echo MMAB_BASE for mmablib has not been defined
   exit
 fi
   

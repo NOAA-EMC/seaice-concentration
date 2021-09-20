@@ -2,6 +2,7 @@
 #Robert Grumbine
 #22 December 2016
 
+set -x
 
 module list > /dev/null 2> /dev/null
 if [ $? -ne 0 ] ; then
@@ -20,6 +21,7 @@ if [ $? -ne 0 ] ; then
   #end building on non-module system
 else
 #on a system with module software, such as wcoss
+  set +x
   module purge
   module use `pwd`/modulefiles
   module load seaice_analysis/4.4.0
@@ -27,6 +29,7 @@ else
     echo some problem trying to load seaice_analysis/4.4.0
     #NCO Compilation modules
     module load EnvVars/1.0.3 ips/19.0.5.281  impi/19.0.5
+    module load mmab/3.5.0
     #NCO build libraries for grib, bufr, ...
     module load w3nco/2.2.0 w3emc/2.4.0
     module load bacio/2.0.3
@@ -36,27 +39,28 @@ else
     module load zlib/1.2.11
     module load bufr/11.3.1
     module load NetCDF/4.5.0
-
   fi
+  set -x
   module list
+  env
 #If being built against new mmablib by developer:
-  export BASE=/u/Robert.Grumbine/rgdev/mmablib
-  export VER=""
-  export MMAB_INC=$BASE/include/
-  export MMAB_SRC=${BASE}/sorc/
-  export MMAB_LIB="-L ${BASE}/"
-  export MMAB_VER=""
-  export VER=$MMAB_VER
-  export dlib=${BASE}
-  export MMAB_INC=$dlib/include
-  export MMAB_OMBC_LIB4=$dlib/libombc_4.a
-  export MMAB_OMBF_LIB4=$dlib/libombf_4.a
+#  export BASE=/u/Robert.Grumbine/rgdev/mmablib
+#  export VER=""
+#  export MMAB_INC=$BASE/include/
+#  export MMAB_SRC=${BASE}/sorc/
+#  export MMAB_LIB="-L ${BASE}/"
+#  export MMAB_VER=""
+#  export VER=$MMAB_VER
+#  export dlib=${BASE}
+#  export MMAB_INC=$dlib/include
+#  export MMAB_OMBC_LIB4=$dlib/libombc_4.a
+#  export MMAB_OMBF_LIB4=$dlib/libombf_4.a
 
 fi
 export mmablib_ver=${MMAB_VER:-v3.5.0}
 
-set -xe
-#set -x
+#set -xe
+set -x
 
 . ../versions/seaice_analysis.ver
 

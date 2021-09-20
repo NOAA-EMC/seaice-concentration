@@ -15,6 +15,3 @@ all:		$(CMD)
 $(CMD):		$(OBJS)
 	$(FC) $(FLDFLAGS) -o $(@) $(OBJS) $(LIBS)
 
-scan : 	scan.C
-	$(CPP) $(CPPOPTS) scan.C  $(MMAB_INC) $(MMAB_LIB) -lombf_4 -o scan 
-

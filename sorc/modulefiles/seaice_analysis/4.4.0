@@ -9,11 +9,6 @@ proc ModulesHelp { } {
 }
 module-whatis   " ice concentration analysis whatis description"
 
-## setenv BASE /nwpara2/lib
-##setenv BASE ~/para/mmablib/v3.5.0
-
-## module load /nwpara2/lib/modulefiles/mmab/$mmablib_ver
-
 set ver 4.4.0
 set lname seaice_analysis
 
@@ -22,6 +17,12 @@ module load EnvVars/1.0.3 ips/19.0.5.281  impi/19.0.5
 
 #mmab module
 module load mmab/3.5.0
+
+## setenv BASE /nwpara2/lib
+##setenv BASE ~/para/mmablib/v3.5.0
+#setenv BASE $MMAB_BASE
+#setenv MMAB_LIB $MMAB_BASE
+
 
 #NCO build libraries for grib, bufr, ...
 module load w3nco/2.2.0 w3emc/2.4.0

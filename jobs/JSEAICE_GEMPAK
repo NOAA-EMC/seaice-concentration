@@ -40,10 +40,10 @@ setpdy.sh
 . ./PDY
 env
 
-export com=${com:-${COMROOT}/${NET}/${envir}}
+#export com=${com:-${COMROOT}/${NET}/${envir}}
 export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN2}.${PDY}}
 #XXW export COMOUT=${COMOUT:-${COMROOT}/nawips/${envir}/${RUN}.${PDY}}
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/gempak}
+export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN2}.${PDY}/gempak}
 #export WMOOUT=${WMOOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}/wmo}
 
 if [ ! -f $COMOUT ] ; then
@@ -60,8 +60,8 @@ $HOMEseaice_analysis/scripts/exice_nawips.sh.ecf
 $HOMEseaice_analysis/gempak/ush/ice/ice_edge_vgf.sh
 
 cd $DATA
-if [ "$KEEPDATA" != "YES" ] ; then
-  rm -rf $DATA
-fi
+#if [ "$KEEPDATA" != "YES" ] ; then
+#  rm -rf $DATA
+#fi
 
 date

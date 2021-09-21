@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 int get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
 // For netcdf:
   int i, ncid, varid, retval;
-  int idp;
+  int idp = 0;
   char obname[90];
   size_t lenp;
 
@@ -160,7 +160,7 @@ int get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
   north.set( (float) 0.);
   south.set( (float) 0.);
 
-  for (i = 0; i < lenp; i++) {
+  for (i = 0; i < (int) lenp; i++) {
     ll.lat = dlat[i];
     ll.lon = dlon[i];
     // n.b.: location for wrong hemisphere returns as 0,0, which isn't helpful

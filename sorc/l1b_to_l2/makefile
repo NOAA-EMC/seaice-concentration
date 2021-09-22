@@ -3,9 +3,6 @@ SHELL=/bin/sh
         
 include ../makeall.mk
 #work -- from makeall.mk or makeall.sh as a rule
-#module load ips impi
-#module load bufr w3nco w3emc
-#module load NetCDF/4.5.0
 #
 #Home:
 #NCEPLIB=-L /Users/rmg3/usrlocal/nceplibs/lib

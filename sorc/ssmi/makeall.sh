@@ -13,7 +13,7 @@ if [ ! -f makeall.mk ] ; then
   fi
 fi
 
-for d in seaice_seaissmi.cd seaice_ssmibufr.fd
+for d in seaice_ssmibufr.fd
 do
   cd $d
   make

@@ -25,7 +25,8 @@ int ice_add_bufr(ssmi_tmp *north_tmp, ssmi_tmp  *south_tmp,
   float tlat, tlon;
   float t19v, t19h, t22v, t37v, t37h, t85v, t85h;
   float nasa;
-  int ilat, jlon, stype, index, satno;
+  int ilat, jlon, index, satno;
+  //int stype;
 
   #ifdef HIRES
      int KMAX = 4;
@@ -43,7 +44,7 @@ int ice_add_bufr(ssmi_tmp *north_tmp, ssmi_tmp  *south_tmp,
     t22v = ( (float)a->full[j].t22v );
     t37v = ( (float)a->full[j].t37v );
     t37h = ( (float)a->full[j].t37h );
-    stype = a->full[j].surface_type;
+    //stype = a->full[j].surface_type;
 
     for (k = 0; k < KMAX; k++) {
       if (k > 0) {

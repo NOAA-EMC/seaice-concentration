@@ -39,10 +39,6 @@ else
     #module load bufr/11.3.1
     #module load NetCDF/4.5.0
 
-    export MMAB_BASE=/u/Robert.Grumbine/rgdev/mmablib/
-    export MMAB_INC=$MMAB_BASE/include
-    export MMAB_SRC=$MMAB_BASE/sorc
-    export MMAB_LIBF4=$MMAB_BASE/libombf_4.a
     module load envvar/1.0
     module load imagemagick/7.0.8-7
     module load prod_envir/2.0.5
@@ -72,6 +68,10 @@ else
   set -x
   module list
   env
+  export MMAB_BASE=/u/Robert.Grumbine/rgdev/mmablib/
+  export MMAB_INC=$MMAB_BASE/include
+  export MMAB_SRC=$MMAB_BASE/sorc
+  export MMAB_LIBF4=$MMAB_BASE/libombf_4.a
 #If being built against new mmablib by developer:
 #  export BASE=/u/Robert.Grumbine/rgdev/mmablib
 #  export VER=""
@@ -107,4 +107,4 @@ fi
 ./toexec cp
 
 #clean up
-#rm */makeall.mk
+rm */makeall.mk

@@ -1,0 +1,48 @@
+#BSUB -J %E%seaice_analysis_%CYC%
+#BSUB -o /%COM%/output/%ENVIR%/today/seaice_analysis_%CYC%.o%J
+#BSUB -e /%COM%/output/%ENVIR%/today/seaice_analysis_%CYC%.o%J
+#BSUB -L /bin/sh
+#BSUB -q prod_transfer
+#BSUB -cwd /tmp
+#BSUB -W 00:40
+#BSUB -P %PROJ%-%PROJENVIR%
+#BSUB -R rusage[mem=8000]
+#BSUB -R affinity[core]
+
+%include <head.h>
+%include <envir-p3.h>
+
+set -x
+export cyc=%CYC%
+export PDY=${PDY:-%PDY:%}
+#export job=seaice_analysis_%CYC%
+export model=seaice_analysis
+%include <model_ver.h>
+
+module load grib_util/${grib_util_ver}
+module load NetCDF/${NetCDF_ver}
+module list
+#export LOUD=on
+
+${HOMEseaice_analysis}/jobs/JSEAICE_ANALYSIS
+
+%include <tail.h>
+%manual
+######################################################################
+#PURPOSE:  To execute the job that creates Ice Concentration Fields for the
+#          Arctic Ocean and Antarctic Continent and adjoining water bodies.
+#
+# 04/06/2009: Job only requires 1000 to run at the normal time.
+#   Bumped consumable memory to 1500 for cases where the job is being
+#   run at a later time - more data is processed and more memory is required.
+######################################################################
+
+######################################################################
+# Job specific troubleshooting instructions:
+#  see generic troubleshoot manual page
+#
+######################################################################
+
+# include manual page below
+%end
+

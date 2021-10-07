@@ -11,5 +11,5 @@ LIBS = ${W3NCO_LIB4} ${BUFR_LIB4}
 
 seaice_ssmisubufr : 
 	$(FC) $(FOPTS) ssmisu_decode.f
-	$(CC) $(COPTS) ssmisu_binary.c $(MMAB_INC) 
+	$(CC) $(COPTS) ssmisu_binary.c -I $(MMAB_INC) 
 	$(FLD) $(FLDFLAGS) ssmisu_decode.o ssmisu_binary.o $(LIBS) -o seaice_ssmisubufr

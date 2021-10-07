@@ -59,8 +59,9 @@ $HOMEseaice_analysis/scripts/exice_nawips.sh.ecf
 # Execute the META file generation scripts.
 $HOMEseaice_analysis/gempak/ush/ice/ice_edge_vgf.sh
 
-if [ "$KEEPDATA" != "YES" ] ; then
-  rm -rf $DATA
-fi
+cd $DATA
+#if [ "$KEEPDATA" != "YES" ] ; then
+#  rm -rf $DATA
+#fi
 
 date

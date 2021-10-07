@@ -37,10 +37,10 @@ export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
 #########################################
 # Run setpdy and initialize PDY variables
 #########################################
-if [ -z $PDY ] ; then
+#if [ -z $PDY ] ; then
   setpdy.sh
   . ./PDY
-fi
+#fi
 echo FILTER pdy = $PDY
 
 export RUN=${RUN:-sice}
@@ -62,8 +62,8 @@ err_chk
 
 cat $pgmout
 
-#if [ "$KEEPDATA" != "YES" ] ; then
-#  rm -rf $DATA
-#fi
+if [ "$KEEPDATA" != "YES" ] ; then
+  rm -rf $DATA
+fi
 
 date

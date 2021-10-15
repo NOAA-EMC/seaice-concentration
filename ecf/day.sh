@@ -33,6 +33,8 @@ module load bufr/11.5.0
 module load g2/3.4.5
 module load netcdf/4.7.4
 
+module load grib_util/1.2.2
+
 #module load grib_util/1.1.1
 #module load bufr_dumplist/2.3.0
 module load bufr_dump/2.0.0
@@ -75,9 +77,10 @@ do
   export PDYm1=$tagm
   echo dates: tag= $tag PDY = $PDY
 #for canned cactus test:
-  export COMIN=/lfs/h1/ops/canned/com/omb/v4.4/sice.$tagm
+  export COMIN=/lfs/h1/ops/canned/com/omb/v4.4/sice.$tag
+  export COMINm1=/lfs/h1/ops/canned/com/omb/v4.4/sice.$tagm
   export DCOMROOT=/lfs/h1/ops/canned/dcom
-  export DCOM=/lfs/h1/ops/canned/dcom/20210824
+  export DCOM=/lfs/h1/ops/canned/dcom/$tag
 
   export job=seaice_filter
   export DATA=$DATAROOT/${job}.${pid}
@@ -89,7 +92,7 @@ do
   #script handles make: mkdir $DATA
 #Required for dumpjb to run:
   export TMPDIR=$DATA
-  env > env_pre_analysis
+  #env > env_pre_analysis
   time ./sms.fake > /u/Robert.Grumbine/noscrub/com/sms.$tag
 
 #  module load gempak

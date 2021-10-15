@@ -17,11 +17,12 @@ set -x
 #  which makes it more likely useful for sea ice filtering.
 #The navy tank is unused, just noting the existence and difference.
 
+echo exseaice_filter: DCOMROOT = $DCOMROOT
 #Note that date is PDYm1 -- this gives full calendar day of data 
-if [ ! -f $COMOUT/land.$PDYm1 ] ; then
+if [ ! -s $COMOUT/land.$PDYm1 ] ; then
   echo working on land $PDYm1
-  if [ -f ${DCOMROOT}/prod/$PDY/b021/xx054 ] ; then
-    ln -sf ${DCOMROOT}/prod/$PDY/b021/xx054 fort.11
+  if [ -f ${DCOMROOT}/$PDY/b021/xx054 ] ; then
+    ln -sf ${DCOMROOT}/$PDY/b021/xx054 fort.11
     touch fort.51
     time $EXECseaice_analysis/seaice_avhrrbufr
     cp fort.51 $COMOUT/land.$PDYm1
@@ -32,10 +33,10 @@ if [ ! -f $COMOUT/land.$PDYm1 ] ; then
   fi
 fi
 
-if [ ! -f $COMOUT/seas.$PDYm1 ] ; then
+if [ ! -s $COMOUT/seas.$PDYm1 ] ; then
   echo working on seas $PDYm1
-  if [ -f ${DCOMROOT}/prod/$PDY/b021/xx053 ] ; then
-    ln -sf ${DCOMROOT}/prod/$PDY/b021/xx053 fort.11
+  if [ -f ${DCOMROOT}/$PDY/b021/xx053 ] ; then
+    ln -sf ${DCOMROOT}/$PDY/b021/xx053 fort.11
     time $EXECseaice_analysis/seaice_avhrrbufr 
     touch fort.51
     cp fort.51 $COMOUT/seas.$PDYm1

@@ -47,7 +47,10 @@ export RUN=${RUN:-sice}
 export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
 export COMINm1=${COMINm1:-${COMROOT}/${NET}/${envir}/${RUN}.${PDYm1}}
 export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-export DCOM=${DCOM:-$DCOMROOT/prod/$PDY}
+
+#setenv("DCOMROOT","/lfs/h1/ops/prod/dcom")
+export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
+export DCOM=${DCOM:-$DCOMROOT/$PDY}
 
 mkdir -p $COMOUT
 env

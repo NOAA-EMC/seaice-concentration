@@ -108,11 +108,12 @@ refyear=2012
 #BUFR------------------------------------------------------
 #Run the dumpscript to retrieve a day's data
 #----------------------------------------------------------
-if [ -z $obsproc_dump_ver ] ; then
-  echo null obsproc_dump_ver
-  export obsproc_dump_ver=v4.0.0
-  export obsproc_shared_bufr_dumplist_ver=v1.4.0
-fi
+#Cactus:
+#if [ -z $obsproc_dump_ver ] ; then
+#  echo null obsproc_dump_ver
+#  export obsproc_dump_ver=v4.0.0
+#  export obsproc_shared_bufr_dumplist_ver=v1.4.0
+#fi
 
 
 # The last SSMI instrument died 9 August 2021. These lines kept here as comments 
@@ -133,7 +134,8 @@ fi
 
 export pgm=dumpjb2
 . prep_step
-$USHobsproc_dump/dumpjb ${PDY}00 12 ssmisu
+#$USHobsproc_dump/dumpjb ${PDY}00 12 ssmisu
+$DUMPJB ${PDY}00 12 ssmisu
 export err=$?
 if [ $err -ne 0 ] ; then
   msg="WARNING:  Continuing without ssmiu data"
@@ -146,7 +148,8 @@ touch ssmisu.ibm # ensures that file exists in rare event that dump is empty
 
 export pgm=dumpjb3
 . prep_step
-$USHobsproc_dump/dumpjb ${PDY}00 12 amsr2
+#$USHobsproc_dump/dumpjb ${PDY}00 12 amsr2
+$DUMPJB ${PDY}00 12 amsr2
 export err=$?
 if [ $err -ne 0 ] ; then
   msg="WARNING:  Continuing without amsr2"

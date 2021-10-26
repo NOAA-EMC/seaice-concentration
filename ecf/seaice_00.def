@@ -1,0 +1,20 @@
+suite para
+  family primary
+    family 00 
+      family seaice_analysis
+        defstatus complete
+        edit PACKAGEHOME '/lfs/h1/ops/%ENVIR%/packages/seaice_analysis.%seaice_analysis_ver%'
+        edit PROJ 'ICE'
+        family v4.5
+          task jseaice_filter
+            time 11:00
+          task jseaice_analysis
+            trigger jseaice_filter == complete
+            time 11:08
+          task jseaice_gempak
+            trigger jseaice_analysis == complete
+        endfamily
+      endfamily
+    endfamily
+  endfamily
+endsuite

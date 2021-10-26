@@ -4,7 +4,7 @@ SHELL=/bin/sh
 #include ../makeall.mk
 
 #Demand that these be set in environment:
-MMAB_BASE=/u/Robert.Grumbine/rgdev/mmablib
+#MMAB_BASE=/u/Robert.Grumbine/rgdev/mmablib
 VER=""
 #
 MMAB_INC=-I $(MMAB_BASE)/$(VER)/include/
@@ -13,20 +13,22 @@ MMAB_SRC=$(MMAB_BASE)/$(VER)/sorc/
 
 #------------------- should need no changes below here ------------------------
 #Compilers and their options
-FC=ifort
+FC=ftn
 FOPTS=-c -O2 $(MMAB_INC)
 #FOPTS=-c -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
 
 FLD=$(FC)
 FLDFLAGS=
 
-CC=gcc
+#CC=gcc
 COPTS=-c -ansi -O2 -DLINUX $(MMAB_INC) $(NETCDF_INCLUDE)
 
-CPP=g++
+#CPP=g++
+CPP=$(CC)
 #CPPOPTS= -c -ansi -Wall -O2 -DLINUX -DCPLUS -I$(MMAB_INC) $(NETCDF_INCLUDE)
 CPPOPTS= -c -ansi -Wall -O2 -DLINUX -DCPLUS $(MMAB_INC) $(NETCDF_INCLUDE)
-CPPLD=g++
+#CPPLD=g++
+CPPLD=$(CC)
 CPPLDFLAGS=
 
 #Building elements

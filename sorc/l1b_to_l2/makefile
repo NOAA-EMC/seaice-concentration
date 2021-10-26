@@ -31,7 +31,9 @@ distclean : clean
 	rm ssmi_tol2 ssmis_tol2 bayes demo
 # ---------------------------------------------------------------------
 bayes : bayes.o
-	g++ $<  $(NETCDF_LDFLAGS_C) $(NCEPLIB) $(LIBS) -o $(@)
+#	g++ $<  $(NETCDF_LDFLAGS_C) $(NCEPLIB) $(LIBS) -o $(@)
+	$(CPP) $<  $(NETCDF_LDFLAGS_C) $(NCEPLIB) $(LIBS) -o $(@)
 
 demo : demo.o
-	g++ $<  $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) $(LIBS) -o $(@)
+#	g++ $<  $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) $(LIBS) -o $(@)
+	$(CPP) $<  $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) $(LIBS) -o $(@)

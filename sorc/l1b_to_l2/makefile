@@ -8,10 +8,10 @@ include ../makeall.mk
 #module load NetCDF/4.5.0
 #
 #Home:
-#NCEPLIB=-L /Users/rmg3/usrlocal/nceplibs/lib
-#LIBS=-l ombf_4 -l bufr_4_DA -l w3nco_4 
+NCEPLIB=-L /Users/rmg3/usrlocal/nceplibs/lib
+LIBS=-l ombf_4 -l bufr_4_DA -l w3nco_4 
 #Ncep
-NCEPLIB=$(BUFR_LIB4) $(W3EMC_LIB4) $(W3NCO_LIB4)
+#NCEPLIB=$(BUFR_LIB4) $(W3EMC_LIB4) $(W3NCO_LIB4)
 
 #Should be no changes below this point---------------------------------
 

@@ -55,7 +55,7 @@ class match:
     self.sst     = 95.
     self.ice_sst = 95.
     self.tb      = np.zeros((self.ntb))
-    #debug print("done with init", flush=True)
+    #print("done with init", flush=True)
 
   def show(self, fout = sys.stdout):
     print("{:9.4f}".format(self.longitude), "{:8.4f}".format(self.latitude),
@@ -183,22 +183,19 @@ def bayes(xvec, xcrit, label, unknown, nobs, landmask, icemask, watermask, fout 
 
 
 def dr(x, y, label, unknown, nobs, landmask, icemask, watermask, fout = sys.stdout):
-  filters = []
-
   ratio = delta(x,y)
   tc = np.linspace(ratio.min(), ratio.max(), num=100)
+  filters = []
   for i in range(0,len(tc)):
     tmp = bayes(ratio, tc[i], label, unknown, nobs, landmask, icemask, watermask, fout)
     if (len(tmp) > 0):
-      for i in range(0,len(tmp)):
-        filters.append(tmp[i])
-      del tmp
-  del ratio
-
+      filters.append(tmp)
+      #debug print("len_filters:",len(filters),flush=True)
   print(label," dr perfect filters:",len(filters))
   for i in range(0,len(filters)):
-    print(i, filters[i].show() )
+    print(filters[i])
     
+  del ratio
   return filters
 
 #----------------------------------------------------------------
@@ -225,9 +222,6 @@ class filter:
     self.stats = bayes_stats
     self.npts  = npts
 
-  def show(self, fout = sys.stdout):
-    print("fs ",self.name, self.type, self.value, self.stats, self.npts, "efs", file=fout)
-
   def better(self, other):
 # return true if self is a better filter than the other for filter type 'index'
 # perfect_is --> 1.0
@@ -236,15 +230,17 @@ class filter:
 # better : self.npts > other.npts
     return(self.npts > other.npts)
 
+  def show(self, fout = sys.stdout):
+    print(self.name, self.type, self.value, self.stats, self.npts, file=fout)
+
   def apply(self, tb, index, is_or_isnt):
 #   is = logical, do you want that this _is_ true/filtered (arg=True), 
 #         or that it is _not_ true 
     if (self.name[0:1] == "dr"):
       iname=self.name[2:5]
       jname=self.name[6:9]
-      ipol = self.name[5]
-      jpol = self.name[9]
-      print("apply ",iname, jname, ipol, jpol)
+      ip = self.name[5]
+      jp = self.name[9]
 #      if (self.type == "cold"): #use less than
 #      elif (self.type == "hot"): #use > 
 #      else:

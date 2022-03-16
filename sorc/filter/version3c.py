@@ -97,6 +97,7 @@ for k in range(0,len(all)):
 
 print("done adding in ice fixed",flush=True)
 
+del ice_longitude, ice_latitude, ice_distance
 del ice_land
 del icec
 #--------------------------------------------------------
@@ -116,6 +117,7 @@ for k in range(0,len(all)):
 
 print("done adding in sst ",flush=True)
 del sst
+del ice_sst
 #---------------------------------------------------------------------
 #construct masks:
 
@@ -151,36 +153,98 @@ print(stats,flush=True)
 
 #----------------------------------------------------------------
 fout = open("round1","w")
+bfilters = []
 for thot in range (75, 315):
-  bayes(t19v, thot, "t19v", unknown, nobs, landmask, icemask, watermask, fout)
-  bayes(t19h, thot, "t19h", unknown, nobs, landmask, icemask, watermask, fout)
-  bayes(t22v, thot, "t22v", unknown, nobs, landmask, icemask, watermask, fout)
-  bayes(t37v, thot, "t37v", unknown, nobs, landmask, icemask, watermask, fout)
-  bayes(t37h, thot, "t37h", unknown, nobs, landmask, icemask, watermask, fout)
-  bayes(t85v, thot, "t85v", unknown, nobs, landmask, icemask, watermask, fout)
-  bayes(t85h, thot, "t85h", unknown, nobs, landmask, icemask, watermask, fout)
+  tmp = bayes(t19v, thot, "t19v", unknown, nobs, landmask, icemask, watermask, fout)
+  filter.add(bfilters, tmp)
+  tmp = bayes(t19h, thot, "t19h", unknown, nobs, landmask, icemask, watermask, fout)
+  filter.add(bfilters, tmp)
+  tmp = bayes(t22v, thot, "t22v", unknown, nobs, landmask, icemask, watermask, fout)
+  filter.add(bfilters, tmp)
+  tmp = bayes(t37v, thot, "t37v", unknown, nobs, landmask, icemask, watermask, fout)
+  filter.add(bfilters, tmp)
+  tmp = bayes(t37h, thot, "t37h", unknown, nobs, landmask, icemask, watermask, fout)
+  filter.add(bfilters, tmp)
+  tmp = bayes(t85v, thot, "t85v", unknown, nobs, landmask, icemask, watermask, fout)
+  filter.add(bfilters, tmp)
+  tmp = bayes(t85h, thot, "t85h", unknown, nobs, landmask, icemask, watermask, fout)
+  filter.add(bfilters,tmp)
 
-dr(t19v, t19h, "drt19vt19h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19v, t22v, "drt19vt22v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19v, t37v, "drt19vt37v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19v, t37h, "drt19vt37h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19v, t85v, "drt19vt85v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19v, t85h, "drt19vt85h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19h, t22v, "drt19ht22v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19h, t37v, "drt19ht37v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19h, t37h, "drt19ht37h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19h, t85v, "drt19ht85v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t19h, t85h, "drt19ht85h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t22v, t37v, "drt22vt37v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t22v, t37h, "drt22vt37h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t22v, t85v, "drt22vt85v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t22v, t85h, "drt22vt85h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t37v, t37h, "drt37vt37h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t37v, t85v, "drt37vt85v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t37v, t85h, "drt37vt85h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t37h, t85v, "drt37ht85v", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t37h, t85h, "drt37ht85h", unknown, nobs, landmask, icemask, watermask, fout)
-dr(t85v, t85h, "drt85vt85h", unknown, nobs, landmask, icemask, watermask, fout)
+print(len(bfilters),'simple filters evaluated')
+
+
+drfilters = []
+tmp = dr(t19v, t19h, "drt19vt19h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19v, t22v, "drt19vt22v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19v, t37v, "drt19vt37v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19v, t37h, "drt19vt37h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19v, t85v, "drt19vt85v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19v, t85h, "drt19vt85h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19h, t22v, "drt19ht22v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19h, t37v, "drt19ht37v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19h, t37h, "drt19ht37h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19h, t85v, "drt19ht85v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t19h, t85h, "drt19ht85h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t22v, t37v, "drt22vt37v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t22v, t37h, "drt22vt37h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t22v, t85v, "drt22vt85v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t22v, t85h, "drt22vt85h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t37v, t37h, "drt37vt37h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t37v, t85v, "drt37vt85v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t37v, t85h, "drt37vt85h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t37h, t85v, "drt37ht85v", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t37h, t85h, "drt37ht85h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+tmp = dr(t85v, t85h, "drt85vt85h", unknown, nobs, landmask, icemask, watermask, fout)
+filter.add(drfilters, tmp)
+
+print("drfilters: ",len(drfilters))
+
+count = 0
+#print out all filters to fout, and new bests to screen
+for i in range (0,len(bfilters)):
+  bfilters[i].show(fout)
+  if (bfilters[i].perfect()):
+    if (count == 0):
+      best = bfilters[i]
+    if (bfilters[i].better(best)):
+      best = bfilters[i]
+      print("better bfilter = ",i," ",end="")
+      best.show()
+    count += 1
+
+for i in range (0,len(drfilters)):
+  drfilters[i].show(fout)
+  if (drfilters[i].perfect()):
+    if (count == 0):
+      best = drfilters[i]
+    if (drfilters[i].better(best)):
+      best = drfilters[i]
+      print("better drfilter = ",i," ",end="")
+      best.show()
+    count += 1
+
 fout.close()
 
-exit(0)
+print(count," perfect filters")
+print("best filter: ",end="")
+best.show()

@@ -148,6 +148,7 @@ def bayes(xvec, xcrit, label, unknown, nobs, landmask, icemask, watermask, fout 
         "{:6.4f}".format(bayes_stats[2]), nwarm, file = fout, flush=True ) 
     #place to collect the perfect filters
       x = filter(label, "hot", xcrit, bayes_stats, nwarm)
+      #debug x.show()
       filters.append(x)
     #elif
 
@@ -174,6 +175,7 @@ def bayes(xvec, xcrit, label, unknown, nobs, landmask, icemask, watermask, fout 
         "{:6.4f}".format(bayes_stats[2]), ncold, file = fout, flush=True )
     #place to collect the perfect filters
       x = filter(label, "cold", xcrit, bayes_stats, ncold)
+      #debug x.show()
       filters.append(x)
     #elif
 
@@ -197,7 +199,8 @@ def dr(x, y, label, unknown, nobs, landmask, icemask, watermask, fout = sys.stdo
 
   print(label," dr perfect filters:",len(filters))
   for i in range(0,len(filters)):
-    print(i, filters[i].show() )
+    print(i," ",end="")
+    filters[i].show()
     
   return filters
 
@@ -222,11 +225,14 @@ class filter:
     self.name = name
     self.type = type
     self.value = value
-    self.stats = bayes_stats
     self.npts  = npts
+    self.stats = np.zeros((3))
+    self.stats[0] = bayes_stats[0]
+    self.stats[1] = bayes_stats[1]
+    self.stats[2] = bayes_stats[2]
 
   def show(self, fout = sys.stdout):
-    print("fs ",self.name, self.type, self.value, self.stats, self.npts, "efs", file=fout)
+    print(self.name, self.type, self.value, self.stats, self.npts, file=fout)
 
   def better(self, other):
 # return true if self is a better filter than the other for filter type 'index'

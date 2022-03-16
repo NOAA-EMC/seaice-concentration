@@ -55,7 +55,7 @@ class match:
     self.sst     = 95.
     self.ice_sst = 95.
     self.tb      = np.zeros((self.ntb))
-    #print("done with init", flush=True)
+    #debug print("done with init", flush=True)
 
   def show(self, fout = sys.stdout):
     print("{:9.4f}".format(self.longitude), "{:8.4f}".format(self.latitude),
@@ -133,23 +133,20 @@ def bayes(xvec, xcrit, label, unknown, nobs, landmask, icemask, watermask, fout 
   pover_land  = len(lmask.nonzero()[0])/nlandpts
   pover_water = len(omask.nonzero()[0])/nwaterpts
   pover_ice   = len(imask.nonzero()[0])/nicepts
-  if (pwarm > 0):
+  if (pwarm > 0):     #ignore if the filter is never tripped
     bayes_stats[0] = pover_ice * pice / pwarm
     bayes_stats[1] = pover_land * pland / pwarm
     bayes_stats[2] = pover_water * pwater / pwarm
-  #  print(label, "hot ", xcrit,
-  #    "{:6.4f}".format(bayes_stats[0]) ,
-  #    "{:6.4f}".format(bayes_stats[1]) ,
-  #    "{:6.4f}".format(bayes_stats[2]), nwarm, file = fout, flush=True )
-    if ( (np.any(bayes_stats == 1.0) or np.any(bayes_stats == 0.0)) ):
-      print(label, "hot ", xcrit,
-        "{:6.4f}".format(bayes_stats[0]) ,
-        "{:6.4f}".format(bayes_stats[1]) ,
-        "{:6.4f}".format(bayes_stats[2]), nwarm, file = fout, flush=True ) 
-    #place to collect the perfect filters
-      x = filter(label, "hot", xcrit, bayes_stats, nwarm)
-      filters.append(x)
-    #elif
+    #print out perfect filters -- debugging
+    #debug if ( (np.any(bayes_stats == 1.0) or np.any(bayes_stats == 0.0)) ):
+    #debug   print(label, "hot ", xcrit,
+    #debug     "{:6.4f}".format(bayes_stats[0]) ,
+    #debug     "{:6.4f}".format(bayes_stats[1]) ,
+    #debug     "{:6.4f}".format(bayes_stats[2]), nwarm, file = fout, flush=True ) 
+
+    #place to collect the filters
+    x = filter(label, "hot", xcrit, bayes_stats, nwarm)
+    filters.append(x)
 
   cold = ma.masked_array(xvec < xcrit)
   cold = ma.logical_and(cold, unknown)
@@ -167,35 +164,39 @@ def bayes(xvec, xcrit, label, unknown, nobs, landmask, icemask, watermask, fout 
     bayes_stats[0] = pover_ice * pice / pcold
     bayes_stats[1] = pover_land * pland / pcold
     bayes_stats[2] = pover_water * pwater / pcold
-    if ( (np.any(bayes_stats == 1.0) or np.any(bayes_stats == 0.0)) ):
-      print(label,"cold ",xcrit,
-        "{:6.4f}".format(bayes_stats[0]) ,
-        "{:6.4f}".format(bayes_stats[1]) ,
-        "{:6.4f}".format(bayes_stats[2]), ncold, file = fout, flush=True )
-    #place to collect the perfect filters
-      x = filter(label, "cold", xcrit, bayes_stats, ncold)
-      filters.append(x)
-    #elif
+    #print out perfect filters -- debugging
+    #debug if ( (np.any(bayes_stats == 1.0) or np.any(bayes_stats == 0.0)) ):
+    #debug   print(label,"cold ",xcrit,
+    #debug     "{:6.4f}".format(bayes_stats[0]) ,
+    #debug     "{:6.4f}".format(bayes_stats[1]) ,
+    #debug     "{:6.4f}".format(bayes_stats[2]), ncold, file = fout, flush=True )
+
+    #place to collect the filters
+    x = filter(label, "cold", xcrit, bayes_stats, ncold)
+    filters.append(x)
 
   del bayes_stats
-  #debug print("number of perfect filters:",len(filters), flush=True)
   return filters
 
 
 def dr(x, y, label, unknown, nobs, landmask, icemask, watermask, fout = sys.stdout):
+  filters = []
+
   ratio = delta(x,y)
   tc = np.linspace(ratio.min(), ratio.max(), num=100)
-  filters = []
   for i in range(0,len(tc)):
     tmp = bayes(ratio, tc[i], label, unknown, nobs, landmask, icemask, watermask, fout)
     if (len(tmp) > 0):
-      filters.append(tmp)
-      #debug print("len_filters:",len(filters),flush=True)
-  print(label," dr perfect filters:",len(filters))
-  for i in range(0,len(filters)):
-    print(filters[i])
-    
+      for i in range(0,len(tmp)):
+        filters.append(tmp[i])
+      del tmp
   del ratio
+
+  print(label," dr filters:",len(filters))
+  #debug for i in range(0,len(filters)):
+  #debug   print(i," ",end="")
+  #debug   filters[i].show()
+    
   return filters
 
 #----------------------------------------------------------------
@@ -219,8 +220,22 @@ class filter:
     self.name = name
     self.type = type
     self.value = value
-    self.stats = bayes_stats
     self.npts  = npts
+    self.stats = np.zeros((3))
+    self.stats[0] = bayes_stats[0]
+    self.stats[1] = bayes_stats[1]
+    self.stats[2] = bayes_stats[2]
+
+  def show(self, fout = sys.stdout):
+    print(self.name, self.type, self.value, self.stats, self.npts, file=fout)
+
+  def perfect(self):
+    return (np.any(self.stats == 1.0) or np.any(self.stats == 0.0)) 
+
+  def add(filters, tmp):
+    #debug print("adding ",len(tmp)," filters", flush=True)
+    for i in range (0,len(tmp)):
+      filters.append(tmp[i])
 
   def better(self, other):
 # return true if self is a better filter than the other for filter type 'index'
@@ -228,10 +243,10 @@ class filter:
 # perfect_isnot --> 0.0
 # for each ice, land, water
 # better : self.npts > other.npts
-    return(self.npts > other.npts)
-
-  def show(self, fout = sys.stdout):
-    print(self.name, self.type, self.value, self.stats, self.npts, file=fout)
+    if (self.perfect() and other.perfect() ):
+      return(self.npts > other.npts)
+    else:
+      return False
 
   def apply(self, tb, index, is_or_isnt):
 #   is = logical, do you want that this _is_ true/filtered (arg=True), 
@@ -239,8 +254,9 @@ class filter:
     if (self.name[0:1] == "dr"):
       iname=self.name[2:5]
       jname=self.name[6:9]
-      ip = self.name[5]
-      jp = self.name[9]
+      ipol = self.name[5]
+      jpol = self.name[9]
+      print("apply ",iname, jname, ipol, jpol)
 #      if (self.type == "cold"): #use less than
 #      elif (self.type == "hot"): #use > 
 #      else:

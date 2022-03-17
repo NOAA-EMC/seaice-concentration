@@ -192,10 +192,10 @@ def dr(x, y, label, unknown, nobs, landmask, icemask, watermask, fout = sys.stdo
       del tmp
   del ratio
 
-  print(label," dr filters:",len(filters))
-  #debug for i in range(0,len(filters)):
-  #debug   print(i," ",end="")
-  #debug   filters[i].show()
+  #debug print(label," dr filters:",len(filters))
+  #debug2 for i in range(0,len(filters)):
+  #debug2   print(i," ",end="")
+  #debug2   filters[i].show()
     
   return filters
 
@@ -227,7 +227,9 @@ class filter:
     self.stats[2] = bayes_stats[2]
 
   def show(self, fout = sys.stdout):
-    print(self.name, self.type, self.value, self.stats, self.npts, file=fout)
+    print(self.name, self.type, self.value, 
+       ('{:6.4f} '*3).format(self.stats[0], self.stats[1], self.stats[2]),
+       self.npts, file=fout)
 
   def perfect(self):
     return (np.any(self.stats == 1.0) or np.any(self.stats == 0.0)) 

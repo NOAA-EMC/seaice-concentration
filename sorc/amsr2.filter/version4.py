@@ -133,6 +133,14 @@ print("done adding in sst ",flush=True)
 del sst
 del ice_sst
 #---------------------------------------------------------------------
+# Print matchups to plain text
+f1 = open("allmatch","w")
+for k in range(0,len(all)):
+  all[k].show(f1)
+fclose(f1)
+exit(0)
+
+#---------------------------------------------------------------------
 #construct masks:
 
 ice_land = np.zeros((npts))

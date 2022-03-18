@@ -254,10 +254,10 @@ class filter:
 #   is = logical, do you want that this _is_ true/filtered (arg=True), 
 #         or that it is _not_ true 
     if (self.name[0:1] == "dr"):
-      iname=self.name[2:5]
-      jname=self.name[6:9]
-      ipol = self.name[5]
-      jpol = self.name[9]
+      iname = self.name[2:5]
+      jname = self.name[6:9]
+      ipol  = self.name[5]
+      jpol  = self.name[9]
       print("apply ",iname, jname, ipol, jpol)
 #      if (self.type == "cold"): #use less than
 #      elif (self.type == "hot"): #use > 

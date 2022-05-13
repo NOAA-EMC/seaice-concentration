@@ -9,11 +9,13 @@ PROGRAM amsr2lr
       CHARACTER(8) SUBSET
       CHARACTER(80)  HS1, HS2, HS3, Htmp
 
-      CHARACTER*(*)   FLT
+!      CHARACTER*(*)   FLT
+      CHARACTER(20)   FLT
       PARAMETER     ( FLT = 'bufr.tab' )
 
 !      REAL HDR(9), XLOC(2,1), PRDLR(5,12), PRDHR(5,2)
-      REAL*8 HDR(9), XLOC(2,1), PRDLR(5,12), PRDHR(5,2)
+      REAL(8) HDR(9), XLOC(2,1), PRDLR(5,12), PRDHR(5,2)
+!      REAL(8) HDR(9), XLOC(2,1), PRDLR(5,12), PRDHR(5,2)
       DATA HS1, HS2, HS3, Htmp &
     / 'SAID SIID YEAR MNTH DAYS HOUR MINU ORBN SLNM               ', &
       'CLATH CLONH                                                ', &
@@ -175,7 +177,7 @@ END
 !---------------------------------------------------------------
 LOGICAL FUNCTION hfok(obs)
       IMPLICIT none
-      REAL*8 obs(5,2) ! i = parameters, 5 = tmbr; j = channel
+      REAL(8) obs(5,2) ! i = parameters, 5 = tmbr; j = channel
       LOGICAL tmp
       tmp = .TRUE.
       IF (obs(5,1) > 285 .OR. obs(5,2) > 285. ) tmp = .FALSE.
@@ -185,7 +187,7 @@ LOGICAL FUNCTION hfok(obs)
       END
       LOGICAL FUNCTION lfok(obs)
       IMPLICIT none
-      REAL*8 obs(5,12) ! i = parameters, 5 = tmbr; j = channel
+      REAL(8) obs(5,12) ! i = parameters, 5 = tmbr; j = channel
       LOGICAL tmp
       INTEGER i
       tmp = .TRUE.
@@ -205,8 +207,8 @@ LOGICAL FUNCTION hfok(obs)
       REAL AMSR_GR37LIM, AMSR_GR24LIM
       PARAMETER (AMSR_GR37LIM = 0.046)
       PARAMETER (AMSR_GR24LIM = 0.045)
-      REAL *8 obs(5,12), amsre(5,12)
-      REAL *8 lat
+      REAL(8) obs(5,12), amsre(5,12)
+      REAL(8) lat
       LOGICAL tmp
       REAL gr3719, gr2419
 
@@ -224,8 +226,8 @@ LOGICAL FUNCTION hfok(obs)
       END
       SUBROUTINE regress(amsre, lat) 
       IMPLICIT none
-      REAL *8 amsre(5,12)
-      REAL *8 lat
+      REAL(8) amsre(5,12)
+      REAL(8) lat
 !Perform limited regression -- just those channels that are used in
 !weather filter
       IF (lat > 0) THEN

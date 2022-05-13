@@ -3,6 +3,8 @@
 if [ -z $MMAB_BASE ] ; then
   echo MMAB_BASE for mmablib has not been defined
   exit
+ else
+  echo in general, MMAB_BASE= $MMAB_BASE
 fi
 
 if [ ! -f makeall.mk ] ; then

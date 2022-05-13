@@ -1,6 +1,6 @@
 #!/bin/bash --login
 #####
-#BSUB -J l2_2021
+#BSUB -J l2_2021d
 #BSUB -q "dev"
 #BSUB -P RTO-T2O
 #BSUB -W 7:59
@@ -20,7 +20,7 @@ export PM=${PM:-12}
 export DCOMROOT=/u/Robert.Grumbine/noscrub/satellites/
 export RGTAG=prod
 export EXDIR=/u/Robert.Grumbine/rgdev/concentration/sorc/l1b_to_l2/
-export OUTDIR=/u/Robert.Grumbine/noscrub/l2
+export OUTDIR=/u/Robert.Grumbine/noscrub/l2b
 
 echo starting on modules
 module load EnvVars/1.0.3 ips/19.0.5.281 impi/19.0.5
@@ -29,7 +29,7 @@ module load bufr_dumplist/2.3.0
 module load dumpjb/5.1.0
 module list
 
-export PDY=20210201
+export PDY=20210101
 
 x=$$
 mkdir -p /gpfs/dell2/ptmp/wx21rg/runup.$x
@@ -48,4 +48,3 @@ do
   PDY=`/u/Robert.Grumbine/bin/dtgfix3 $PDY`
 done
 rm -r /gpfs/dell2/ptmp/wx21rg/runup.$x
-#ls -l /gpfs/dell2/ptmp/wx21rg/runup.$x

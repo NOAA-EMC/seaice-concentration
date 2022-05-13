@@ -11,5 +11,5 @@ LIBS = $(BUFR_LIBd)
 
 seaice_ssmibufr : 
 	$(FC) $(FOPTS) ssmi.bufr.f
-	$(CC) $(COPTS) binary.c $(MMAB_INC)
+	$(CC) $(COPTS) binary.c -I $(MMAB_INC)
 	$(FLD) ssmi.bufr.o binary.o $(LIBS) -o seaice_ssmibufr

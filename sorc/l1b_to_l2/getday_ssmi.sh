@@ -14,6 +14,11 @@ OUTDIR=${OUTDIR:-/u/Robert.Grumbine/noscrub/l2}
 #module load dumpjb/5.1.0 bufr_dumplist/2.3.0
 #env | grep -i dcom > ~/dcoms
 
+if [ $PDY -ge 20210809 ] ;
+  echo F15 retired 20210809
+  exit
+fi
+
 set -x
 # Run if we don't already have:
 if [ ! -f ${OUTDIR}/l2.ssmi.${PDY}.nc ] ; then

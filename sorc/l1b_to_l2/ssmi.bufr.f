@@ -47,9 +47,9 @@
       CHARACTER(80)  XIDST,XLCST,BRTST,XL85ST, BR85ST
       CHARACTER(8) inout,subset
       REAL     XIDENT(9),xloc(4,64),BRT(2,7,64),temps(7)
-      REAL*8   XIDENT8(9), xloc8(4,64), BRT8(2,7,64), temps8(7)
+      REAL(8)   XIDENT8(9), xloc8(4,64), BRT8(2,7,64), temps8(7)
       REAL     xloc85(4, 192), brt85(2, 2, 192)
-      REAL*8   xloc858(4, 192), brt858(2, 2, 192)
+      REAL(8)   xloc858(4, 192), brt858(2, 2, 192)
       INTEGER index, index2, index3
       INTEGER iy, id, im, imins, isad, iunt, jcnt, jret, iret
       INTEGER kret, k2ret, kwrit, k

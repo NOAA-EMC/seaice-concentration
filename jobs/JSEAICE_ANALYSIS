@@ -68,4 +68,8 @@ err_chk
 
 cat $pgmout
 
+if [ "$KEEPDATA" != "YES" ] ; then
+  rm -rf $DATA
+fi
+
 date

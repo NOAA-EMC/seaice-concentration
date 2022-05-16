@@ -1,5 +1,3 @@
-#MMABDIR=/Volumes/ncep/mmablib.git/mmablib
-#MMABDIR=~/para/mmablib/mmablib/
 MMABDIR=$(MMAB_BASE)
 PLATFORM=F15
 

@@ -14,6 +14,9 @@ if [ ! -f makeall.mk ] ; then
     exit 1
   fi
 fi
+if [ -z $MMAB_LIBF4 ] ; then
+  export MMAB_LIBF4=$MMAB_BASE/libombf_4.a
+fi
 
 for d in seaice_amsrbufr.fd seaice_iceamsr2.Cd 
 do

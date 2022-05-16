@@ -18,10 +18,10 @@ NCEPLIB=$(BUFR_LIB4) $(W3EMC_LIB4) $(W3NCO_LIB4)
 all : ssmi_tol3 ssmisu_tol3 
 
 ssmi_tol3 : ssmi_tol3.o
-	$(CPPLD) $(@).o $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) -L ~/rgdev/mmablib/ $(LIBS) $(CPPLDFLAGS) -o $(@)
+	$(CPPLD) $(@).o -L $(NETCDF_LIBRARIES) -lnetcdf  $(NCEPLIB) $(MMAB_LIBF4) $(LIBS) $(CPPLDFLAGS) -o $(@)
 
 ssmisu_tol3 : ssmisu_tol3.o
-	$(CPPLD) $(@).o $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) -L ~/rgdev/mmablib/ $(LIBS) $(CPPLDFLAGS) -o $(@)
+	$(CPPLD) $(@).o -L $(NETCDF_LIBRARIES) -lnetcdf  $(NCEPLIB) $(MMAB_LIBF4) $(LIBS) $(CPPLDFLAGS) -o $(@)
 
 # ---------------------------------------------------------------------
 clean :

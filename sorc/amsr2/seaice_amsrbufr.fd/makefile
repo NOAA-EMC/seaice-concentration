@@ -1,6 +1,6 @@
 #Robert Grumbine 27 May 2016
 
-include makeall.mk
+include ../makeall.mk
 
 LIBS = ${W3NCO_LIBd} ${BUFR_LIBd} ${BACIO_LIB4}
 CFLAGS = 	-O2 -DLINUX -std=c89 -pg

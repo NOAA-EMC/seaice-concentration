@@ -40,11 +40,10 @@ else
     module load g2/3.4.5
     module load jasper/2.0.25
     module load libpng/1.6.37
-    #module load zlib/1.2.11
+    module load zlib/1.2.11
     module load netcdf/4.7.4
   fi
   set -x
-  module list
   export BASE=/u/Robert.Grumbine/rgdev/mmablib
   export MMAB_BASE=/u/Robert.Grumbine/rgdev/mmablib
   export VER=""
@@ -61,6 +60,8 @@ else
 #  export MMAB_OMBF_LIB4=$dlib/libombf_4.a
 
 fi
+
+module list
 export mmablib_ver=${MMAB_VER:-v3.5.0}
 
 #set -xe
@@ -69,7 +70,7 @@ set -x
 . ../versions/seaice_analysis.ver
 
 #for d in general amsr2 ssmi ssmis avhrr l1b_to_l2 l2_to_l3
-for d in l1b_to_l2 amsr2 ssmi ssmis avhrr  
+for d in l1b_to_l2 l2_to_l3 amsr2 ssmi ssmis avhrr general 
 do
   cp makeall.mk $d
   cd $d

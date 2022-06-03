@@ -10,7 +10,7 @@ MMAB_SRC=$(MMAB_BASE)/$(VER)/sorc/
 #------------------- should need no changes below here ------------------------
 #Compilers and their options
 FC=ifort
-FOPTS=-c -O2 -I $(MMAB_INC)
+FOPTS=-c -O2 -I $(MMAB_INC) -I $(NETCDF_INCLUDE)
 
 ##Home desk:
 #FC=gfortran

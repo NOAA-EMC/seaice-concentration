@@ -24,14 +24,14 @@ else
   set +x
   module purge
   #WCOSS2
-  #module load envvar/1.0
-  #module use `pwd`/modulefiles
+  module load envvar/1.0
+  module use `pwd`/modulefiles
   module load seaice_analysis/4.5.0
   if [ $? -ne 0 ] ; then
     echo some problem trying to load seaice_analysis/4.5.0
     echo manually loading
-    #source wcoss2.modules
-    source ./hera.modules
+    source ./wcoss2.modules
+    #source ./hera.modules
   fi
   set -x
   #move in to the system-specific modules
@@ -60,14 +60,16 @@ set -x
 
 . ../versions/seaice_analysis.ver
 
-#for d in general amsr2 ssmi ssmis avhrr l1b_to_l2 l2_to_l3
 for d in l1b_to_l2 l2_to_l3 amsr2 ssmi ssmis avhrr general 
+#debug for d in l1b_to_l2 
 do
   cp makeall.mk $d
   cd $d
+  #debug env > environment
   ./makeall.sh
   cd ..
 done
+#debug exit
 
 if [ ! -d ../exec ] ; then
   mkdir ../exec

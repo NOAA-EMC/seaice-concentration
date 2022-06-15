@@ -20,7 +20,7 @@ export NETCDF_LIBRARIES=$NETCDF_ROOT/lib
 #env
 #module list
 
-export BASE=/u/Robert.Grumbine/rgdev/mmablib
-export MMAB_BASE=/u/Robert.Grumbine/rgdev/mmablib
+export BASE=/u/robert.grumbine/rgdev/mmablib
+export MMAB_BASE=/u/robert.grumbine/rgdev/mmablib
 export VER=""
 export mmablib_ver=${MMAB_VER:-v3.5.0}

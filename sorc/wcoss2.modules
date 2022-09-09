@@ -1,0 +1,26 @@
+#NCO Compilation modules
+module load PrgEnv-intel/8.2.0
+module load intel/19.1.3.304
+#module avail
+#NCO build libraries for grib, bufr, ...
+module load w3nco/2.4.1
+module load bacio/2.4.1
+module load bufr/11.6.0
+module load g2/3.4.5
+module load jasper/2.0.25
+module load libpng/1.6.37
+module load zlib/1.2.11
+module load netcdf/4.7.4
+
+export NETCDF_INCLUDES=$NETCDF_ROOT/include/
+export NETCDF_INCLUDE=$NETCDF_ROOT/include/
+export NETCDF_LDFLAGS_C=$NETCDF_ROOT/lib
+export NETCDF_LIBRARIES=$NETCDF_ROOT/lib
+
+#env
+#module list
+
+export BASE=/u/robert.grumbine/rgdev/mmablib
+export MMAB_BASE=/u/robert.grumbine/rgdev/mmablib
+export VER=""
+export mmablib_ver=${MMAB_VER:-v3.5.0}

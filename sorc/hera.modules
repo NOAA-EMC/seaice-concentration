@@ -1,0 +1,38 @@
+#!/bin/sh
+module purge
+
+#Can load directly:
+module load hpss
+module load imagemagick 
+module load wgrib 
+module load grads 
+
+#Need for hpc-stack
+module use /scratch2/NCEPDEV/nwprod/hpc-stack/libs/hpc-stack/modulefiles/stack
+module load hpc/1.2.0 hpc-intel/2022.1.2 hpc-impi/2022.1.2
+module load esmf/8.3.0b09
+module load hdf5/1.10.6
+module load wgrib2/2.0.8
+module load netcdf/4.7.0
+
+
+module load w3nco/2.4.1
+module load bacio/2.4.1
+module load bufr/11.7.0
+module load g2/3.4.5
+module load jasper/2.0.25
+module load libpng/1.6.37
+#module load libpng/1.6.35
+module load zlib/1.2.11
+  
+export NETCDF_INCLUDE=$NETCDF/include
+export NETCDF_LIBRARIES=$NETCDF/lib
+export NETCDF_LDFLAGS_C=$NETCDF/lib
+
+export BASE=/home/Robert.Grumbine/rgdev/mmablib
+export MMAB_BASE=/home/Robert.Grumbine/rgdev/mmablib
+export VER=""
+export mmablib_ver=${MMAB_VER:-v3.5.0}
+
+env
+module list

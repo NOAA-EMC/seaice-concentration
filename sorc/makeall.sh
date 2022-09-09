@@ -23,29 +23,23 @@ else
 #on a system with module software, such as wcoss
   set +x
   module purge
+  #WCOSS2
+  module load envvar/1.0
   module use `pwd`/modulefiles
-  module load seaice_analysis/4.4.0
+  module load seaice_analysis/4.5.0
   if [ $? -ne 0 ] ; then
-    echo some problem trying to load seaice_analysis/4.4.0
-    #NCO Compilation modules
-    module load EnvVars/1.0.3 ips/19.0.5.281  impi/19.0.5
-    module load mmab/3.5.0
-    #NCO build libraries for grib, bufr, ...
-    module load w3nco/2.2.0 w3emc/2.4.0
-    module load bacio/2.0.3
-    module load libpng/1.2.59
-    module load jasper/1.900.29
-    module load g2/3.2.0
-    module load zlib/1.2.11
-    module load bufr/11.3.1
-    module load NetCDF/4.5.0
+    echo some problem trying to load seaice_analysis/4.5.0
+    echo manually loading
+    source ./wcoss2.modules
+    #source ./hera.modules
   fi
   set -x
-  module list
+  #move in to the system-specific modules
+  #export BASE=/u/Robert.Grumbine/rgdev/mmablib
+  #export MMAB_BASE=/u/Robert.Grumbine/rgdev/mmablib
+  #export VER=""
   env
 #If being built against new mmablib by developer:
-#  export BASE=/u/Robert.Grumbine/rgdev/mmablib
-#  export VER=""
 #  export MMAB_INC=$BASE/include/
 #  export MMAB_SRC=${BASE}/sorc/
 #  export MMAB_LIB="-L ${BASE}/"
@@ -57,6 +51,8 @@ else
 #  export MMAB_OMBF_LIB4=$dlib/libombf_4.a
 
 fi
+
+module list
 export mmablib_ver=${MMAB_VER:-v3.5.0}
 
 #set -xe
@@ -64,13 +60,16 @@ set -x
 
 . ../versions/seaice_analysis.ver
 
-for d in general amsr2 ssmi ssmis avhrr l1b_to_l2 l2_to_l3
+for d in l1b_to_l2 l2_to_l3 amsr2 ssmi ssmis avhrr general 
+#debug for d in l1b_to_l2 
 do
   cp makeall.mk $d
   cd $d
+  #debug env > environment
   ./makeall.sh
   cd ..
 done
+#debug exit
 
 if [ ! -d ../exec ] ; then
   mkdir ../exec

@@ -13,6 +13,11 @@ if [ ! -f makeall.mk ] ; then
   fi
 fi
 
+if [ -z $MMAB_LIBF4 ] ; then
+  export MMAB_LIBF4=$MMAB_BASE/libombf_4.a
+fi
+
+
 for d in seaice_ssmibufr.fd
 do
   cd $d

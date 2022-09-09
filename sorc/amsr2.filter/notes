@@ -1,0 +1,41 @@
+posteriori flag values (TN282)
+2 -- Land (157 on land mask grid)
+158-164 Ocean always warmer than 2.15 C / 275.3 K
+165     Ocean (-3.0,2.15] C
+170-172 Inland > 2.15C
+173     Inland > 0.0 C
+174     Inland > -3.0C
+224     Undefined
+
+So, want to consider flag = 165, or 173, or 174, or 224
+
+--------------------------------------------------------
+
+
+perfect filter types:
+  is_ice     -- stats[0] == 1.
+  isnt_ice   -- stats[0] == 0.
+  is_land    -- stats[1] == 1.
+  isnt_land  -- stats[1] == 0.
+  is_water   -- stats[2] == 1.
+  isnt_water -- stats[2] == 0.
+
+ice candidates:
+  is_ice or
+  (not isnt_ice) and (isnt_land) and not(is_water)
+
+function -- apply filter
+
+pass 1: 
+  perfect filters -- for each type
+  more than x% of data?
+  more than x% of best?
+
+
+#is there a perfect ice filter?
+#are there perfect not-ice filters?
+  is is perfect land?
+    flag 157
+  is it perfect water?
+    concentration = 0.0 -- need this as a value for further work.
+...

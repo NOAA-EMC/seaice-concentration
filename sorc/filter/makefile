@@ -1,7 +1,7 @@
 #Robert Grumbine 27 May 2016
 SHELL=/bin/sh
         
-#include ../makeall.mk
+include ../makeall.mk
 
 #Demand that these be set in environment:
 #MMAB_BASE=/u/Robert.Grumbine/rgdev/mmablib

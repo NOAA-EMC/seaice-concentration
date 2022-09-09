@@ -9,7 +9,7 @@ proc ModulesHelp { } {
 }
 module-whatis   " ice concentration analysis whatis description"
 
-setenv BASE /u/Robert.Grumbine/rgdev/mmablib/
+setenv BASE /u/robert.grumbine/rgdev/mmablib/
 
 set ver 4.3.0
 #NCO Compilation modules

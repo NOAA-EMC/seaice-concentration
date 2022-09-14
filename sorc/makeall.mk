@@ -11,8 +11,8 @@ SHELL=/bin/sh
 
 #------------------- should need no changes below here ------------------------
 #Compilers and their options
-FC=ifort
-FOPTS=-c -O2 -I $(MMAB_INC)
+FC=ftn
+FOPTS=-c -O2 -I $(MMAB_INC) -e03
 #FOPTS=-c -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
 
 ##Home desk:
@@ -23,13 +23,20 @@ FOPTS=-c -O2 -I $(MMAB_INC)
 FLD=$(FC)
 FLDFLAGS=$(MMAB_LIBF4)
 
-CC=gcc
-COPTS=-c -ansi -O2 -DLINUX -I $(MMAB_INC) $(NETCDF_INCLUDE)
+NETCDF_LDFLAGS_C=-L$(NETCDF_LIBRARIES)
 
-CPP=g++
-#CPPOPTS= -c -ansi -Wall -O2 -DLINUX -DCPLUS -I$(MMAB_INC) $(NETCDF_INCLUDE)
+CC=cc
+#gnu:
+COPTS=-c -ansi -O2 -DLINUX -I $(MMAB_INC) $(NETCDF_INCLUDE)
+#intel:
+COPTS=-c -O2 -DLINUX -I $(MMAB_INC) $(NETCDF_INCLUDE) -std=c11
+
+CPP=CC
+CPPLD=CC
+#gnu:
 CPPOPTS= -c -ansi -Wall -O2 -DLINUX -DCPLUS -I $(MMAB_INC) $(NETCDF_INCLUDE)
-CPPLD=g++
+#intel:
+CPPOPTS= -c -Wall -O2 -DLINUX -DCPLUS -I $(MMAB_INC) $(NETCDF_INCLUDE) -std=c++11
 CPPLDFLAGS=$(MMAB_LIBF4)
 
 #Building elements

@@ -4,42 +4,47 @@
 
 set -x
 
+source ../versions/build.ver
 module list > /dev/null 2> /dev/null
+
 if [ $? -ne 0 ] ; then
 #On a system without the module software
   if [ `uname` == 'Darwin' ] ; then
-    export BASE=/Users/rmg3/usrlocal/mmab
+    export MMAB_BASE=/Users/rmg3/usrlocal/mmablib/
     export MMAB_VER=v3.5.0
   else
-    export BASE=/usr1/rmg3
+    export MMAB_BASE=/usr1/rmg3
     export MMAB_VER=v3.5.0
   fi
   export VER=$MMAB_VER
-  export MMAB_INC=$BASE/$VER/include/
-  export MMAB_LIB="-L ${BASE}/mmablib/$VER/"
-  export MMAB_SRC=${BASE}/${VER}/sorc/
+  export MMAB_INC=$MMAB_BASE/$VER/include/
+  export MMAB_LIB="-L ${MMAB_BASE}/$VER/"
+  export MMAB_SRC=${MMAB_BASE}/${VER}/sorc/
   #end building on non-module system
 else
 #on a system with module software, such as wcoss
-  set +x
-  module purge
-  #WCOSS2
-  module load envvar/1.0
+#  set +x
+  module reset
   module use `pwd`/modulefiles
-  module load seaice_analysis/4.5.0
+  module load seaice_analysis/$seaice_analysis_ver
   if [ $? -ne 0 ] ; then
-    echo some problem trying to load seaice_analysis/4.5.0
-    echo manually loading
-    source ./wcoss2.modules
-    #source ./hera.modules
+    echo some problem trying to load seaice_analysis/$seaice_analysis_ver
+    exit 1
   fi
   set -x
-  #move in to the system-specific modules
-  #export BASE=/u/Robert.Grumbine/rgdev/mmablib
-  #export MMAB_BASE=/u/Robert.Grumbine/rgdev/mmablib
-  #export VER=""
+  module list
   env
+
+  # fix MMAB?
+  # module load mmab/$MMAB_VER
+
+  export MMAB_BASE=`pwd`/mmablib/${MMAB_VER}
+  export MMAB_INC=$MMAB_BASE/include
+  export MMAB_SRC=$MMAB_BASE/sorc
+  export MMAB_LIBF4=$MMAB_BASE/libombf_4.a
 #If being built against new mmablib by developer:
+#  export BASE=/u/Robert.Grumbine/rgdev/mmablib
+#  export VER=""
 #  export MMAB_INC=$BASE/include/
 #  export MMAB_SRC=${BASE}/sorc/
 #  export MMAB_LIB="-L ${BASE}/"
@@ -51,25 +56,18 @@ else
 #  export MMAB_OMBF_LIB4=$dlib/libombf_4.a
 
 fi
-
-module list
-export mmablib_ver=${MMAB_VER:-v3.5.0}
+export mmablib_ver=${MMAB_VER}
 
 #set -xe
 set -x
 
-. ../versions/seaice_analysis.ver
-
-for d in l1b_to_l2 l2_to_l3 amsr2 ssmi ssmis avhrr general 
-#debug for d in l1b_to_l2 
+for d in general amsr2 ssmi ssmis avhrr l1b_to_l2 l2_to_l3
 do
   cp makeall.mk $d
   cd $d
-  #debug env > environment
   ./makeall.sh
   cd ..
 done
-#debug exit
 
 if [ ! -d ../exec ] ; then
   mkdir ../exec

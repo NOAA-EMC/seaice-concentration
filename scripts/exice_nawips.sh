@@ -21,12 +21,12 @@ NAGRIB_TABLE=$HOMEseaice_analysis/fix/nagrib.tbl
 
 #
 create_gempak () {
-  if [ $RUN == "ice" ]; then
+  if [ $RUNice == "ice" ]; then
       NAGRIB=${OS_BIN}/nagrib_nc
   else
       NAGRIB=${OS_BIN}/nagrib2
   fi
-  if [ "$RUN" == "ice" ] ; then
+  if [ "$RUNice" == "ice" ] ; then
     cpyfil=`echo $entry  | awk 'BEGIN {FS="|"} {print $2}'`
     garea=`echo $entry   | awk 'BEGIN {FS="|"} {print $3}'`
     gbtbls=`echo $entry  | awk 'BEGIN {FS="|"} {print $4}'`
@@ -59,16 +59,16 @@ create_gempak () {
     fi
     fhr=$fhcnt
   
-    if [ $RUN == "ice" ] ; then    
-      GRIBIN=$COMIN/${model}${RUN}.${cycle}.grb
-      GEMGRD=${RUN}_${PDY}${cyc}
+    if [ $RUNice == "ice" ] ; then    
+      GRIBIN=$COMIN/${model}${RUNice}.${cycle}.grb
+      GEMGRD=${RUNice}_${PDY}${cyc}
     else
       GRIBIN=$COMIN/seaice.${cycle}.5min.grb.grib2
       GEMGRD=${RUN2}_${PDY}${cyc}.grd
     fi
   
-    if [ -z $RUN ] ; then
-        echo  "RUN not defined"
+    if [ -z $RUNice ] ; then
+        echo  "RUNice not defined"
     else
         GRIBIN_chk=$GRIBIN
     fi
@@ -140,7 +140,7 @@ EOF
 
 for product in ice ice_5min; do 
     entry=`grep "^${product} " $NAGRIB_TABLE | awk 'index($1,"#") != 1 {print $0}'`
-    RUN=$(echo $entry|sed 's/ //g'|awk -F"|" '{print $1}')
+    RUNice=$(echo $entry|sed 's/ //g'|awk -F"|" '{print $1}')
     create_gempak
 done
 

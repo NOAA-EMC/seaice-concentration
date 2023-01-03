@@ -16,9 +16,8 @@ if [ -z $LMOD_FAMILY_COMPILER ] ; then
 
   #module load bufr_dumplist/2.3.0
   #module load dumpjb/5.1.0
-  module load bufr_dump/2.0.0
+  module load bufr_dump/1.1.2
 
-  #module load lsf/10.1
   module list
 fi
 

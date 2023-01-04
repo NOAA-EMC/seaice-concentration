@@ -1,0 +1,13 @@
+Remove directory nasateam2.algorithm, ssmis/reference 
+  -- developer oops left it in the implementation tree.  
+     These is developer reference only.
+
+delete empty directory ush
+delete top level 'makeall.sh', this need only begin in sorc directory
+
+Change makefiles to point to gfortran, g++, gcc on wcoss system, vs AIX ncepxlF, etc.
+give type conversion to 'sizeof' -related prints.
+(emc archive 21551)
+
+
+

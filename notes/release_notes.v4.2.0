@@ -1,0 +1,27 @@
+Changes:
+science:
+include F-18 SSMI/S
+
+for ops:
+Change scripts/*, jobs/*, ush/*, sms/* for current (3/8/2016) ops standards
+add sorc/seaice_concentration_analysis.modulefile for ops
+add makefile.mk to hold general definitions for makes
+update makeall.sh to use modules
+improve F90 compliance: go to, implicit none, numbered do loops
+change makefiles to rely on modules, makefil.mk
+
+Commentary:
+Add authorship and dates to files
+update/add comments about file purposes
+
+Add directories/files:
+patch2 -- patching bad ice fields
+qclimits -- finding bounds for Tb
+loose -- miscellaneous tools for maintaining system
+reference -- variously
+notes -- various additions
+sorc/amsr2/reference -- completing the reference file set
+weafilt -- codes for weather filter development
+add amsr2/seaice_amsr2.fd, amsr2/seaice_iceamsr2.Cd/ for processing of amsr2 Tb in next implementation
+
+Robert Grumbine 23 August 2016

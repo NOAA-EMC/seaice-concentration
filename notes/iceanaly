@@ -1,0 +1,34 @@
+SSMI data processing
+
+ssmi.c -- original operational file.  Operations in 1997 required that all
+source be in single filt.  RG development generally proceeded with individual
+files and then concatenated these sources for operational implementation.
+
+ssmimain.c 
+  an extracted main program for ssmi data processing.  Later morphs to ssmi.main.c, and
+then ssmi.main.C
+
+  originally read sdr format, and did its own date management.  
+
+  For operational implementation, moved to bufr format.
+
+  later, changed to expect data files to be pre-selected to be appropriate
+and stopped date management.  This is why jday is now unused argument.
+
+
+  added hires approach to ssmi.main.c -- regression of sqrt(v^2 - h^2) on
+team1 over clear points.  16 mar 2004 in my version.  added counts for
+which errors are flagged in qc.  Also start using all ssmi rather than only
+F-13.
+
+  team2 added to ssmi.main.C
+
+  Feb 2009: added satno as an argument.  Propted by loss of F-14 and 
+bad data from F-15.
+
+
+  10/31/2011 (mine) new weather filtering approach for F-15, last of the SSMI
+and corrupted in 22 GHz.
+
+
+

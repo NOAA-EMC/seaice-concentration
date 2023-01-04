@@ -1,0 +1,414 @@
+--------   Version 4.0.0 Implementation 2012 -------------------------------------
+
+In brief:
+I'm now running in user parallel the new sea ice concentration system.  
+It includes the new vertical structure, grib2 output, newer polar 
+stereographic land masks, F17 sea ice concentration, improved weather 
+filter for F15 sea ice concentration, updated AMSR ice algorithm, and 
+improved management of AMSR data input.  Output is on cirrus in 
+/marine/noscrub/wx21rg/com/developer/sice.YYYYMMDD  As expected, while 
+we still have the old satellite, adding the newer one makes little change 
+to the products.  But it is still worth testing it in your own systems 
+to ensure that none of these things which look minor to me are major to 
+you.  20120403 is the first day with the new system's output.  I will 
+start running this from cron on cirrus.
+
+
+At Length:
+
+Downstream users note and question thereto:
+There are some changes to the polar stereographic land masks, the half 
+degree lat-long land mask, and deletions of files that, as best I can 
+see, nobody is using.  Particular groups to look for effects on their 
+operations are the SST analysis folks, and the GFS (the latter might be 
+making use of these legacy to-be-deleted files, but probably aren't).  
+Please verify that your jobs are not adversely affected by the new 
+version sea ice. 
+
+Directories which exist, but are empty, in my mapping of the vertical structure on emcsvn:
+
+    dictionaries, exec, gempak, lib, ush, util -- no expectation of 
+needing these; they are place holders for the future.
+
+Directories with new or changed content:
+
+    jobs -- renaming the job from JMRF_ICEDRFT2 to JSEAICE_CONCENTRATION_ANALYSIS
+    scripts -- renamed likewise
+    parm -- new directory, contains parameters for the generation of GRIB2 sea ice output files
+    sorc -- see below
+    fix -- see below
+
+
+External libraries used:
+
+    mmablib (separate RFC coming)
+    bacio (will use current /nwprod/lib version)
+    bufrlib ("")
+    w3lib ("")
+
+
+External utilities used:
+dumpjb
+
+
+In the future:
+
+    It will be good to remove the MRF network from this job and replace 
+with an MMAB network.
+    For now, GRIB1 programs are still running in the job.  These also 
+generate the WMO files and I don't know where WMO stands on our 
+unilaterally changing to GRIB2, nor am I confident about how to make that change.
+    There is currently no AMSR data coming.  Nonetheless, the old instrument 
+has not been declared dead, so such data could come in the future.  And 
+May 18th 2012 expects the launch of a new AMSR instrument (AMSR2 on GCOM-W).  
+Therefore, the upgrades which were abandoned last fall with the loss of 
+AMSRE data are implemented here in the source.
+    In similar vein, the weather filter improvements for SSMI on F-15 
+which were not implemented last fall as they did not make marked difference, 
+are implemented here.
+
+
+Fixed files used in ice concentration analysis (all have seaice_ prefix)
+
+    Geographic files:
+        alldist.bin -- no change
+        gland5min.grib -- nc
+        gland5min -- nc
+        posteriori_5min -- nc
+        lake_isleout -- nc
+        nland127.grib -- nc
+        nland127.map -- change
+        sland127.grib -- nc
+        sland127.map -- change
+        newland.grib -- change
+        newland -- change
+        posteriori_30min -- nc
+        nland.grib -- change
+        nland.map -- change
+        sland.grib -- change
+        sland.map -- change
+        seaice_newland.pct -- delete
+        seaice_newland.grb -- delete
+    Algorithm files:
+    SSMI -- unmodified
+        TBfyant.tab
+        TBowant.tab
+        TBccant.tab
+        TBfyark.tab
+        TBowark.tab
+        TBccark.tab
+        TBthark.tab
+    AMSR -- all are modified, upgrade from prelaunch TEAM2 algorithm to Jan 2009 TEAM2 algorithm
+        TBfyant.tab.amsr
+        TBowant.tab.amsr
+        TBccant.tab.amsr
+        TBfyark.tab.amsr
+        TBowark.tab.amsr
+        TBccark.tab.amsr
+        TBthark.tab.amsr 
+    SSMI-S -- All are new
+        TBfyant.tab.ssmisu
+        TBowant.tab.ssmisu
+        TBccant.tab.ssmisu
+        TBfyark.tab.ssmisu
+        TBowark.tab.ssmisu
+        TBccark.tab.ssmisu
+        TBthark.tab.ssmisu 
+
+
+Source
+
+    General programs (not tied to a particular instrument)
+        edge.cd -- no change
+        monitor.cd -- no change
+        psgnorth.fd -- no change, to be retired in future
+        psgsouth.fd -- no change, to be retired in future
+        icegrid.Cd -- move .cd to .Cd, follow industry standard naming for C++
+        posteriori.Cd -- ""
+        reduce.Cd -- ""
+        xpm.Cd -- ""
+        blend.Cd -- ""
+        filtanal.Cd -- ""
+        grib2.fd -- New, generate grib2 output for sea ice concentration files
+        regions.Cd -- new, make graphics for areas specified by argument list
+    SSMI (from DMSP F-11, -13, -14, -15; -15 is the last remaining SSMI flying)
+        ssmibufr.fd -- add monitoring program
+        seaissmi.Cd -- improved management of satellite #, improved weather filter
+    AMSR
+        amsrbufr.fd -- improved location management for scan spots
+        amsrice.Cd -- location management, newer algorithm tie points, file name convention
+    SSMI-S (from DMSP F-16, F-17, F-18; F-19 and F-20 are scheduled to be launched)
+        ssmisubufr.fd -- new, decode bufr tanks
+        seaissmisu -- new, produce ice concentrations from SSMI-S input
+
+
+Source Future:
+
+It would be nice to completely separate the preliminary analysis programs 
+(listed under SSMI, AMSR, SSMI-S in sorc) to jobs separate from the 
+general assembly of ice concentration fields in to a coherent analysis 
+(listed under general).  The satellite analyses may then run independently 
+of the assembly, in parallel.  And adding or deleting satellite would 
+become a more straightforward process.
+
+
+Remove directory nasateam2.algorithm, ssmis/reference 
+  -- developer oops left it in the implementation tree.  
+     These is developer reference only.
+
+delete empty directory ush
+delete top level 'makeall.sh', this need only begin in sorc directory
+
+Change makefiles to point to gfortran, g++, gcc on wcoss system, vs AIX ncepxlF, etc.
+give type conversion to 'sizeof' -related prints.
+(emc archive 21551)
+
+
+--------   End Version 4.0.0 Implementation 2012 -------------------------------------
+
+----------------        Changes 2004 to 2012     ---------------------------------
+
+ssmimain.c
+  an extracted main program for ssmi data processing.  Later morphs to ssmi.main.c, and
+then ssmi.main.C
+
+  originally read sdr format, and did its own date management.
+
+  For operational implementation, moved to bufr format.
+
+  later, changed to expect data files to be pre-selected to be appropriate
+and stopped date management.  This is why jday is now unused argument.
+
+
+  added hires approach to ssmi.main.c -- regression of sqrt(v^2 - h^2) on
+team1 over clear points.  16 mar 2004 in my version.  added counts for
+which errors are flagged in qc.  Also start using all ssmi rather than only
+F-13.
+
+  team2 added to ssmi.main.C
+
+  Feb 2009: added satno as an argument.  Prompted by loss of F-14 and
+bad data from F-15.
+
+  10/31/2011 (mine) new weather filtering approach for F-15, last of the SSMI
+and corrupted in 22 GHz.
+
+
+----------------   End Changes 2004 to 2012     ---------------------------------
+
+
+
+---------------- 2004 implementation of high resolution analysis -----------
+Implementation-related notes
+
+20040505 -- implementation of high resolution analysis
+seaice_filtanal.Cd : replaces seaice_filtanal.fd
+  change to 12.7 km and 5' grids from 25.4 km and 30' grids.
+  change a logical test to be less verbose
+
+seaice_icegrid.Cd : replaces seaice_icegrid.fd
+  change to 5' global grid
+  handle case of there being no prior global analysis field
+
+seaice_ssmibufr.fd :
+  binary.c     -- includes high resolution output now
+  ssmi.bufr.f  -- includes F15 and high resolution output now
+
+seaice_xpm.Cd : replaces seaice_xpm.cd
+  No code changes
+  Makefile now builds codes for 5 minute global 12.7 km hemispheric grids.
+
+seaice_reduce.Cd : NEW
+  Codes to construct reduced resolution grids from higher resolutions.
+  3 executables are built, one each for northern hemisphere, southern
+    hemisphere, and global.
+
+seaice_seaissmi.cd :
+  Source split in to logical groups
+  Code modified for new, higher resolution, 12.7 km versus 25.4 km,
+    processing of SSMI to sea ice concentrations.
+
+seaice_psgsouth.fd :
+seaice_psgnorth.fd :
+seaice_ice2grib.fd :
+  Same source code used for both old and new resolutions.
+  Difference lies in the included file icegrid.inc (see makefile)
+  Conditional construction of WMO output
+  New include files in new.includes/
+
+This set involves mainly changes to makefiles and does not produce codes
+that conflict with the old 25.4 km and 30 minute resolution processing.
+They may be implemented immediately.
+
+seaice_psgnorth.fd :
+    removed unused debug lines
+    put wmo output under control of include
+    new include file for 12.7 km grid
+    Makefile generates executables for both 12.7 km and 25.4 km files.
+
+seaice_psgsouth.fd :
+    removed unused debug lines
+    put wmo output under control of include
+    new include file for 12.7 km grid
+    Makefile generates executables for both 12.7 km and 25.4 km files.
+
+seaice_ice2grib.fd :
+    removed unused debug lines
+    put wmo output under control of include
+    new include files for 30 minute and 5 minute grids
+    Makefile generates executables for both 5 minute and 30 minute files.
+
+seaice_xpm.Cd      :
+    No code changes
+    Makefile now also generates executables for both 12.7 km hemispheric grids
+         and 5 minute grid
+
+seaice_reduce.Cd   : NEW
+    Executables to reduce northern hemisphere, southern hemisphere, and global
+      higher resolution grids to the old resolutions.
+
+new.includes:
+    directory containing the new include files mentioned above.
+
+Executable      time (s)        Max resident set size (kb)
+north_reduce    0.2               4,480
+south_reduce    0.1               3,548
+north12xpm      0.5               3,180
+south12xpm      0.35              2,740
+northxpm        0.15              2,128
+southxpm        0.1               2,068
+psgnorth        0.09              5,448
+psgsouth        0.07              4,340
+psgnorth12      0.24             15,116
+psgsouth12      0.18             10,900
+global_reduce   1.1              21,816
+global5minxpm   6.2              20,004
+globalxpm       0.2               2,284
+ice2grib5min    2.0             172,668
+ice2grib        0.1               6,908
+
+
+Round 2 codes:
+This involves changes which must all be done concurrently to produce the
+higher resolution sea ice fields, and correctly produce the lower resolution
+sea ice fields.
+
+seaice_ssmibufr.fd:
+  high resoution output added
+  includes all satellites in output
+
+seaice_seaissmi.cd: replace seaice_seaissmi.fd
+  Source code split in to logical groups
+  Many code modifications to produce new, higher resolution, 12.7 km sea
+    ice concentrations from ssmi information.
+
+seaice_filtanal.Cd : replaces seaice_filtanal.fd
+  change to 12.7 km and 5' grids from 25.4 km and 30' grids
+  change a logical test to be less verbose
+  remove unused variables
+
+seaice_icegrid.Cd : replaces seaice_icegrid.fd
+  change to 5' global grid from 30'
+  handle case of there being no prior global analysis field
+
+
+Executable      time (s)        Max resident set size (kb)
+seaice_ssmibufr 180               2,972
+seaice_seaissmi  28              83,328
+seaice_filtanal  21             111,452
+seaice_icegrid    4.4           334,732
+
+ex990 total     300             334,732
+(includes dumpjb, and codes from round1; dumpjb is most of the time)
+
+
+Fixed fields:
+
+Round 2 codes:
+This involves changes which must all be done concurrently to produce the
+higher resolution sea ice fields, and correctly produce the lower resolution
+sea ice fields.
+
+ex990.sh.sms :
+  deletes exsaic script, unrelated to sea ice processing.
+  produce higher resolution sea ice fields
+  produce old resolution fields from this new input
+  use high resolution SST analysis (0.5 degree now)
+
+seaice_ssmibufr.fd:
+  high resoution output added
+  includes all satellites in output
+
+seaice_seaissmi.cd: replace seaice_seaissmi.fd
+  Source code split in to logical groups
+  Many code modifications to produce new, higher resolution, 12.7 km sea
+    ice concentrations from ssmi information.
+
+seaice_filtanal.Cd : replaces seaice_filtanal.fd
+  change to 12.7 km and 5' grids from 25.4 km and 30' grids
+  change a logical test to be less verbose
+  remove unused variables
+
+seaice_icegrid.Cd : replaces seaice_icegrid.fd
+  change to 5' global grid from 30'
+  handle case of there being no prior global analysis field
+
+
+Executable      time (s)        Max resident set size (kb)
+seaice_ssmibufr 180               2,972
+seaice_seaissmi  28              83,328
+seaice_filtanal  21             111,452
+seaice_icegrid    4.4           334,732
+
+ex990 total     300             334,732
+(includes dumpjb, and codes from round1; dumpjb is most of the time)
+
+
+Fixed fields:
+
+New seaice fixed files -------------------------------------
+seaice_nland127.map :
+  byte array of land mask flags
+  derived from GMT land and water mapping
+  points that were 'ice' covered in summer masked out to coast.
+
+seaice_sland127.map :
+  byte array of land mask flags
+  derived from GMT land and water mapping
+  points that were 'ice' covered in summer masked out to coast.
+
+seaice_gland5min    :
+  byte array of land mask flags
+  derived from GMT land and water mapping
+  points that can not be filled from an ocean point on the 12.7 km grids
+    masked out as 151 (unfillable ocean) -- these may be fillable in the
+    future as higher resolution and better algorithms become available.
+    50907 such points.
+  'land' points that can be filled from an ocean point of the 12.7 km grid
+    masked as 150 (fillable land).  These exist because of differences in
+    locating bounding points of polygon segments from GMT.
+    9611 such points
+
+seaice_newland.pct :
+  floating point array of fraction of 30 minute grid cell which can be filled
+    by information from ocean points on the 5 minute grid.
+
+Revised files -------------------------------------
+
+seaice_nland.map :
+seaice_sland.map :
+  25.4 km byte array of land mask flags
+  any point that can be filled with any unmasked (not land or coast)
+     point from the higher resolution grid is marked ocean.  This will not
+     accurately represent the land, as it over-ascribes ocean.
+  some points may display as land now, that used to be ocean.  These are
+     due to the unfillable (due to contamination) points now known on the
+     higher resolution grid.
+
+seaice_newland :
+  30 minute (1/2 degree) byte array of land mask flags
+  any point that can be filled with any unmasked (not land or coast)
+     point from the higher resolution grid is marked ocean.  This will not
+     accurately represent the land, as it over-ascribes ocean.
+
+---------------- End of 2004 implementation of high resolution analysis -----------

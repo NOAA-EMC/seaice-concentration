@@ -1,0 +1,10 @@
+﻿Notes for next sea ice history and concentration analysis
+
+Land mask should be embedded (or bit-masked) in analysis grids
+Placemark #days of ice cover (history/climo)
+Additional filtering of bogus points, perhaps by reference grid
+Bounding curve analysis of ice areas + extents
+History fields uniformly [0-1]
+History in grib2 consistently
+Each instrument analyzed separately, then combined
+

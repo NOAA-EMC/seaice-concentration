@@ -18,7 +18,7 @@ PROGRAM bufr_readsst
       DATA IDST2  /'SAZA SOZA FOVN CLAVR '/
       DATA IDCHN  /'INCN ALBD TMBR '/
 
-      REAL*8 XDATA(18),XCHAN(3,5)
+      REAL(8) XDATA(18),XCHAN(3,5)
       DOUBLE PRECISION dst(18), chan(3,5)
       CHARACTER(8)  SUBSET
       INTEGER outunit, creturns

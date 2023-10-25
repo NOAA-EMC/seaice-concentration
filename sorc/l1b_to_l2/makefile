@@ -3,9 +3,6 @@ SHELL=/bin/sh
         
 include ../makeall.mk
 #work -- from makeall.mk or makeall.sh as a rule
-#module load ips impi
-#module load bufr w3nco w3emc
-#module load NetCDF/4.5.0
 #
 #Home:
 #NCEPLIB=-L /Users/rmg3/usrlocal/nceplibs/lib
@@ -34,7 +31,9 @@ distclean : clean
 	rm ssmi_tol2 ssmis_tol2 bayes demo
 # ---------------------------------------------------------------------
 bayes : bayes.o
-	g++ $<  $(NETCDF_LDFLAGS_C) $(NCEPLIB) $(LIBS) -o $(@)
+#	g++ $<  $(NETCDF_LDFLAGS_C) $(NCEPLIB) $(LIBS) -o $(@)
+	$(CPP) $<  $(NETCDF_LDFLAGS_C) $(NCEPLIB) $(LIBS) -o $(@)
 
 demo : demo.o
-	g++ $<  $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) $(LIBS) -o $(@)
+#	g++ $<  $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) $(LIBS) -o $(@)
+	$(CPP) $<  $(NETCDF_LDFLAGS_C) -lnetcdf  $(NCEPLIB) $(LIBS) -o $(@)

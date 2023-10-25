@@ -1,0 +1,123 @@
+In brief:
+I'm now running in user parallel the new sea ice concentration system.  It includes the new vertical structure, grib2 output, newer polar stereographic land masks, F17 sea ice concentration, improved weather filter for F15 sea ice concentration, updated AMSR ice algorithm, and improved management of AMSR data input.  Output is on cirrus in /marine/noscrub/wx21rg/com/developer/sice.YYYYMMDD  As expected, while we still have the old satellite, adding the newer one makes little change to the products.  But it is still worth testing it in your own systems to ensure that none of these things which look minor to me are major to you.  20120403 is the first day with the new system's output.  I will start running this from cron on cirrus.
+
+
+At Length:
+
+Downstream users note and question thereto:
+There are some changes to the polar stereographic land masks, the half degree lat-long land mast, and deletions of files that, as best I can see, nobody is using.  Particular groups to look for effects on their operations are the SST analysis folks, and the GFS (the latter might be making use of these legacy to-be-deleted files, but probably aren't).  Please verify that your jobs are not adversely affected by the new version sea ice. 
+
+Directories which exist, but are empty, in my mapping of the vertical structure on emcsvn:
+
+    dictionaries, exec, gempak, lib, ush, util -- no expectation of needing these; they are place holders for the future.
+
+Directories with new or changed content:
+
+    jobs -- renaming the job from JMRF_ICEDRFT2 to JSEAICE_CONCENTRATION_ANALYSIS
+    scripts -- renamed likewise
+    parm -- new directory, contains parameters for the generation of GRIB2 sea ice output files
+    sorc -- see below
+    fix -- see below
+
+
+External libraries used:
+
+    mmablib (separate RFC coming)
+    bacio (will use current /nwprod/lib version)
+    bufrlib ("")
+    w3lib ("")
+
+
+External utilities used:
+dumpjb
+
+
+
+In the future:
+
+    It will be good to remove the MRF network from this job and replace with an MMAB network.
+    For now, GRIB1 programs are still running in the job.  These also generate the WMO files and I don't know where WMO stands on our unilaterally changing to GRIB2, nor am I confident about how to make that change.
+    There is currently no AMSR data coming.  Nonetheless, the old instrument has not been declared dead, so such data could come in the future.  And May 18th 2012 expects the launch of a new AMSR instrument (AMSR2 on GCOM-W).  Therefore, the upgrades which were abandoned last fall with the loss of AMSRE data are implemented here in the source.
+    In similar vein, the weather filter improvements for SSMI on F-15 which were not implemented last fall as they did not make marked difference, are implemented here.
+
+
+Fixed files used in ice concentration analysis (all have seaice_ prefix)
+
+    Geographic files:
+        alldist.bin -- no change
+        gland5min.grib -- nc
+        gland5min -- nc
+        posteriori_5min -- nc
+        lake_isleout -- nc
+        nland127.grib -- nc
+        nland127.map -- change
+        sland127.grib -- nc
+        sland127.map -- change
+        newland.grib -- change
+        newland -- change
+        posteriori_30min -- nc
+        nland.grib -- change
+        nland.map -- change
+        sland.grib -- change
+        sland.map -- change
+        seaice_newland.pct -- delete
+        seaice_newland.grb -- delete
+    Algorithm files:
+    SSMI -- unmodified
+        TBfyant.tab
+        TBowant.tab
+        TBccant.tab
+        TBfyark.tab
+        TBowark.tab
+        TBccark.tab
+        TBthark.tab
+    AMSR -- all are modified, upgrade from prelaunch TEAM2 algorithm to Jan 2009 TEAM2 algorithm
+        TBfyant.tab.amsr
+        TBowant.tab.amsr
+        TBccant.tab.amsr
+        TBfyark.tab.amsr
+        TBowark.tab.amsr
+        TBccark.tab.amsr
+        TBthark.tab.amsr 
+    SSMI-S -- All are new
+        TBfyant.tab.ssmisu
+        TBowant.tab.ssmisu
+        TBccant.tab.ssmisu
+        TBfyark.tab.ssmisu
+        TBowark.tab.ssmisu
+        TBccark.tab.ssmisu
+        TBthark.tab.ssmisu 
+
+
+Source
+
+    General programs (not tied to a particular instrument)
+        edge.cd -- no change
+        monitor.cd -- no change
+        psgnorth.fd -- no change, to be retired in future
+        psgsouth.fd -- no change, to be retired in future
+        icegrid.Cd -- move .cd to .Cd, follow industry standard naming for C++
+        posteriori.Cd -- ""
+        reduce.Cd -- ""
+        xpm.Cd -- ""
+        blend.Cd -- ""
+        filtanal.Cd -- ""
+        grib2.fd -- New, generate grib2 output for sea ice concentration files
+        regions.Cd -- new, make graphics for areas specified by argument list
+    SSMI (from DMSP F-11, -13, -14, -15; -15 is the last remaining SSMI flying)
+        ssmibufr.fd -- add monitoring program
+        seaissmi.Cd -- improved management of satellite #, improved weather filter
+    AMSR
+        amsrbufr.fd -- improved location management for scan spots
+        amsrice.Cd -- location management, newer algorithm tie points, file name convention
+    SSMI-S (from DMSP F-16, F-17, F-18; F-19 and F-20 are scheduled to be launched)
+        ssmisubufr.fd -- new, decode bufr tanks
+        seaissmisu -- new, produce ice concentrations from SSMI-S input
+
+
+Source Future:
+
+It would be nice to completely separate the preliminary analysis programs (listed under SSMI, AMSR, SSMI-S in sorc) to jobs separate from the general assembly of ice concentration fields in to a coherent analysis (listed under general).  The satellite analyses may then run independently of the assembly, in parallel.  And adding or deleting satellite would become a more straightforward process.
+
+
+Bob Grumbine

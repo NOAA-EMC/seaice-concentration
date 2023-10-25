@@ -9,7 +9,7 @@
       REAL bmiss
       PARAMETER (bmiss=10.0E6)
       CHARACTER(8) SUBSET
-      REAL*8 hdr(9),ident(3), ssmischn(4,24)
+      REAL(8) hdr(9),ident(3), ssmischn(4,24)
 
       INTEGER ichan, jj, ii, isiid, ntank, lubfi
       INTEGER iorbn, islnm, isaid, iret, JT, IDATE

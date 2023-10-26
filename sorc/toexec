@@ -29,10 +29,8 @@ seaice_regions.Cd/seaice_regions.north \
 seaice_regions.Cd/seaice_regions.southhigh \
 seaice_regions.Cd/seaice_regions.northhigh \
 seaice_filtanal.Cd/seaice_filtanal \
-seaice_imsice.Cd/imsice_gl \
 seaice_imsice.Cd/imsice \
 seaice_noice.Cd/noice \
-seaice_noice.Cd/noice_gl \
 seaice_ice2grib.fd/seaice_ice2grib \
 seaice_ice2grib.fd/seaice_ice2grib5min \
 seaice_psgnorth.fd/seaice_psgnorth12 \

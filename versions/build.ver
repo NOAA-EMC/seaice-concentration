@@ -23,10 +23,5 @@ export netcdf_ver=4.7.4
 #export prod_envir_ver=2.0.5
 #export prod_util_ver=2.0.10
 
-#export libjpeg_ver=9c
-#export grib_util_ver=1.2.3
-#export wgrib2_ver=2.0.8
-
 #export hdf5_ver=1.10.6
 
-#export imagemagick_ver=7.0.8-7

@@ -27,10 +27,10 @@ export SENDEMAIL=${SENDEMAIL:-YES}
 #################################################
 # Specify job's execution areas (directory paths)
 #################################################
-export EXECseaice_analysis=${EXECseaice_analysis:-$HOMEseaice_analysis/exec}
-export FIXseaice_analysis=${FIXseaice_analysis:-$HOMEseaice_analysis/fix}
-export PARMseaice_analysis=${PARMseaice_analysis:-$HOMEseaice_analysis/parm}
-export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
+export EXECseaice_analysis=${EXECseaice_analysis:-$HOMEseaice_analysis/exec/}
+export FIXseaice_analysis=${FIXseaice_analysis:-$HOMEseaice_analysis/fix/}
+export PARMseaice_analysis=${PARMseaice_analysis:-$HOMEseaice_analysis/parm/}
+export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush/}
 
 #########################################
 # Run setpdy and initialize PDY variables

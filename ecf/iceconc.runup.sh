@@ -15,15 +15,16 @@
 #-----------------------------------------------------------------------------
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz loading modules zzzzzzzzzzzzzzzzzzzzzzz
 module reset
-module load EnvVars/1.0.3
-module load ips/19.0.5.281 impi/19.0.5
-module load prod_envir/1.1.0
-module load prod_util/1.1.5
-module load grib_util/1.1.1
-module load bufr_dumplist/2.3.0
-module load dumpjb/5.1.0
-module load imagemagick/6.9.9-25
-module load lsf/10.1 #for internal job management, i.e., bkill
+. jobcards
+#module load EnvVars/1.0.3
+#module load ips/19.0.5.281 impi/19.0.5
+#module load prod_envir/1.1.0
+#module load prod_util/1.1.5
+#module load grib_util/1.1.1
+#module load bufr_dumplist/2.3.0
+#module load dumpjb/5.1.0
+#module load imagemagick/6.9.9-25
+#module load lsf/10.1 #for internal job management, i.e., bkill
 module list
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 
@@ -35,18 +36,18 @@ tagm=20210408
 tag=20210409
 end=20210409
 
-export HOMEbase=/u/Robert.Grumbine/rgdev
+export HOMEbase=/u/robert.grumbine/rgdev
 export seaice_analysis_ver=v4.4.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 #Use this to override system in favor of my archive:
-export DCOMROOT=/u/Robert.Grumbine/noscrub/satellites/
+export DCOMROOT=/u/robert.grumbine/noscrub/satellites/
 export RGTAG=prod
 export my_archive=true
 
 cd $HOMEseaice_analysis/ecf
 
-export COMINsst_base=/u/Robert.Grumbine/noscrub/sst/prod/sst
+export COMINsst_base=/u/robert.grumbine/noscrub/sst/prod/sst
 . ./jobcards
 
 if [ -z $obsproc_dump_ver ] ; then
@@ -74,14 +75,14 @@ do
   export job=seaice_filter
   export DATA=$DATAROOT/${job}.${pid}
   #script handles make: mkdir $DATA
-  time ./sms.filter.fake > /u/Robert.Grumbine/noscrub/com/sms.filter.$tag
+  time ./sms.filter.fake > /u/robert.grumbine/noscrub/com/sms.filter.$tag
 
   export job=seaice_analysis
   export DATA=$DATAROOT/${job}.${pid}
   #script handles make: mkdir $DATA
 #Required for dumpjb to run:
   export TMPDIR=$DATA
-  time ./sms.fake > /u/Robert.Grumbine/noscrub/com/sms.$tag
+  time ./sms.fake > /u/robert.grumbine/noscrub/com/sms.$tag
 
 #  module load gempak
 #  time ../jobs/JICE_GEMPAK > gempak.$tag

@@ -11,12 +11,12 @@ all : psgsouth psgsouth12
 
 psgsouth12 : 
 	ln -sf $(MMAB_INC)/icegrid.south12 icegrid.inc
-	$(FC) $(FOPTS)     psgrib.f $(MMAB_SRC)/GRIBIT.f 
-	$(FLD) $(FLDFLAGS) psgrib.o GRIBIT.o $(LIBS) $(MMAB_LIBF4) -o seaice_psgsouth12
+	$(FC) $(FOPTS)     psgrib.f 
+	$(FLD) $(FLDFLAGS) psgrib.o $(LIBS) $(MMAB_LIBF4) -o seaice_psgsouth12
 	rm -f icegrid.inc psgrib.o
 
 psgsouth : 
 	ln -sf $(MMAB_INC)/icegrid.south icegrid.inc
-	$(FC) $(FOPTS)     psgrib.f $(MMAB_SRC)/GRIBIT.f
-	$(FLD) $(FLDFLAGS) psgrib.o GRIBIT.o $(LIBS) $(MMAB_LIBF4) -o seaice_psgsouth
+	$(FC) $(FOPTS)     psgrib.f 
+	$(FLD) $(FLDFLAGS) psgrib.o $(LIBS) $(MMAB_LIBF4) -o seaice_psgsouth
 	rm -f icegrid.inc psgrib.o

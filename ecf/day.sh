@@ -10,7 +10,7 @@ echo initial tag date = $tag
 set -e
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz loading modules zzzzzzzzzzzzzzzzzzzzzzz
 #. /usrx/local/Modules/3.2.10/init/bash
-module purge
+module reset
 module load ips/19.0.5.281 impi/19.0.5
 module load prod_envir/1.1.0
 module load prod_util/1.1.5 

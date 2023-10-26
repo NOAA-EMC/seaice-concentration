@@ -3,6 +3,7 @@
 set -x
 
 find . -type f -name '*.o' -exec rm {} \;
+rm general/*/icegrid.inc
 
 for ex in  \
 seaice_icegrid.Cd/seaice_icegrid \
@@ -46,12 +47,9 @@ done
 
 rm \
 ssmis/seaice_ssmisubufr.fd/seaice_ssmisubufr \
-ssmi/seaice_ssmibufr.fd/seaice_ssmibufr \
 avhrr/seaice_avhrrfilter.Cd/seaice_avhrrfilter \
 avhrr/seaice_avhrrbufr.fd/seaice_avhrrbufr \
 amsr2/seaice_iceamsr2.Cd/seaice_iceamsr2 \
 amsr2/seaice_amsrbufr.fd/seaice_amsrbufr \
-l1b_to_l2/ssmi_tol2 \
 l1b_to_l2/ssmisu_tol2 \
-l2_to_l3/ssmi_tol3 \
 l2_to_l3/ssmisu_tol3 \

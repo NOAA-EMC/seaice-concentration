@@ -14,7 +14,7 @@
 
 #-----------------------------------------------------------------------------
 echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz loading modules zzzzzzzzzzzzzzzzzzzzzzz
-module purge
+module reset
 module load EnvVars/1.0.3
 module load ips/19.0.5.281 impi/19.0.5
 module load prod_envir/1.1.0

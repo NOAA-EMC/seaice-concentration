@@ -103,34 +103,18 @@ $USHseaice_analysis/imsice.sh
 #Dummy variables at this point, formerly used and may be useful
 # again in the future.  Robert Grumbine 6 August 1997.
 jday=1
-refyear=2012
+refyear=2022
 
 #BUFR------------------------------------------------------
 #Run the dumpscript to retrieve a day's data
 #----------------------------------------------------------
 #Cactus:
-#if [ -z $obsproc_dump_ver ] ; then
-#  echo null obsproc_dump_ver
-#  export obsproc_dump_ver=v4.0.0
-#  export obsproc_shared_bufr_dumplist_ver=v1.4.0
-#fi
+if [ -z $obsproc_dump_ver ] ; then
+  echo null obsproc_dump_ver
+  export obsproc_dump_ver=v4.0.0
+  export obsproc_shared_bufr_dumplist_ver=v1.4.0
+fi
 
-
-# The last SSMI instrument died 9 August 2021. These lines kept here as comments 
-#   for when historical re-runs are done before that date.  Robert Grumbine
-#export pgm=dumpjb1
-#. prep_step
-#echo trying to execute $USHobsproc_dump/dumpjb ${PDY}00 12 ssmit
-#$USHobsproc_dump/dumpjb ${PDY}00 12 ssmit
-#export err=$?
-#if [ $err -ne 0 ] ; then
-#  msg="WARNING:  Continuing without ssmit data"
-#  postmsg "$jlogfile" "$msg"
-#  echo "********************************************************************" >> $mailbody
-#  echo "*** WARNING:  dumpjb returned status $err.  Continue without ssmit. " >> $mailbody
-#  echo "********************************************************************" >> $mailbody
-#fi
-#touch ssmit.ibm # ensures that file exists in rare event that dump is empty
 
 export pgm=dumpjb2
 . prep_step
@@ -161,36 +145,14 @@ fi
 touch amsr2.ibm # ensures that file exists in rare event that dump is empty
 
 # send email if any dumpjb calls returned non-zero status
-  if [ -s "$mailbody" ] && [ "$SENDEMAIL" = "YES" ]; then
-     subject="$job degraded due to missing data"
-     mail.py -s "$subject" < $mailbody
-  fi
+if [ -s "$mailbody" ] && [ "$SENDEMAIL" = "YES" ]; then
+   subject="$job degraded due to missing data"
+   mail.py -s "$subject" < $mailbody
+fi
 
 #--------------------------------------------------------------------
 #Process the bufr output into something readable: bufr --> l1b
 #--------------------------------------------------------------------
-##################Decode SSMI data
-# The last SSMI instrument died 9 August 2021. These lines kept here as comments 
-#   for when historical re-runs are done before that date.  Robert Grumbine
-#export pgm=seaice_ssmibufr
-#. prep_step
-#
-#ln -sf ssmit.ibm fort.14
-#touch bufrout
-#
-#startmsg
-#$EXECseaice_analysis/seaice_ssmibufr >> $pgmout 2> errfile
-#export err=$?
-#if [ $err -ne 0 ] ; then
-#  msg="WARNING:  Continuing without ssmibufr"
-#  postmsg "$jlogfile" "$msg"
-#  echo "********************************************************************" >> $mailbody
-#  echo "*** WARNING:  ssmibufr returned status $err.  Continue without ssmi " >> $mailbody
-#  echo "********************************************************************" >> $mailbody
-#fi
-#
-#echo bufrout > delta
-#mv fort.51 bufrout
 
 ##################Decode SSMI-S data
 export pgm=seaice_ssmisubufr
@@ -200,7 +162,7 @@ export XLFRTEOPTS="unit_vars=yes"
 ln -sf ssmisu.ibm fort.11
 
 startmsg
-$EXECseaice_analysis/seaice_ssmisubufr >> $pgmout 2> errfile
+time $EXECseaice_analysis/seaice_ssmisubufr >> $pgmout 2> errfile
 mv fort.51 ssmisu.bufr
 export err=$?
 if [ $err -ne 0 ] ; then
@@ -222,7 +184,7 @@ if [ -f fort.52 ] ; then
 fi
 
 startmsg
-$EXECseaice_analysis/seaice_amsrbufr >> $pgmout 2> errfile
+time $EXECseaice_analysis/seaice_amsrbufr >> $pgmout 2> errfile
 mv fort.52 amsr2.bufr
 export err=$?;err_chk
 if [ $err -ne 0 ] ; then
@@ -234,53 +196,10 @@ if [ $err -ne 0 ] ; then
 fi
 
 #---------------------------------------------------------------------
-# Translate from l1b to l2 in ssmi, ssmis
+# Translate from l1b to l2 in ssmis
 # AMSR2 remains straight shot l1b to l3
 # Robert Grumbine 9 April 2021
 #---------------------------------------------------------------------
-
-#---------------------------------------------------------------------
-# Run the analysis on the files
-# Input files =  delta, $FIXseaice_analysis/seaice_nland127.map, $FIXseaice_analysis/seaice_sland127.map
-# Output files = n3ssmi.$PDY, s3ssmi.$PDY, ssminorth.$PDY, ssmisouth.$PDY
-# Arguments (currently not used) - $jday : Julian Day,
-#				   $refyear : 4 digit year
-#				   248      : satellite number (248 = F15)
-#----------------------------------------------------------
-## The last SSMI instrument died 9 August 2021. These lines kept here as comments 
-##   for when historical re-runs are done before that date.  Robert Grumbine
-#
-##Process SSMI data to analyst (L3) grids
-#export pgm=seaice_seaissmi
-#. prep_step
-#
-#cp $FIXseaice_analysis/seaice_TBthark.tab .
-#cp $FIXseaice_analysis/seaice_TBowark.tab .
-#cp $FIXseaice_analysis/seaice_TBowant.tab .
-#cp $FIXseaice_analysis/seaice_TBfyark.tab .
-#cp $FIXseaice_analysis/seaice_TBfyant.tab .
-#cp $FIXseaice_analysis/seaice_TBccark.tab .
-#cp $FIXseaice_analysis/seaice_TBccant.tab .
-#
-#startmsg
-##satno=248
-##time $EXECseaice_analysis/seaice_seaissmi delta $FNLAND127 $FSLAND127 \
-##           n3ssmi.$PDY s3ssmi.$PDY ssminorth12.$PDY ssmisouth12.$PDY \
-##           $jday $refyear $satno $FGSHHS $FDIST >> $pgmout 2>errfile
-#export err=$?;err_chk
-#
-## New version:
-#export pgm=ssmi_tol2
-#. prep_step
-#ln -sf ssmit.ibm fort.14
-#$EXECseaice_analysis/ssmi_tol2 
-#export err=$?;err_chk
-##produces l2out.f248.51.nc
-#
-#export pgm=ssmi_tol3
-#. prep_step
-#$EXECseaice_analysis/ssmi_tol3 l2out.f248.51.nc nmap.${PDY}.f15 smap.${PDY}.f15
-#export err=$?;err_chk
 
 #----------------------------------------------------------
 # Run the analysis on the SSMI-S datafiles
@@ -320,19 +239,19 @@ echo ssmisu.bufr > delta
 #export err=$?;err_chk
 
 
-export pgm=ssmi_tol3
+export pgm=ssmisu_tol2
 . prep_step
 startmsg
 ln -sf ssmisu.ibm fort.11
-$EXECseaice_analysis/ssmisu_tol2 
+time $EXECseaice_analysis/ssmisu_tol2 >> $pgmout 2> errfile 
 #produces l2out.f285.51.nc, l2out.f286.52.nc
 export err=$?;err_chk
 
-export pgm=ssmi_tol3
+export pgm=ssmisu_tol3
 . prep_step
 startmsg
-$EXECseaice_analysis/ssmisu_tol3 l2out.f285.51.nc nmap.${PDY}.f17 smap.${PDY}.f17
-$EXECseaice_analysis/ssmisu_tol3 l2out.f286.52.nc nmap.${PDY}.f18 smap.${PDY}.f18
+time $EXECseaice_analysis/ssmisu_tol3 l2out.f285.51.nc nmap.${PDY}.f17 smap.${PDY}.f17 >> $pgmout 2> errfile
+time $EXECseaice_analysis/ssmisu_tol3 l2out.f286.52.nc nmap.${PDY}.f18 smap.${PDY}.f18 >> $pgmout 2> errfile
 export err=$?;err_chk
 
 
@@ -352,8 +271,7 @@ cp $FIXseaice_analysis/seaice_TBfyark.tab.amsr2 .
 cp $FIXseaice_analysis/seaice_TBfyant.tab.amsr2 .
 cp $FIXseaice_analysis/seaice_TBccark.tab.amsr2 .
 cp $FIXseaice_analysis/seaice_TBccant.tab.amsr2 .
-#
-#
+
 export pgm=seaice_iceamsr2
 . prep_step
 startmsg
@@ -376,9 +294,9 @@ export err=$?;err_chk
 export pgm=seaice_blend
 startmsg
 $EXECseaice_analysis/seaice_blend \
-  amsr2north6.$PDY nmap.${PDY}.f15 nmap.${PDY}.f17 nmap.${PDY}.f18 \
+  amsr2north6.$PDY nmap.${PDY}.f17 nmap.${PDY}.f18 \
     initnorth12.$PDY \
-  amsr2south6.$PDY smap.${PDY}.f15 smap.${PDY}.f17 smap.${PDY}.f18 \
+  amsr2south6.$PDY smap.${PDY}.f17 smap.${PDY}.f18 \
     initsouth12.$PDY \
   $FNLAND127 $FSLAND127 noice.$PDY imseaice_analysis.$PDY >> $pgmout 2> errfile
 export err=$?;err_chk
@@ -446,29 +364,17 @@ convert sh.$PDY.xpm sh.$PDY.gif
 if [ $SENDCOM = "YES" ]
 then
   # Raw files -- L3 -- on per-instrument basis
-#L3 with tb etc.
-  #cp n3ssmi.$PDY  ${COMOUT}/seaice.t${cyc}z.n3ssmi
-  #cp s3ssmi.$PDY  ${COMOUT}/seaice.t${cyc}z.s3ssmi
-  #cp n3ssmis.$PDY  ${COMOUT}/seaice.t${cyc}z.n3ssmis
-  #cp s3ssmis.$PDY  ${COMOUT}/seaice.t${cyc}z.s3ssmis
-  #cp n3ssmis18.$PDY  ${COMOUT}/seaice.t${cyc}z.n3ssmis18
-  #cp s3ssmis18.$PDY  ${COMOUT}/seaice.t${cyc}z.s3ssmis18
+  #L2 ice files -- conc + Tb
+  cp l2out.* ${COMOUT}
+
+  #L3 with tb etc.
   cp namsr2.${PDY}_hr ${COMOUT}/seaice.t${cyc}z.namsr2.${PDY}_hr
   cp namsr2.${PDY}_lr ${COMOUT}/seaice.t${cyc}z.namsr2.${PDY}_lr
   cp samsr2.${PDY}_hr ${COMOUT}/seaice.t${cyc}z.samsr2.${PDY}_hr
   cp samsr2.${PDY}_lr ${COMOUT}/seaice.t${cyc}z.samsr2.${PDY}_lr
-#L3 ice conc only
-  #cp ssminorth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssminorth12
-  #cp ssmisouth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmisouth12
-  #cp ssmisnorth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmisnorth12
-  #cp ssmissouth12.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmissouth12
-  #cp ssmisnorth1218.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmisnorth1218
-  #cp ssmissouth1218.$PDY  ${COMOUT}/seaice.t${cyc}z.ssmissouth1218
+  #L3 ice conc only
   cp amsr2north6.${PDY}   ${COMOUT}/seaice.t${cyc}z.amsr2north6.${PDY}
   cp amsr2south6.${PDY}   ${COMOUT}/seaice.t${cyc}z.amsr2south6.${PDY}
-#L2 ice files
-  cp l2out.* ${COMOUT}
-#L3 -- new
   cp nmap.${PDY}.f1[578] ${COMOUT}
   cp smap.${PDY}.f1[578] ${COMOUT}
 
@@ -481,7 +387,6 @@ then
   cp sh12.$PDY.gif    ${COMOUT}/seaice.t${cyc}z.sh12.gif
   cp nh.$PDY.gif      ${COMOUT}/seaice.t${cyc}z.nh.gif
   cp sh.$PDY.gif      ${COMOUT}/seaice.t${cyc}z.sh.gif
-
 
 
   if [ $SENDDBN = "YES" ]
@@ -898,18 +803,18 @@ then
    #####################################################################
    # GOOD RUN
    set +x
-   echo "**************JOB $job COMPLETED NORMALLY ON THE IBM SP"
-   echo "**************JOB $job COMPLETED NORMALLY ON THE IBM SP"
-   echo "**************JOB $job COMPLETED NORMALLY ON THE IBM SP"
+   echo "**************JOB $job COMPLETED NORMALLY "
+   echo "**************JOB $job COMPLETED NORMALLY "
+   echo "**************JOB $job COMPLETED NORMALLY "
    set -x
    #####################################################################
 else
    #####################################################################
    # FAILED
    set +x
-   echo "**************ABNORMAL TERMIMATION JOB $job ON THE IBM SP"
-   echo "**************ABNORMAL TERMIMATION JOB $job ON THE IBM SP"
-   echo "**************ABNORMAL TERMIMATION JOB $job ON THE IBM SP"
+   echo "**************ABNORMAL TERMIMATION JOB $job "
+   echo "**************ABNORMAL TERMIMATION JOB $job "
+   echo "**************ABNORMAL TERMIMATION JOB $job "
    set -x
    #####################################################################
 fi

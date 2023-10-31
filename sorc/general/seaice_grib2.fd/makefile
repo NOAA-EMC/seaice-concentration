@@ -3,7 +3,7 @@ SHELL=/bin/sh
 
 include ../makeall.mk
 #
-SRCS=	seaice_grib2.f
+SRCS=	seaice_grib2.f90
 OBJS=	seaice_grib2.o
 
 LIBS = ${BACIO_LIB4} ${W3NCO_LIB4} ${G2_LIB4} ${JASPER_LIB} ${PNG_LIB} ${Z_LIB}

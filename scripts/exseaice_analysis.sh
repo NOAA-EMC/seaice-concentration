@@ -291,6 +291,8 @@ export err=$?;err_chk
 #RG add amsr2 to blend 2017
 #---------------------------------------------------------
 
+#debug: exit 1
+
 export pgm=seaice_blend
 startmsg
 $EXECseaice_analysis/seaice_blend \

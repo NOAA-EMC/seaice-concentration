@@ -1,8 +1,8 @@
       PROGRAM psgrib
 !$$$  MAIN PROGRAM DOCUMENTATION BLOCK
 !                .      .    .                                       .
-! MAIN PROGRAM: PSGSOUTH     ENGRIB POLAR STEREOGRAPHIC DATA
-!   PRGMMR: GRUMBINE         ORG: NP21        DATE: 1998-01-29
+! MAIN PROGRAM: PSGNORTH     ENGRIB POLAR STEREOGRAPHIC DATA
+!   PRGMMR: GRUMBINE         ORG: NP21        DATE: 2000-02-07
 !
 ! ABSTRACT: READ IN 1 BYTE VALUES FROM A GRID SPECIFIED BY THE
 !    ICEGRID.INC FILE AND WRITE THEM OUT AS A GRIB FIELD.
@@ -42,7 +42,6 @@
 !$$$
 !     Engrib character data from polar stereographic grids.  
 !     Robert Grumbine 4 June 1997.  
-! Last known change of any kind 7 Feb 2006
 
       IMPLICIT none
 !     Includes for bacio
@@ -71,7 +70,7 @@
       CHARACTER(4) KW
       PARAMETER (wmounit = 52 )
       PARAMETER (KW      = "KWBM")
-      PARAMETER (BULHEAD = "OESA88")
+      PARAMETER (BULHEAD = "OENA88")
 
 !     Local Utility variables
       INTEGER i, j, cen, yy, mmm, dd
@@ -79,7 +78,7 @@
       CHARACTER(7) fname
       INTEGER MOVA2I
 
-      CALL W3TAGB('PSGSOUTH',2006,0023,0095,'NP21   ')
+      CALL W3TAGB('PSGNORTH',2006,0023,0054,'NP21')
 
       READ (*,*) cen
       READ (*,*) yy
@@ -95,23 +94,24 @@
       i = LP*MP
       WRITE (fname,9001) 
  9001 FORMAT ("fort.11")
-      ierr = bacio(BAOPEN_RONLY + BAREAD + BACLOSE, start, newpos, 
-     1              SIZEOF_CHARACTER, i, nactual, fdes, fname, conc) 
+
+      ierr = bacio(BAOPEN_RONLY + BAREAD + BACLOSE, start, newpos,   & 
+                    SIZEOF_CHARACTER, i, nactual, fdes, fname, conc) 
       IF (ierr .NE. 0) THEN
         PRINT *,'bacio ierr = ',ierr
         STOP "error from bacio read "
       ENDIF
 
-      DO 1000 j = 1, MP
-        DO 1100 i = 1, LP
+      DO j = 1, MP
+        DO i = 1, LP
           map(i,j) = FLOAT(MOVA2I(conc(i,j))) / 100.
- 1100   CONTINUE
- 1000 CONTINUE
+        ENDDO
+      ENDDO
 
-      CALL mapxy(xorig, yorig, xlat1, xlon1, 
-     1            slat, slon, sgn, eccen2, rearth)
-      CALL mapxy(xorig+L*dx, yorig+M*dy, xlat2, xlon2, 
-     1            slat, slon, sgn, eccen2, rearth)
+      CALL mapxy(xorig, yorig, xlat1, xlon1, & 
+                  slat, slon, sgn, eccen2, rearth)
+      CALL mapxy(xorig+L*dx, yorig+M*dy, xlat2, xlon2, & 
+                  slat, slon, sgn, eccen2, rearth)
 
       pi = ABS(ACOS(-1.))
       xlat1 = xlat1*pi/180.
@@ -119,20 +119,19 @@
       xlat2 = xlat2*pi/180.
       xlon2 = xlon2*pi/180.
 
-      CALL gribit(map, lbm, 5, LP, MP, 8, 0.0, 
-     1            28, 1, 7, 120, 0, 91, 102, 0, 0, 
-     2            yy, mmm, dd, 0, 1, 0, 0, 10, 0, 0, 2, 
-     3     xlat1, xlon1, xlat2, xlon2, dx, dy, -90.-slon, sgn, gridno,
-     4     grib, lgrib, ierr) 
+      CALL gribit(map, lbm, 5, LP, MP, 8, 0.0, & 
+                  28, 1, 7, 120, 0, 91, 102, 0, 0, & 
+                  yy, mmm, dd, 0, 1, 0, 0, 10, 0, 0, 2, & 
+           xlat1, xlon1, xlat2, xlon2, dx, dy, -90.-slon, sgn, gridno, &
+           grib, lgrib, ierr) 
 
   
       IF (ierr .EQ. 0) THEN
         WRITE (fname, 9002) 
  9002   FORMAT("fort.51")
-        ierr = bacio(BAOPEN_WONLY + BAWRITE + BACLOSE, start, newpos, 
-     1                SIZEOF_CHARACTER, lgrib, nactual, fdes, fname, 
-     2                grib) 
-
+        ierr = bacio(BAOPEN_WONLY + BAWRITE + BACLOSE, start, newpos, &
+                      SIZEOF_CHARACTER, lgrib, nactual, fdes, fname, &
+                      grib) 
         IF (WMO) THEN
           WRITE (fname, 9020)
  9020     FORMAT("fort.52")
@@ -158,12 +157,11 @@
           CALL WRYTE(WMOUNIT,LGRIB,GRIB)
 
         ENDIF
-
        ELSE
         PRINT *,'Error ',ierr,' constructing grib message in psgrib'
       ENDIF
      
-      CALL W3TAGE('PSGSOUTH')
+      CALL W3TAGE('PSGNORTH')
 
       STOP
       END

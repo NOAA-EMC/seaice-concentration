@@ -1,6 +1,6 @@
 #!/bin/bash --login
 
-export tag=20231026
+export tag=20231113
 
 export tag=${tag:-`date +"%Y%m%d"`}
 tagm=`expr $tag - 1`
@@ -20,6 +20,7 @@ export seaice_analysis_ver=v4.4.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 cd $HOMEseaice_analysis/ecf/
+module reset
 source ../versions/run.ver
 . ./jobcards
 module list

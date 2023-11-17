@@ -19,6 +19,9 @@ if [ -z $LMOD_FAMILY_COMPILER ] ; then
   module list
 fi
 
+echo zzz jobcards-module list
+module list
+
 #set -xe
 set -x
 

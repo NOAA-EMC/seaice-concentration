@@ -217,6 +217,8 @@ if [ ! -f $COMOUT/amsr2.bufr ] ; then
     echo "*** WARNING:  amsr2bufr returned status $err.  Continue without amsr2 " >> $mailbody
     echo "********************************************************************" >> $mailbody
   fi
+  touch amsr2.bufr 
+  cp amsr2.bufr $COMOUT/amsr2.bufr
 else
   cp $COMOUT/amsr2.bufr .
 fi
@@ -877,7 +879,10 @@ else
 fi
 
 ############## END OF SCRIPT #######################
-#Can removed these at end of clean run -- they are for restart runs
-#rm $COMOUT/imsice.$PDY
-#rm $COMOUT/noice.$PDY
-#rm $COMOUT/ssmisu.ibm
+#Can removed these at end of clean run -- they are for restarting runs
+rm $COMOUT/imsice.$PDY
+rm $COMOUT/noice.$PDY
+rm $COMOUT/ssmisu.ibm
+rm $COMOUT/ssmisu.bufr 
+rm $COMOUT/amsr2.ibm 
+rm $COMOUT/amsr2.bufr 

@@ -1,6 +1,6 @@
 #!/bin/sh
-#set -xe
 set -x
+set -xe
 
 #Set up something like ecf environment for calling J job
 

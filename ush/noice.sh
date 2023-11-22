@@ -10,4 +10,4 @@ tar xf  $FIXseaice_analysis/counts.tgz count.$stag
 export pgm=noice
 . prep_step
 $EXECseaice_analysis/noice count.$stag noice.$PDY
-    export err=$?;err_chk
+export err=$?;err_chk

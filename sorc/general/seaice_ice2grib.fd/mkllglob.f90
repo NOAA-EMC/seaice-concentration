@@ -93,8 +93,8 @@
       newpos = 0
       start  = 0
       i = nx*ny
-      ierr = bacio(BAOPEN_RONLY + BAREAD + BACLOSE, start, newpos,
-     1              SIZEOF_CHARACTER, i, nactual, fdes, fname, cmap)
+      ierr = bacio(BAOPEN_RONLY + BAREAD + BACLOSE, start, newpos, &
+                    SIZEOF_CHARACTER, i, nactual, fdes, fname, cmap)
       IF (ierr .NE. 0) THEN
         PRINT *,'bacio ierr = ',ierr
         STOP "error from bacio read "
@@ -108,25 +108,25 @@
 
       CALL W3TAGB('ICE2GRIB',1999,0126,0058,'NP21   ')
 
-      DO 1000 j = 1, ny
-        DO 1100 i = 1, nx
+      DO j = 1, ny
+        DO i = 1, nx
           outmap(i,j) = FLOAT(MOVA2I(cmap(i,j))) / 100.
- 1100   CONTINUE
- 1000 CONTINUE
+        ENDDO
+      ENDDO
 
-      CALL gribit(outmap, lbm, 0, nx, ny, 8, 0.0, 28, 1, 7, 120, 0, 91,
-     1     102, 0, 0, yy, mm, dd, 0, 1,
-     2     0, 0, 10, 0, 0, 2, 
+      CALL gribit(outmap, lbm, 0, nx, ny, 8, 0.0, 28, 1, 7, 120, 0, 91, &
+           102, 0, 0, yy, mm, dd, 0, 1, &
+           0, 0, 10, 0, 0, 2,  &
 !     Last argument is power in multiplying (data)*10**x prior to gribbing.
-     3     90.-dylat/2.,         dxlat/2., 
-     4     90.-dylat/2+(ny-1)*dylat, dxlat/2.+dxlat*(nx-1), 
-     5     dxlat, dylat, 0, -10., gridno, grib, lgrib, ierr) 
+           90.-dylat/2.,         dxlat/2., &
+           90.-dylat/2+(ny-1)*dylat, dxlat/2.+dxlat*(nx-1), & 
+           dxlat, dylat, 0, -10., gridno, grib, lgrib, ierr) 
       IF (ierr .EQ. 0) THEN
         WRITE (fname, 9010)
  9010   FORMAT("fort.51")
-        ierr = bacio(BAOPEN_WONLY + BAWRITE + BACLOSE, start, newpos,
-     1                SIZEOF_CHARACTER, lgrib, nactual, fdes, fname,
-     2                grib)
+        ierr = bacio(BAOPEN_WONLY + BAWRITE + BACLOSE, start, newpos, &
+                      SIZEOF_CHARACTER, lgrib, nactual, fdes, fname, &
+                      grib)
 
         IF (WMO) THEN
           WRITE (fname, 9020)

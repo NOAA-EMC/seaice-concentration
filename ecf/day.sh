@@ -1,5 +1,7 @@
 #!/bin/bash --login
 
+export tag=20231115
+
 export tag=${tag:-`date +"%Y%m%d"`}
 tagm=`expr $tag - 1`
 export tagm=`/u/robert.grumbine/bin/dtgfix3 $tagm`
@@ -7,21 +9,6 @@ export end=$tag
 echo initial tag date = $tag
 
 #-----------------------------------------------------------------------------
-set -e
-echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz loading modules zzzzzzzzzzzzzzzzzzzzzzz
-#. /usrx/local/Modules/3.2.10/init/bash
-. jobcards
-#module reset
-#module load ips/19.0.5.281 impi/19.0.5
-#module load prod_envir/1.1.0
-#module load prod_util/1.1.5 
-#module load grib_util/1.1.1
-#module load bufr_dumplist/2.3.0
-#module load dumpjb/5.1.0
-#module load NetCDF/4.5.0
-
-module list
-echo zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz done loading modules zzzzzzzzzzzzzzzzzz
 
 set -xe
 
@@ -33,7 +20,10 @@ export seaice_analysis_ver=v4.4.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 cd $HOMEseaice_analysis/ecf/
+module reset
+source ../versions/run.ver
 . ./jobcards
+module list
 echo $jlogfile $DATA $cyc $cycle
 echo date pdy= $PDY ncepdate = $ncepdate
 

@@ -3,37 +3,51 @@
 !
 !
 ! Program to decode the ssmi/su tank
+! .. and to write out the netcdf L2 information
       IMPLICIT none
 
       REAL bmiss
       PARAMETER (bmiss=10.0E6)
       CHARACTER(8) SUBSET
       REAL(8) hdr(9),ident(3), ssmischn(4,24)
-!
-      INTEGER ichan, jj, ii, isiid, ntank, lubfi, kt, jt
-      INTEGER iorbn, islnm, isaid, idate, iret
+
+      INTEGER ichan, jj, ii, isiid, ntank, lubfi
+      INTEGER iorbn, islnm, isaid, iret, JT, IDATE
       INTEGER mhr, mins, secs, mda, myr, mmo
       INTEGER icount, err, freq
       REAL xlat, xlon
 
-      INTEGER openout, outunit, creturns, textout
-!.................................
+      INTEGER outunit, outunit2, creturns, textout
+!------------- For netcdf -----------------------------
+      INTEGER open_nc
+      INTEGER nwrite, ncid, platform, varid(15)
+      INTEGER nwrite2, ncid2, platform2, varid2(15)
+!------------------------------------------------------
 
-        CALL W3TAGB('SSMISU_Decode',0095,0333,0077,'NP11   ')
+      CALL DATELEN(10)
 
-        CALL DATELEN(10)
-
-        lubfi = 11
-        icount = 0
-        kt = 0
-        ntank = 1
+      lubfi  = 11
+      icount = 0
+      ntank  = 1
 
       freq = 10 * 1000 !Text output frequency
-      textout = 52
+      textout = 53
 
-      outunit = 51
-      creturns = openout(outunit)
-      PRINT *,'ssmisubufr creturned = ',creturns
+      outunit  = 51
+      platform = 285
+      nwrite   = 0
+      creturns = open_nc(outunit, ncid, platform, varid)
+      PRINT *,'open_nc returned = ',creturns
+      PRINT *,'ncid = ',ncid
+      PRINT *,'varid = ',varid
+
+      outunit2  = 52
+      platform2 = 286
+      nwrite2   = 0
+      creturns = open_nc(outunit2, ncid2, platform2, varid2)
+      PRINT *,'open_nc returned = ',creturns
+      PRINT *,'ncid2 = ',ncid2
+      PRINT *,'varid2 = ',varid2
 
 
       DO JT = 1, ntank
@@ -63,15 +77,11 @@
 
 !  -----------------------------------------------------------------
 !  CALL UFBINT, UFBREP TO GET THE DATA
-!
 !     MNEMONICS are embedded in CALLS
-!
 !  -----------------------------------------------
-      !For testing:
-      ! IF (icount .GT. 100*freq) GO TO 100
 
-      call ufbint(lubfi,hdr,9,1,iret,
-     *            'SAID YEAR MNTH DAYS HOUR MINU SECO CLAT CLON')
+      call ufbint(lubfi,hdr,9,1,iret, &
+                  'SAID YEAR MNTH DAYS HOUR MINU SECO CLAT CLON')
 !     WRITE(6,*) 'IRET= ',IRET
       call ufbint(lubfi,ident,3,1,iret,'SAID ORBN SLNM')
 
@@ -99,8 +109,9 @@
 
       if(mod(icount,freq) .eq. 0) then
 
-        write(textout,50)isiid,myr,mmo,mda,mhr,mins,secs, xlat,
-     *    xlon,isaid,islnm,iorbn
+        PRINT *,'nwrite = ',nwrite
+        write(textout,50)isiid,myr,mmo,mda,mhr,mins,secs, xlat, &
+          xlon,isaid,islnm,iorbn
    50   format(1x,i3,1x,i4,1x,5i2,1x,2f12.5,1x,2i6,1x,i8)
 
         do ii = 1,4
@@ -122,10 +133,15 @@
       endif
 
 ! Output in binary all steps' info:
-          CALL ssmisout(hdr, ident, ssmischn)
+      !CALL ssmisout(hdr, ident, ssmischn)
+      IF (isaid .EQ. platform) THEN
+        CALL ssmisout_nc(hdr, ident, ssmischn, ncid, varid, nwrite)
+      ELSE IF (isaid .EQ. platform2) THEN
+        CALL ssmisout_nc(hdr, ident, ssmischn, ncid2, varid2, nwrite2)
+      ENDIF
 
 !
-!       get next report
+!     get next report
 !
       GO TO 150
   100 CONTINUE
@@ -138,21 +154,20 @@
 !            call exit(23)
             STOP
           endif
-!
-!
+
         WRITE(6,*) 'AFTER WOOLENS INTERFACE:  icount= ',icount
-!
+
       WRITE(6,617)
   617 FORMAT(1x,'  TIMES AND TOTAL NUMBER OF btmps OVER THE AREA')
-!D     WRITE(6,618) IDAT1,IDAT2,icount
-!D  618 FORMAT(2X,3I10)
-!
+
       ENDDO
-!
+
 !.................
+      CALL close_nc(ncid)
+      CALL close_nc(ncid2)
+      PRINT *,'nwrite, nwrite2 = ',nwrite, nwrite2
+
       WRITE(6,692)icount
   692 FORMAT(1x,'END OF JOB','count= ',i8)
-
-        CALL W3TAGE('DCODNET3')
 
       END

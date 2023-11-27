@@ -1,6 +1,6 @@
 #!/bin/bash --login
 
-export tag=20231115
+#export tag=20231120
 
 export tag=${tag:-`date +"%Y%m%d"`}
 tagm=`expr $tag - 1`
@@ -49,12 +49,13 @@ do
   export job=seaice_filter
   export DATA=$DATAROOT/${job}.${pid}
   #script handles make: mkdir $DATA
-  #debug: time ./sms.filter.fake > /u/robert.grumbine/noscrub/com/sms.filter.$tag
+  #debug: 
+  time ./sms.filter.fake > /u/robert.grumbine/noscrub/com/sms.filter.$tag
 
   export job=seaice_analysis
   export DATA=$DATAROOT/${job}.${pid}
   #script handles make: mkdir $DATA
-#Required for dumpjb to run:
+  #Required for dumpjb to run:
   export TMPDIR=$DATA
   time ./sms.fake > /u/robert.grumbine/noscrub/com/sms.$tag
 

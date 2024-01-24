@@ -1,23 +1,24 @@
-#!/bin/bash --login
+#!/bin/bash 
 #####
-#BSUB -J aice_2021
-#BSUB -q "dev"
-#BSUB -P RTO-T2O
-#BSUB -W 2:59
-# #BSUB -W 0:09
-#BSUB -o aice.%J
-#BSUB -e aice.%J
-#BSUB -R "affinity[core(1)]"
-#  #BSUB -R "rusage[mem=1024]"
+#PBS -l select=1:ncpus=1
+#PBS -l walltime=2:59:00
+#PBS -N aice_2024
+#PBS -q "dev"
+#PBS -j oe
+#PBS -A RTO-T2O
+#  #PBS -R "rusage[mem=1024]"
 #####
 
 
 #-----------------------------------------------------------------------------
 set -x
 
-tagm=20231120
-tag=20231121
-end=20231126
+tagm=20240102
+tag=20240103
+end=20240108
+
+echo $tagm
+exit
 
 export HOMEbase=/u/robert.grumbine/rgdev
 export seaice_analysis_ver=v4.4.0

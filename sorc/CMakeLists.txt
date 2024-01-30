@@ -40,7 +40,8 @@ endif()
 
 #
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DLINUX")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Wall -std=c++11 -DCPLUS ")
+
 set(CMAKE_INSTALL_PREFIX "/u/robert.grumbine/rgdev/rg.analy")
 set(CMAKE_INSTALL_BINDIR "exec")
 include_directories(mmablib/include)

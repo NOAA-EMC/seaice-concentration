@@ -13,12 +13,11 @@
 #-----------------------------------------------------------------------------
 set -x
 
-tagm=20240102
-tag=20240103
-end=20240108
+tagm=20240124
+tag=20240125
+end=20240130
 
-echo $tagm
-exit
+echo zzz $tagm
 
 export HOMEbase=/u/robert.grumbine/rgdev
 export seaice_analysis_ver=v4.4.0

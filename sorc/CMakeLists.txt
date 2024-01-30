@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.19)
 
 project(try.cmake
         VERSION 1.0.0
-	LANGUAGES Fortran C C++)
+	LANGUAGES Fortran C CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_DIRECTORY_LABELS ${PROJECT_NAME})
 
 include(GNUInstallDirs)
-#
+
 ## Build type
 #if(NOT CMAKE_BUILD_TYPE MATCHES "^(Debug|Release|RelWithDebInfo|MinSizeRel)$")
 #  message(STATUS "Setting build type to 'Release' as none was specified.")
@@ -34,12 +34,24 @@ elseif(CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU)$")
   set(CMAKE_Fortran_FLAGS_RELEASE "-O3")
   set(CMAKE_Fortran_FLAGS_DEBUG "-O0 -ggdb -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans -ffpe-trap=invalid,zero,overflow -fbounds-check")
 endif()
+#-----------------------------------------
 
+#For nceplibs:
+
+#
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DLINUX")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX")
 set(CMAKE_INSTALL_PREFIX "/u/robert.grumbine/rgdev/rg.analy")
 set(CMAKE_INSTALL_BINDIR "exec")
+include_directories(mmablib/include)
 
 # Build and install code.
 add_subdirectory(mmablib)
+# -- need to work out: link_libraries(libombf_4.a)
+#target_link_libraries(/u/robert.grumbine/rgdev/rg.analy/sorc/mmablib/libombf_4.a)
+
+
+add_subdirectory(general)
 add_subdirectory(amsr2)
 
 ## Install utility scripts.

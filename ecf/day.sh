@@ -1,6 +1,6 @@
 #!/bin/bash --login
 
-export tag=20240110
+#export tag=20240110
 
 export tag=${tag:-`date +"%Y%m%d"`}
 tagm=`expr $tag - 1`

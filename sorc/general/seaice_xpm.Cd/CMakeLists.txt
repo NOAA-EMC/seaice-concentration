@@ -11,4 +11,4 @@ add_executable(${exe_name} ${CXX_src1} ${CXX_src2} )
 set(exe_name seaice_fxpm )
 add_executable(${exe_name} ${CXX_src2} )
 
-#install(TARGETS ${exe_name} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS ${exe_name} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

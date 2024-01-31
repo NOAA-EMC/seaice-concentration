@@ -46,14 +46,17 @@ set(CMAKE_INSTALL_PREFIX "/u/robert.grumbine/rgdev/rg.analy")
 set(CMAKE_INSTALL_BINDIR "exec")
 include_directories(mmablib/include)
 
-# Build and install code.
+# Build and install code -- mmablib
 add_subdirectory(mmablib)
 # -- need to work out: link_libraries(libombf_4.a)
 #target_link_libraries(/u/robert.grumbine/rgdev/rg.analy/sorc/mmablib/libombf_4.a)
+#link_libraries(${W3NCO_LIBd})
 
-
+# Executables
 add_subdirectory(general)
 add_subdirectory(amsr2)
+add_subdirectory(avhrr)
+add_subdirectory(ssmis)
 
 ## Install utility scripts.
 #add_subdirectory(ush)

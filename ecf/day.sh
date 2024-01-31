@@ -48,15 +48,16 @@ do
 
   export job=seaice_filter
   export DATA=$DATAROOT/${job}.${pid}
-  #script handles make: mkdir $DATA
+  #Required for dumpjb to run:
+  export TMPDIR=$DATA
+
   #debug: 
   time ./sms.filter.fake > /u/robert.grumbine/noscrub/com/sms.filter.$tag
 
+  #debug: exit
+
   export job=seaice_analysis
   export DATA=$DATAROOT/${job}.${pid}
-  #script handles make: mkdir $DATA
-  #Required for dumpjb to run:
-  export TMPDIR=$DATA
   time ./sms.fake > /u/robert.grumbine/noscrub/com/sms.$tag
 
 #  module load gempak

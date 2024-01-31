@@ -559,7 +559,7 @@ then
   fi
 fi
 
-echo completed the L2 and L3 analyses
+echo zzzzz completed the L2 and L3 analyses zzzzzzzzzzzzzzzz
 
 #-----------------------------------------------------------
 # Construct the modeller's global sea ice grid -- L4
@@ -571,7 +571,7 @@ echo completed the L2 and L3 analyses
 #-----------------------------------------------------------
 
 qc="false"
-echo qc, cominsst, cominsstm1:
+echo zzzzz qc, cominsst, cominsstm1:
 echo $qc $COMINsst $COMINsstm1
 
 if [ -s $COMINsst/rtgssthr_grb_0.083.grib2 ] ; then
@@ -609,7 +609,7 @@ then
   $WGRIB2 oned | grep TMP | $WGRIB2 -i oned -order we:ns -bin sst 
   if [ ! -s sst ]
   then
-    echo failed to get an sst field!
+    echo zzzzz failed to get an sst field!
   fi  
   
   startmsg

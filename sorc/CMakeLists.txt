@@ -38,13 +38,15 @@ endif()
 
 #For nceplibs:
 
-#
+# for RG
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DLINUX")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Wall -std=c++11 -DCPLUS ")
 
 set(CMAKE_INSTALL_PREFIX "/u/robert.grumbine/rgdev/rg.analy")
 set(CMAKE_INSTALL_BINDIR "exec")
+
 include_directories(mmablib/include)
+include_directories($NETCDF_INCLUDE)
 
 # Build and install code -- mmablib
 add_subdirectory(mmablib)
@@ -57,7 +59,8 @@ add_subdirectory(general)
 add_subdirectory(amsr2)
 add_subdirectory(avhrr)
 add_subdirectory(ssmis)
+add_subdirectory(l2_to_l3)
+add_subdirectory(l1b_to_l2)
 
 ## Install utility scripts.
 #add_subdirectory(ush)
-

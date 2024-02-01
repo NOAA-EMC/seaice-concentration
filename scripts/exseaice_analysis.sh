@@ -645,8 +645,11 @@ then
   export pgm=seaice_avhrrfilter
 startmsg
   $EXECseaice_analysis/seaice_avhrrfilter first_fill5min.$PDY first_age.$PDY $COMIN/land.$PDYm1 land_fill5.$PDY land_age.$PDY > reset_points.$PDY 
+  export err=$?;err_chk
+  echo zzz past avhrrfilter for land 
   $EXECseaice_analysis/seaice_avhrrfilter land_fill5.$PDY land_age.$PDY $COMIN/seas.$PDYm1 fill5min.$PDY age.$PDY >> reset_points.$PDY 
   export err=$?;err_chk
+  echo zzz past avhrrfilter for seas 
 
 ##### Done with avhrr filter
 

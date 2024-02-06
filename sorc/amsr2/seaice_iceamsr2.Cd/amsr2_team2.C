@@ -193,7 +193,7 @@ float nasa_team2(float v19, float h19, float v24, float v37, float h37,
     double cosphi19,cosphi89;
 
     double v19i,h19i,v24i,v37i,h37i,v89i,h89i;
-    double pr19,pr89,gr3719,gr2419,gr8919v,gr8919h;
+    double pr19,pr89,gr3719,gr8919v,gr8919h;
     double pr19r,pr89r,dgr;
     double dpr19,dpr89,ddgr;
     float icecon = BAD_DATA;
@@ -240,8 +240,6 @@ float nasa_team2(float v19, float h19, float v24, float v37, float h37,
 
 // NOTE: in older code, only the 24ghz filter is used ... why? ... other is commented out
 // Newer team2 code returns to both filters
-        //gr2419=(v24i-v19i)/(v24i+v19i);
-        //if ((gr3719 < AMSR2_GR37LIM) && (gr2419 < AMSR2_GR24LIM)){
         if (weather(v19i, h19i, v24i, v37i, h37i, v89i, h89i) != WEATHER) {
         /*** if passed the weather filters ***/
           pr19=(v19i-h19i)/(v19i+h19i);

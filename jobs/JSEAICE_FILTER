@@ -14,7 +14,7 @@ echo envir is ${envir:?}
 echo seaice_analysis_ver is ${seaice_analysis_ver:?} 
 export pid=$$
 
-export DATA=$DATAROOT/${job}.${pid}
+export DATA=$DATAROOT/${jobid}
 mkdir -p $DATA
 cd $DATA
 
@@ -24,7 +24,7 @@ cd $DATA
 export pgmout="OUTPUT.${pid}"
 
 export cycle=t${cyc}z
-export NET=${NET:-omb}
+export NET=${NET:-seaice_analysis}
 
 #################################################
 # Specify job's execution areas (directory paths)
@@ -37,17 +37,18 @@ export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
 #########################################
 # Run setpdy and initialize PDY variables
 #########################################
-if [ -z $PDY ] ; then
-  setpdy.sh
-  . ./PDY
-fi
+setpdy.sh
+. ./PDY
+
 echo FILTER pdy = $PDY
 
-export RUN=${RUN:-sice}
-export COMIN=${COMIN:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-export COMINm1=${COMINm1:-${COMROOT}/${NET}/${envir}/${RUN}.${PDYm1}}
-export COMOUT=${COMOUT:-${COMROOT}/${NET}/${envir}/${RUN}.${PDY}}
-export DCOM=${DCOM:-$DCOMROOT/prod/$PDY}
+export RUN=${RUN:-seaice_analysis}
+
+export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
+
+export DCOM=${DCOM:-$DCOMROOT/$PDY}
 
 mkdir -p $COMOUT
 env
@@ -55,15 +56,15 @@ env
 #####################################
 # Execute the script
 echo ${HOMEseaice_analysis}
-$HOMEseaice_analysis/scripts/exseaice_filter >> $pgmout
+$HOMEseaice_analysis/scripts/exseaice_filter.sh >> $pgmout
 export err=$?
 err_chk
 #####################################
 
 cat $pgmout
 
-#if [ "$KEEPDATA" != "YES" ] ; then
-#  rm -rf $DATA
-#fi
+if [ "$KEEPDATA" != "YES" ] ; then
+  rm -rf $DATA
+fi
 
 date

@@ -25,6 +25,7 @@ else
 #on a system with module software, such as wcoss
 #  set +x
   module reset
+  source ../versions/build.ver
   module use `pwd`/modulefiles
   module load seaice_analysis/$seaice_analysis_ver
   if [ $? -ne 0 ] ; then
@@ -32,8 +33,10 @@ else
     exit 1
   fi
   set -x
+  echo zzzzzzzz
   module list
   env
+  echo zzzzzzzz
 
   export MMAB_BASE=`pwd`/mmablib/${MMAB_VER}
   export MMAB_INC=$MMAB_BASE/include

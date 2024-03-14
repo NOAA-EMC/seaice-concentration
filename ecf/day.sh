@@ -1,8 +1,8 @@
 #!/bin/bash --login
 
 #export tag=20240110
-
 export tag=${tag:-`date +"%Y%m%d"`}
+
 tagm=`expr $tag - 1`
 export tagm=`/u/robert.grumbine/bin/dtgfix3 $tagm`
 export end=$tag

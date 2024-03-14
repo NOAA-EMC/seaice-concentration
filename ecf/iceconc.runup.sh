@@ -5,7 +5,7 @@
 #PBS -N aice_2024
 #PBS -q "dev"
 #PBS -j oe
-#PBS -A RTO-T2O
+#PBS -A ICE-DEV
 #  #PBS -R "rusage[mem=1024]"
 #####
 
@@ -13,9 +13,9 @@
 #-----------------------------------------------------------------------------
 set -x
 
-tagm=20240124
-tag=20240125
-end=20240130
+export tagm=20240308
+export tag=20240309
+export end=20240311
 
 echo zzz $tagm
 

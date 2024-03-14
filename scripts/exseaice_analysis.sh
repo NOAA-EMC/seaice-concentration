@@ -883,9 +883,9 @@ fi
 
 ############## END OF SCRIPT #######################
 #Can removed these at end of clean run -- they are for restarting runs
-rm $COMOUT/imsice.$PDY
-rm $COMOUT/noice.$PDY
-rm $COMOUT/ssmisu.ibm
-rm $COMOUT/ssmisu.bufr 
-rm $COMOUT/amsr2.ibm 
-rm $COMOUT/amsr2.bufr 
+#rm $COMOUT/imsice.$PDY
+#rm $COMOUT/noice.$PDY
+#rm $COMOUT/ssmisu.ibm
+#rm $COMOUT/ssmisu.bufr 
+#rm $COMOUT/amsr2.ibm 
+#rm $COMOUT/amsr2.bufr 

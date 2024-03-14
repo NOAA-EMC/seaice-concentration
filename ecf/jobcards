@@ -3,9 +3,9 @@
 # Bring the various environment-sensitive definitions out of J jobs and to here:
 #NCO refers to these as 'job card' variables
 if [ -z $LMOD_FAMILY_COMPILER ] ; then
-  module load intel/$intel_ver
+  #module load intel/$intel_ver
   #module load intel-oneapi/2022.2.0.262
-  #module load intel-classic/2022.2.0.262
+  module load intel-classic/$intel_classic_ver
   module load craype/$craype_ver
   module load libjpeg/$libjpeg_ver
   module load grib_util/$grib_util_ver

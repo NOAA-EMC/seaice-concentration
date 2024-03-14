@@ -12,8 +12,8 @@ SHELL=/bin/sh
 #------------------- should need no changes below here ------------------------
 #Compilers and their options
 FC=ftn
-FOPTS=-c -O2 -I $(MMAB_INC) -e03
-#FOPTS=-c -O2 $(MMAB_INC) $(NETCDF_INCLUDE)
+FOPTS=-c -O2 -I $(MMAB_INC) -std03 
+#FOPTS=-c -O2 -I $(MMAB_INC) -std03 -ftrapuv -check all 
 
 ##Home desk:
 #FC=gfortran

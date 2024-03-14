@@ -5,7 +5,7 @@
 include ../makeall.mk
  
 #Linux
-LIBS = ${W3NCO_LIB4} ${BUFR_LIB4}
+LIBS = ${W3EMC_LIB4} ${BUFR_LIB4}
 
 #Should be no changes below this point---------------------------------
 

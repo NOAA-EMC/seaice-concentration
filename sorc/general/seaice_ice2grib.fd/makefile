@@ -4,7 +4,7 @@
 
 include ../makeall.mk
  
-LIBS = ${MMAB_LIBF4} ${W3NCO_LIB4} ${BACIO_LIB4}
+LIBS = ${MMAB_LIBF4} ${W3EMC_LIB4} ${BACIO_LIB4}
 
 #Should be no changes below this point---------------------------------
 all: seaice_ice2grib seaice_ice2grib5min

@@ -29,7 +29,7 @@ load("craype/"..os.getenv("craype_ver"))
 load("PrgEnv-intel/"..os.getenv("PrgEnv_intel_ver"))
 
 --load("wgrib2/"..os.getenv("wgrib2_ver"))
-load("w3nco/"..os.getenv("w3nco_ver"))
+--load("w3nco/"..os.getenv("w3nco_ver"))
 load("jasper/"..os.getenv("jasper_ver"))
 load("libpng/"..os.getenv("libpng_ver"))
 load("zlib/"..os.getenv("zlib_ver"))

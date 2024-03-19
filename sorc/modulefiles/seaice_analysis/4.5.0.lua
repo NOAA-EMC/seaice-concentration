@@ -23,13 +23,13 @@ prereq("envvar/1.0")
 --load("imagemagick/"..os.getenv("imagemagick_ver"))
 --load("prod_envir/"..os.getenv("prod_envir_ver"))
 --load("prod_util/"..os.getenv("prod_util_ver"))
+--load("wgrib2/"..os.getenv("wgrib2_ver"))
 
-load("intel/"..os.getenv("intel_ver"))
+--load("intel/"..os.getenv("intel_ver"))
+load("intel-classic/"..os.getenv("intel_classic_ver"))
 load("craype/"..os.getenv("craype_ver"))
 load("PrgEnv-intel/"..os.getenv("PrgEnv_intel_ver"))
 
---load("wgrib2/"..os.getenv("wgrib2_ver"))
-load("w3nco/"..os.getenv("w3nco_ver"))
 load("jasper/"..os.getenv("jasper_ver"))
 load("libpng/"..os.getenv("libpng_ver"))
 load("zlib/"..os.getenv("zlib_ver"))
@@ -43,6 +43,7 @@ load("netcdf/"..os.getenv("netcdf_ver"))
 load("cray-mpich/"..os.getenv("cray_mpich_ver"))
 --load("grib_util/"..os.getenv("grib_util_ver"))
 load("w3emc/"..os.getenv("w3emc_ver"))
+--load("w3nco/"..os.getenv("w3nco_ver"))
 
 -- Set other library variables
 

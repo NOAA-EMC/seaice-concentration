@@ -9,5 +9,5 @@ export seaice_analysis_ver=${seaice_analysis_ver:-v4.4.0}
 export job=${job:-seaice_filter}
 
 #Now call J job, which will call the ex
-/u/Robert.Grumbine/rgdev/seaice_analysis.${seaice_analysis_ver}/jobs/JSEAICE_FILTER
+/u/robert.grumbine/rgdev/seaice_analysis.${seaice_analysis_ver}/jobs/JSEAICE_FILTER
 

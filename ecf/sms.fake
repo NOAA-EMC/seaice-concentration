@@ -6,7 +6,7 @@ set -xe
 
 export cyc=${cyc:-00}
 export envir=${envir:-developer}
-export seaice_analysis_ver=${seaice_analysis_ver:-v4.4.0}
+export seaice_analysis_ver=${seaice_analysis_ver:-v4.6.0}
 export job=${job:-seaice_analysis}
 
 export PDY=${PDY:-20231026}

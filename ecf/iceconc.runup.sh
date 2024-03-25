@@ -13,14 +13,14 @@
 #-----------------------------------------------------------------------------
 set -x
 
-export tagm=20240315
-export tag=20240316
-export end=20240318
+export tagm=20240322
+export tag=20240323
+export end=20240325
 
 echo zzz $tagm
 
 export HOMEbase=/u/robert.grumbine/rgdev
-export seaice_analysis_ver=v4.4.0
+export seaice_analysis_ver=v4.6.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 #Use this to override system in favor of my archive:

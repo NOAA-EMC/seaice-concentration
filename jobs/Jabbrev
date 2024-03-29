@@ -53,12 +53,9 @@ export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.$
 export COMOUTwmo=${COMOUTwmo:-${COMOUT}/wmo}
 
 #export COMINsst_base=${COMINsst_base:-$(compath.py ${envir}/com/nsst/${nsst_ver}/nsst)}
-#export COMINsst_base=${COMINsst_base:-$(compath.py prod/com/nsst/${nsst_ver}/nsst)}
-#export COMINsst=${COMINsst:-${COMINsst_base}.${PDY}}
-#export COMINsstm1=${COMINsstm1:-${COMINsst_base}.${PDYm1}}
-export COMINsst_base=${COMINsst_base:-/u/robert.grumbine/noscrub/nsst/}
-export COMINsst=${COMINsst:-${COMINsst_base}/${PDY}}
-export COMINsstm1=${COMINsstm1:-${COMINsst_base}/${PDYm1}}
+export COMINsst_base=${COMINsst_base:-$(compath.py prod/com/nsst/${nsst_ver}/nsst)}
+export COMINsst=${COMINsst:-${COMINsst_base}.${PDY}}
+export COMINsstm1=${COMINsstm1:-${COMINsst_base}.${PDYm1}}
 
 #export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
 export DCOM=${DCOM:-$DCOMROOT/$PDY}
@@ -75,7 +72,7 @@ env
 #####################################
 # Execute the script
 
-$HOMEseaice_analysis/scripts/exseaice_analysis.sh >> $pgmout
+$HOMEseaice_analysis/scripts/abbrev_analysis.sh >> $pgmout
 export err=$?
 err_chk
 #####################################

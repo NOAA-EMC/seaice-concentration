@@ -2,8 +2,9 @@
 #include "icessmi.h"
 
 #include "params.h"
-//to 2021/04 #define MAXAGE  16 
-#define MAXAGE  4 
+//to 2021/04 #define MAXAGE  16
+//to 2024/03 #define MAXAGE  4
+#define MAXAGE 2
 
 /* Construct a filled lat-long grid of sea ice data from yesterday's
      filled map and today's observations.  If today has a valid 

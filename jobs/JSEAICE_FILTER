@@ -49,10 +49,11 @@ set -e
 
 #export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
 #export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
+#export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
 
-export COMIN=${COMIN:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
-export COMINm1=${COMINm1:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDYm1}}
-export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
+export COMIN=${COMIN:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}       }
+export COMINm1=${COMINm1:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDYm1} }
+export COMOUT=${COMOUT:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}    }
 
 export DCOM=${DCOM:-$DCOMROOT/$PDY}
 

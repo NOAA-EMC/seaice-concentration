@@ -39,7 +39,7 @@ cd $HOMEseaice_analysis/ecf
 while [ $tag -le $end ]
 do
 
-  time ./day.sh
+  time ./abbrevday.sh
 
   export tagm=$tag
   tag=`expr $tag + 1`

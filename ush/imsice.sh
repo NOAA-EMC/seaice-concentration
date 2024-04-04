@@ -12,10 +12,13 @@ stag=`echo $PDY | cut -c5-8`
 
 tar xf  $FIXseaice_analysis/counts.tgz count.$stag
 
-#ops if [ -f $DCOMm1/wgrbbul/imssnow96.grb.grib2 ] ; then
-if [ -f $HOME/noscrub/ims/$PDYm1/wgrbbul/imssnow96.grb.grib2 ] ; then
-  #cp $DCOMm1/wgrbbul/imssnow96.grb.grib2 imssnow96.grb.grib2
-  cp $HOME/noscrub/ims/$PDYm1/wgrbbul/imssnow96.grb.grib2 imssnow96.grb.grib2
+#ops: 
+if [ -f $DCOMm1/wgrbbul/imssnow96.grb.grib2 ] ; then
+  cp $DCOMm1/wgrbbul/imssnow96.grb.grib2 imssnow96.grb.grib2
+
+#dev: if [ -f $HOME/noscrub/ims/$PDYm1/wgrbbul/imssnow96.grb.grib2 ] ; then
+#  cp $HOME/noscrub/ims/$PDYm1/wgrbbul/imssnow96.grb.grib2 imssnow96.grb.grib2
+
   $WGRIB2 imssnow96.grb.grib2 | grep ICEC | $WGRIB2 -i imssnow96.grb.grib2 -bin imsice.bin
 
   export pgm=imsice

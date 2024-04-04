@@ -13,9 +13,9 @@
 #-----------------------------------------------------------------------------
 set -x
 
-export tagm=20240212
-export tag=20240213
-export end=20240223
+export tagm=20240330
+export tag=20240331
+export end=20240404
 
 echo zzz $tagm
 
@@ -24,9 +24,9 @@ export seaice_analysis_ver=v4.6.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 #Use this to override system in favor of my archive:
-export DCOMROOT=/u/robert.grumbine/noscrub/satellites/prod/
-export RGTAG=prod
-export my_archive=true
+#export DCOMROOT=/u/robert.grumbine/noscrub/satellites/prod/
+#export RGTAG=prod
+#export my_archive=true
 
 cd $HOMEseaice_analysis/ecf
 

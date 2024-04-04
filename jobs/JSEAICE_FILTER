@@ -45,19 +45,21 @@ echo zzzzzzzzzzzzzzzzzz   FILTER pdy = $PDY
 export RUN=${RUN:-seaice_analysis}
 
 #debug: 
-set -e
+set -xe
 
 #export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
 #export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
 #export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
 
-export COMIN=${COMIN:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}       }
-export COMINm1=${COMINm1:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDYm1} }
-export COMOUT=${COMOUT:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}    }
+export COMIN=${COMIN:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
+export COMINm1=${COMINm1:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
 
 export DCOM=${DCOM:-$DCOMROOT/$PDY}
 
-mkdir -p $COMOUT
+if [ ! -d $COMOUT ] ; then
+  mkdir -p $COMOUT
+fi
 echo zzzzzzzzzzzzzz filter environment
 env
 echo zzzzzzzzzzzzzz end filter environment

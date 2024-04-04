@@ -19,9 +19,9 @@ export HOMEbase=/u/robert.grumbine/rgdev
 export seaice_analysis_ver=v4.6.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 #Use this to override system in favor of my archive:
-export DCOMROOT=/u/robert.grumbine/noscrub/satellites/prod/
-export RGTAG=prod
-export my_archive=true
+#export DCOMROOT=/u/robert.grumbine/noscrub/satellites/prod/
+#export RGTAG=prod
+#export my_archive=true
 
 
 cd $HOMEseaice_analysis/ecf/
@@ -43,7 +43,7 @@ echo tag = $tag date after obsproc: $PDY
 
 #--------------------------------------------------------------------------------------
 #The actual running of stuff
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 while [ $tag -le $end ]
 do
@@ -63,6 +63,7 @@ do
 
   export job=seaice_analysis
   export DATA=$DATAROOT/${job}.${pid}
+#debug:  
   time ./sms.fake > /u/robert.grumbine/noscrub/com/sms.$tag
 
 #  module load gempak

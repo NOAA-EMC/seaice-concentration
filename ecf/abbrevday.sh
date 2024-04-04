@@ -43,7 +43,7 @@ echo tag = $tag date after obsproc: $PDY
 
 #--------------------------------------------------------------------------------------
 #The actual running of stuff
-export KEEPDATA=YES
+export KEEPDATA=NO
 
 while [ $tag -le $end ]
 do

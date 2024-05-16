@@ -60,9 +60,9 @@ export DCOM=${DCOM:-$DCOMROOT/$PDY}
 if [ ! -d $COMOUT ] ; then
   mkdir -p $COMOUT
 fi
-echo zzzzzzzzzzzzzz filter environment
+echo zzz filter environment
 env
-echo zzzzzzzzzzzzzz end filter environment
+echo zzz end filter environment
 
 #####################################
 # Execute the script

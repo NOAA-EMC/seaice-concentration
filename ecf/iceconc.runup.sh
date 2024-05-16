@@ -9,29 +9,29 @@
 #  #PBS -R "rusage[mem=1024]"
 #####
 
-
 #-----------------------------------------------------------------------------
 set -x
 
-export tagm=20240330
-export tag=20240331
-export end=20240404
+export tagm=20240408
+export tag=20240409
+export end=20240412
 
-echo zzz $tagm
+export NRT=NO
+
+echo zzz tagm = $tagm
 
 export HOMEbase=/u/robert.grumbine/rgdev
 export seaice_analysis_ver=v4.6.0
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 #Use this to override system in favor of my archive:
-#export DCOMROOT=/u/robert.grumbine/noscrub/satellites/prod/
-#export RGTAG=prod
-#export my_archive=true
+if [ $NRT == 'NO' ] ; then
+  export DCOMROOT=/u/robert.grumbine/noscrub/satellites/prod/
+  export RGTAG=prod
+  export my_archive=true
+fi
 
 cd $HOMEseaice_analysis/ecf
-
-#export COMINsst_base=/u/robert.grumbine/noscrub/sst/prod/sst
-
 
 #--------------------------------------------------------------------------------------
 #The actual running of stuff

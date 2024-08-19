@@ -39,11 +39,16 @@ endif()
 #For nceplibs:
 
 # for RG
+set(HOME "/home/Robert.Grumbine")
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DLINUX")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Wall -std=c++11 -DCPLUS ")
 
-set(CMAKE_INSTALL_PREFIX "/u/robert.grumbine/rgdev/rg.analy")
+#wcoss2: set(CMAKE_INSTALL_PREFIX "/u/robert.grumbine/rgdev/rg.analy")
+#hera: 
+set(CMAKE_INSTALL_PREFIX "/home/Robert.Grumbine/rgdev/rg.analy")
+
 set(CMAKE_INSTALL_BINDIR "exec")
+set(CMAKE_INSTALL_LIBDIR "lib")
 
 include_directories(mmablib/include)
 include_directories($NETCDF_INCLUDE)
@@ -51,7 +56,6 @@ include_directories($NETCDF_INCLUDE)
 # Build and install code -- mmablib
 add_subdirectory(mmablib)
 # -- need to work out: link_libraries(libombf_4.a)
-#target_link_libraries(/u/robert.grumbine/rgdev/rg.analy/sorc/mmablib/libombf_4.a)
 #link_libraries(${W3NCO_LIBd})
 
 # Executables

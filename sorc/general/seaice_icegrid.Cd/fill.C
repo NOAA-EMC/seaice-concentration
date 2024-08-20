@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
 	  imscount += 1;
 	}
       }
-      if (oice[x] > 100 && oice <= MAX_ICE) {
+      if (oice[x] > 100 && oice[x] <= MAX_ICE) {
         oice[x] = 100;
       }
   }

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(try.cmake
+project(rg.analy
         VERSION 1.0.0
 	LANGUAGES Fortran C CXX)
 
@@ -39,24 +39,36 @@ endif()
 #For nceplibs:
 
 # for RG
+#wcoss2: set(HOME "/home/robert.grumbine")
+#Hera:
 set(HOME "/home/Robert.Grumbine")
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DLINUX")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Wall -std=c++11 -DCPLUS ")
 
-#wcoss2: set(CMAKE_INSTALL_PREFIX "/u/robert.grumbine/rgdev/rg.analy")
+#wcoss2: set(CMAKE_INSTALL_PREFIX "${HOME}/rgdev/rg.analy")
 #hera: 
-set(CMAKE_INSTALL_PREFIX "/home/Robert.Grumbine/rgdev/rg.analy")
+set(CMAKE_INSTALL_PREFIX "${HOME}/rgdev/rg.analy")
+message("top level " CMAKE_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 
 set(CMAKE_INSTALL_BINDIR "exec")
-set(CMAKE_INSTALL_LIBDIR "lib")
+set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
+message(CMAKE_INSTALL_BINDIR="${CMAKE_INSTALL_BINDIR}")
+message(CMAKE_INSTALL_LIBDIR="${CMAKE_INSTALL_LIBDIR}")
 
 include_directories(mmablib/include)
 include_directories($NETCDF_INCLUDE)
 
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DLINUX")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Wall -std=c++11 -DCPLUS ")
+
 # Build and install code -- mmablib
 add_subdirectory(mmablib)
 # -- need to work out: link_libraries(libombf_4.a)
-#link_libraries(${W3NCO_LIBd})
+#Load the relevant modules before calling the cmake:
+set(W3EMC_LIB4 $ENV{W3EMC_LIB4})
+set(W3NCO_LIB4 $ENV{W3NCO_LIB4})
+set(BUFR_LIBd $ENV{BUFR_LIBd})
+message("Library paths " "${W3EMC_LIB4}")
+message("Library paths " "${W3NCO_LIB4}")
+message("Library paths " "${BUFR_libd}")
 
 # Executables
 add_subdirectory(general)

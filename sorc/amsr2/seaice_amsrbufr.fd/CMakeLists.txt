@@ -8,7 +8,7 @@ list(APPEND fortran_src
 set(exe_name seaice_amsrbufr )
 add_executable(${exe_name} ${c_src} ${fortran_src} )
 
-message("bufr lib: " "${BUFR_LIBd}")
+#message("bufr lib: " "${BUFR_LIBd}")
 
 target_link_libraries(${exe_name} ${CMAKE_INSTALL_LIBDIR}/libombf_4.a
 	${W3EMC_LIB4} ${W3NCO_LIB4} ${BUFR_LIBd}

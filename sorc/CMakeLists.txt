@@ -54,10 +54,10 @@ message(CMAKE_INSTALL_BINDIR="${CMAKE_INSTALL_BINDIR}")
 message(CMAKE_INSTALL_LIBDIR="${CMAKE_INSTALL_LIBDIR}")
 
 include_directories(mmablib/include)
-include_directories($NETCDF_INCLUDE)
 
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DLINUX")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Wall -std=c++11 -DCPLUS ")
+set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DLINUX -stand f08 ")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Wall -std=c++11 -DCPLUS ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Wall -std=c++17 -DCPLUS ")
 
 # Build and install code -- mmablib
 add_subdirectory(mmablib)
@@ -66,6 +66,7 @@ add_subdirectory(mmablib)
 set(W3EMC_LIB4 $ENV{W3EMC_LIB4})
 set(W3NCO_LIB4 $ENV{W3NCO_LIB4})
 set(BUFR_LIBd $ENV{BUFR_LIBd})
+include_directories(NETCDF_INCLUDE $ENV{NETCDF_INCLUDE})
 message("Library paths " "${W3EMC_LIB4}")
 message("Library paths " "${W3NCO_LIB4}")
 message("Library paths " "${BUFR_libd}")

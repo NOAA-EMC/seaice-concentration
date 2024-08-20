@@ -12,9 +12,9 @@
 #-----------------------------------------------------------------------------
 set -x
 
-export tagm=20240408
-export tag=20240409
-export end=20240412
+export tagm=20240201
+export tag=20240202
+export end=20240228
 
 export NRT=NO
 

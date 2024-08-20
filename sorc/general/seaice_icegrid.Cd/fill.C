@@ -90,6 +90,7 @@ int main(int argc, char *argv[]) {
 //Do not need to scale the ice concentrations, because the global fields
 //  being input are guaranteed (unsigned char) to be in percents, rather
 //  than fractions.
+  float itmp;
 
   for (x.j = 0; x.j < ice1.ypoints() ; x.j++) {
   for (x.i = 0; x.i < ice1.xpoints() ; x.i++) {
@@ -109,38 +110,45 @@ int main(int argc, char *argv[]) {
         oice[x] = ice2[x];
         oage[x] = 0;
       }
+
       if (oice[x] > MAX_ICE) {
         oice[x] = 100;
       }
       else if (oice[x] < MIN_CONC) {
         oice[x] = 0;
       }
+
       if (iage[x] > MAXAGE ) { 
         //tloc = imsice.locate(ll);
         tloc = x; // only need above if ims/noice grids are different than the analysis
-        #ifdef VERBOSE
-        printf("Reset %4d %4d  %7.3f %7.3f  overage %2d from conc %3d ",
-            x.i, x.j, ll.lon, ll.lat, iage[x], (int) oice[x]);
-        #endif
 
-        if (imsice[tloc] < MAX_ICE) {
+        if (tloc.i >= 0 && tloc.j >= 0 && imsice[tloc] < MAX_ICE) {
           #ifdef VERBOSE
-          printf(" via imsice ");
+	  itmp = imsice[tloc];
+	  itmp =  min(100, max(0, (int)(imsice[tloc]+0.5) ) );
+	  if ((int) (imsice[tloc]+0.5) != (int) oice[x]) {
+            printf("reset %4d %4d  %7.3f %7.3f  overage %2d from conc %3d ",
+                x.i, x.j, ll.lon, ll.lat, iage[x], (int) oice[x]);
+            printf(" via imsice ");
+            printf(" to  %f \n", itmp );
+	  }
           #endif
-          oice[x] = imsice[tloc];
+          oice[x] = (unsigned char) (itmp );
         }
-        else if (noice[tloc] < MAX_ICE) {
+        else if (tloc.i >= 0 && tloc.j >= 0 && noice[tloc] < MAX_ICE) {
+	  if ((int) (noice[tloc]+0.5) != (int) oice[x]) {
           #ifdef VERBOSE
+          printf("reset %4d %4d  %7.3f %7.3f  overage %2d from conc %3d ",
+              x.i, x.j, ll.lon, ll.lat, iage[x], (int) oice[x]);
           printf(" via noice ");
+          printf(" to  %f\n", noice[tloc]);
           #endif
-          oice[x] = noice[tloc];
+	  }
+	  oice[x] = (unsigned char) (0.5+noice[tloc]);
         }
         else {
           oice[x] = 0;
         }
-        #ifdef VERBOSE
-        printf(" to %3d  %f %f\n",oice[x], imsice[tloc], noice[tloc]);
-        #endif
         oage[x] = 0; 
       }
 
@@ -151,6 +159,9 @@ int main(int argc, char *argv[]) {
 	  oage[x] = 0;
 	  imscount += 1;
 	}
+      }
+      if (oice[x] > 100 && oice <= MAX_ICE) {
+        oice[x] = 100;
       }
   }
   }

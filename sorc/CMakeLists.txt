@@ -39,9 +39,10 @@ endif()
 #For nceplibs:
 
 # for RG
-#wcoss2: set(HOME "/home/robert.grumbine")
+#wcoss2: 
+set(HOME "/u/robert.grumbine")
 #Hera:
-set(HOME "/home/Robert.Grumbine")
+#set(HOME "/home/Robert.Grumbine")
 
 #wcoss2: set(CMAKE_INSTALL_PREFIX "${HOME}/rgdev/rg.analy")
 #hera: 
@@ -65,11 +66,11 @@ add_subdirectory(mmablib)
 #Load the relevant modules before calling the cmake:
 set(W3EMC_LIB4 $ENV{W3EMC_LIB4})
 set(W3NCO_LIB4 $ENV{W3NCO_LIB4})
-set(BUFR_LIBd $ENV{BUFR_LIBd})
+set(BUFR_LIBd  $ENV{BUFR_LIBd})
 include_directories(NETCDF_INCLUDE $ENV{NETCDF_INCLUDE})
-message("Library paths " "${W3EMC_LIB4}")
-message("Library paths " "${W3NCO_LIB4}")
-message("Library paths " "${BUFR_libd}")
+message("Library paths w3emc " "${W3EMC_LIB4}")
+message("Library paths w3nco " "${W3NCO_LIB4}")
+message("Library paths bufr " "${BUFR_LIBd}")
 
 # Executables
 add_subdirectory(general)

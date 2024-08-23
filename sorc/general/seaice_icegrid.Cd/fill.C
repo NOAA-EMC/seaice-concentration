@@ -153,12 +153,18 @@ int main(int argc, char *argv[]) {
       }
 
       // 4/2024 -- Hard masking -- if ims has zero, ensure zero in output:
-      if (imsice[x] == 0. && ll.lat > 0. ) {
+      // the 89.0 limit comes from artefacts of interpolating the half-degree
+      //   climatology in to the 5 arcmin grid
+      if (imsice[x] == 0. && ll.lat > 0. && ll.lat < 89.0 ) {
         if (oice[x] != 0) {
           oice[x] = 0;
 	  oage[x] = 0;
 	  imscount += 1;
 	}
+      }
+      if (ll.lat >= 89.0) {
+        oage[x] = 0;
+	oice[x] = 100;
       }
       if (oice[x] > 100 && oice[x] <= MAX_ICE) {
         oice[x] = 100;

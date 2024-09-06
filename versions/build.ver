@@ -1,6 +1,5 @@
 #!/bin/bash
 export seaice_analysis_ver=4.5.0
-<<<<<<< HEAD
 export MMAB_VER=""  #handle this in makeall.sh, by checkout out mmablib submodule operations
 
 export envvar_ver=1.0
@@ -29,3 +28,6 @@ export zlib_ver=1.2.11
 export hdf5_ver=1.10.6
 export netcdf_ver=4.7.4
 
+echo " "
+echo "Version numbers have been set."
+echo " "

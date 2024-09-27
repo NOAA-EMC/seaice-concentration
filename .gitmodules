@@ -2,8 +2,5 @@
 	path = sorc/mmablib
 	url = https://github.com/rgrumbine/mmablib
 [submodule "sorc/CMakeModules"]
-	path = sorc/
-	url = https://github.com/NOAA-EMC/CMakeModules
-[submodule "sorc/sorc/CMakeModules"]
-	path = sorc/sorc/CMakeModules
+	path = sorc/CMakeModules
 	url = https://github.com/NOAA-EMC/CMakeModules

@@ -1,7 +1,15 @@
 #! /usr/bin/env bash
 set -eux
 
-readonly HOMEseaice_analysis=$(cd "$(dirname "$(readlink -f -n "${BASH_SOURCE[0]}" )" )/.." && pwd -P)
+uname_s=$(uname -s)
+if [[ ${uname_s} == Darwin ]]; then
+  echo "Unsupported OS: ${uname_s}"
+  exit 1
+else
+  readonly HOMEseaice_analysis=$(cd "$(dirname "$(readlink -f -n "${BASH_SOURCE[0]}" )" )/.." && pwd -P)
+fi
+
+echo "seaice analysis DIR: ${HOMEseaice_analysis}"
 
 source "${HOMEseaice_analysis}/ush/detect_machine.sh"
 echo "Machine: ${MACHINE_ID}"
@@ -17,8 +25,22 @@ set +x
 source ${HOMEseaice_analysis}/ush/load_modules.sh
 set -x
 
-echo ${FC}
+echo ${CC}
 echo ${CXX}
+echo ${FC}
+# ---------------------------------------------
+
+BUILD_DIR=${BUILD_DIR:-${HOMEseaice_analysis}/build}
+mkdir -p "${BUILD_DIR}"
+
+cd "${BUILD_DIR}"
+ARR_CMAKE_FLAGS=()
+
+export CMAKE_FLAGS=""
+for i in ${CMAKE_FLAGS}; do ARR_CMAKE_FLAGS+=("${i}") ; done
+cmake "${HOMEseaice_analysis}/sorc" "${CMAKE_FLAGS}" <-- for this to work, need CMakeLists.txt in "../" <-- RM
+
+exit 99
 # ---------------------------------------------
 
 export MMAB_VER=""

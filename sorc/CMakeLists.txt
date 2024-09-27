@@ -1,28 +1,53 @@
 cmake_minimum_required(VERSION 3.19)
 
-project(try.cmake
+project(seaice_analysis
         VERSION 1.0.0
 	LANGUAGES Fortran C CXX)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+if (CMAKE_Fortran_COMPILER_ID MATCHES "GNU" AND CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 9.0.0)
+  message(FATAL_ERROR "GNU Compiler >= 9 is required")
+endif()
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules/Modules)
+
 set(CMAKE_DIRECTORY_LABELS ${PROJECT_NAME})
 
-include(GNUInstallDirs)
+message("")
 
-## Build type
-#if(NOT CMAKE_BUILD_TYPE MATCHES "^(Debug|Release|RelWithDebInfo|MinSizeRel)$")
-#  message(STATUS "Setting build type to 'Release' as none was specified.")
-#  set(CMAKE_BUILD_TYPE
-#      "Release"
-#      CACHE STRING "Choose the type of build." FORCE)
-#  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
-#                                               "MinSizeRel" "RelWithDebInfo")
-#endif()
-#
-#if(NOT CMAKE_Fortran_COMPILER_ID MATCHES "^(GNU|Intel)$")
-#  message(WARNING "${CMAKE_Fortran_COMPILER_ID} is not supported.")
-#endif()
-#
+message("..${CMAKE_Fortran_COMPILER_ID}")
+set(CMAKE_Platform $ENV{CMAKE_Platform})
+if(CMAKE_Platform)
+  message("")
+  if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/cmake/configure_${CMAKE_Platform}.cmake)
+    message("Setting configuration for ${CMAKE_Platform}")
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/configure_${CMAKE_Platform}.cmake)
+  else()
+    message("Platform '${CMAKE_Platform}' configuration file does not exist")
+  endif()
+endif()
+
+###############################################################################
+### Set CMAKE_BUILD_TYPE for DEBUG mode
+###############################################################################
+if(DEBUG)
+  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Set type of build to Debug." FORCE)
+else()
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Set type of build to Release." FORCE)
+endif()
+
+include(cmake/${CMAKE_Fortran_COMPILER_ID}.cmake)
+
+###############################################################################
+### Find Dependencies
+###############################################################################
+find_package(MPI REQUIRED)
+if(OPENMP)
+  find_package(OpenMP REQUIRED)
+endif()
+
+find_package(NetCDF 4.7.4 REQUIRED C Fortran)
+
 
 # Set compiler flags.
 if(CMAKE_Fortran_COMPILER_ID MATCHES "^(Intel)$")
@@ -42,11 +67,10 @@ endif()
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -DLINUX")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -Wall -std=c++11 -DCPLUS ")
 
-set(CMAKE_INSTALL_PREFIX "/u/robert.grumbine/rgdev/rg.analy")
+#set(CMAKE_INSTALL_PREFIX "/u/robert.grumbine/rgdev/rg.analy")
 set(CMAKE_INSTALL_BINDIR "exec")
 
 include_directories(mmablib/include)
-include_directories($NETCDF_INCLUDE)
 
 # Build and install code -- mmablib
 add_subdirectory(mmablib)

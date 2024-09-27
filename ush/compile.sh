@@ -38,7 +38,7 @@ ARR_CMAKE_FLAGS=()
 
 export CMAKE_FLAGS=""
 for i in ${CMAKE_FLAGS}; do ARR_CMAKE_FLAGS+=("${i}") ; done
-cmake "${HOMEseaice_analysis}/sorc" "${CMAKE_FLAGS}" <-- for this to work, need CMakeLists.txt in "../" <-- RM
+cmake "${HOMEseaice_analysis}/sorc" "${CMAKE_FLAGS}" #<-- for this to work, need CMakeLists.txt in "../" <-- RM
 
 exit 99
 # ---------------------------------------------

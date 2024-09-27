@@ -36,3 +36,7 @@ fix
 *.exe
 *.out
 *.app
+
+# CMake files and directories
+build*/
+install*/

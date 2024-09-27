@@ -1,0 +1,3 @@
+[submodule "sorc/mmablib"]
+	path = sorc/mmablib
+	url = https://github.com/rgrumbine/mmablib

@@ -88,3 +88,14 @@ add_subdirectory(l1b_to_l2)
 
 ## Install utility scripts.
 #add_subdirectory(ush)
+
+###############################################################################
+### Install
+###############################################################################
+#install(TARGETS seaice_analysis)
+
+#install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mod DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+###############################################################################
+### Done
+###############################################################################

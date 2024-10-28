@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
       }
       if (ll.lat >= 89.0) {
         oage[x] = 0;
-	oice[x] = 100;
+	oice[x] = 98;
       }
       if (oice[x] > 100 && oice[x] <= MAX_ICE) {
         oice[x] = 100;

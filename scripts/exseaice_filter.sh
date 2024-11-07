@@ -20,7 +20,7 @@ echo zzzzzzzzzzzzzzz  exseaice_filter: DCOMROOT = $DCOMROOT
 
 #Note that date is PDYm1 -- this gives full calendar day of data 
 if [ ! -f $COMOUT/land.$PDYm1 ] ; then
-  echo zzz working on land $PDYm1
+  echo zzzzz working on land $PDYm1
   if [ -f ${DCOMROOT}/$PDY/b021/xx054 ] ; then
     ln -sf ${DCOMROOT}/$PDY/b021/xx054 fort.11
     touch fort.51
@@ -28,13 +28,13 @@ if [ ! -f $COMOUT/land.$PDYm1 ] ; then
     cp fort.51 $COMOUT/land.$PDYm1
     rm fort.51
   else
-    echo zzz No avhrr 'land' file, continuing without it
+    echo zzzzz No avhrr 'land' file, continuing without it
     touch $COMOUT/land.$PDYm1
   fi
 fi
 
 if [ ! -f $COMOUT/seas.$PDYm1 ] ; then
-  echo zzz working on seas $PDYm1
+  echo zzzzz working on seas $PDYm1
   if [ -f ${DCOMROOT}/$PDY/b021/xx053 ] ; then
     ln -sf ${DCOMROOT}/$PDY/b021/xx053 fort.11
     time $EXECseaice_analysis/seaice_avhrrbufr 
@@ -42,7 +42,7 @@ if [ ! -f $COMOUT/seas.$PDYm1 ] ; then
     cp fort.51 $COMOUT/seas.$PDYm1
     rm fort.51
   else
-    echo zzz No avhrr 'seas' file, continuing without it
+    echo zzzzz No avhrr 'seas' file, continuing without it
     touch $COMOUT/seas.$PDYm1
   fi
 fi

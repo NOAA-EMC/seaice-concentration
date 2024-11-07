@@ -1,0 +1,15 @@
+edit sorc/CMakeFiles.txt -- redirect HOME to proper location, 
+                             CMAKE_INSTALL_PREFIX edit if necessary
+
+export NETCDF_INCLUDE=...
+module load w3emc, w3nco, bufr
+
+
+cmake ..
+make (this will crash at first attempt to compile seaice_blend because 
+        the omb libs aren't installed, keep going)
+cmake --install . (to get the mmablib put in the right place)
+make (this should now build everything)
+cmake --install . (put the executables in the exec directory)
+
+

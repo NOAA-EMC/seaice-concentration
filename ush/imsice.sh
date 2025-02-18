@@ -12,16 +12,8 @@ stag=`echo $PDY | cut -c5-8`
 
 tar xf  $FIXseaice_analysis/counts.tgz count.$stag
 
-#ops: 
-if [ $NRT == 'YES' ] ; then
-  if [ -f $DCOMm1/wgrbbul/imssnow96.grb.grib2 ] ; then
-    cp $DCOMm1/wgrbbul/imssnow96.grb.grib2 imssnow96.grb.grib2
-  fi
-else
-#dev: 
-  if [ -f $HOME/noscrub/ims/$PDYm1/wgrbbul/imssnow96.grb.grib2 ] ; then
-    cp $HOME/noscrub/ims/$PDYm1/wgrbbul/imssnow96.grb.grib2 imssnow96.grb.grib2
-  fi
+if [ -f $DCOMm1/wgrbbul/imssnow96.grb.grib2 ] ; then
+  cp $DCOMm1/wgrbbul/imssnow96.grb.grib2 imssnow96.grb.grib2
 fi
 
 if [ -f imssnow96.grb.grib2 ]  ; then

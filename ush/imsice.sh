@@ -14,13 +14,18 @@ tar xf  $FIXseaice_analysis/counts.tgz count.$stag
 
 if [ -f $DCOMm1/wgrbbul/imssnow96.grb.grib2 ] ; then
   cp $DCOMm1/wgrbbul/imssnow96.grb.grib2 imssnow96.grb.grib2
+fi
+
+if [ -f imssnow96.grb.grib2 ]  ; then
   $WGRIB2 imssnow96.grb.grib2 | grep ICEC | $WGRIB2 -i imssnow96.grb.grib2 -bin imsice.bin
-export pgm=imsice
-. prep_step
+
+  export pgm=imsice
+  . prep_step
   $EXECseaice_analysis/imsice count.$stag imsice.bin imsice.$PDY
-    export err=$?;err_chk
+  export err=$?;err_chk
 else
   echo could not find imssnow96.grb.grib2 in ${DCOMm1}/wgrbbul
+  echo could not find imssnow96.grb.grib2 in ${DCOMm1}/wgrbbul >> mailbody.txt
 fi
 
 set +xa

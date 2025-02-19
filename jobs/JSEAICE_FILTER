@@ -5,7 +5,7 @@ set -xa
 # #### 31 March 2015 ******************************
 # SETUP AVHRR DATA RETRIEVAL for SEAICE CONCENTRATION ANALYSIS filter
 # ###########################################
-echo Have Entered Filtering Script, PDY = $PDY m1 = $PDYm1
+echo zzzzzzzzzzzzzzzzzz   Have Entered Filtering Script, PDY = $PDY m1 = $PDYm1
 
 export PS4='$SECONDS + '
 date
@@ -29,10 +29,10 @@ export NET=${NET:-seaice_analysis}
 #################################################
 # Specify job's execution areas (directory paths)
 #################################################
-export EXECseaice_analysis=${EXECseaice_analysis:-$HOMEseaice_analysis/exec}
-export FIXseaice_analysis=${FIXseaice_analysis:-$HOMEseaice_analysis/fix}
-export PARMseaice_analysis=${PARMseaice_analysis:-$HOMEseaice_analysis/parm}
-export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
+export EXECseaice_analysis=${EXECseaice_analysis:-$HOMEseaice_analysis/exec/}
+export FIXseaice_analysis=${FIXseaice_analysis:-$HOMEseaice_analysis/fix/}
+export PARMseaice_analysis=${PARMseaice_analysis:-$HOMEseaice_analysis/parm/}
+export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush/}
 
 #########################################
 # Run setpdy and initialize PDY variables
@@ -40,18 +40,29 @@ export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
 setpdy.sh
 . ./PDY
 
-echo FILTER pdy = $PDY
+echo zzzzzzzzzzzzzzzzzz   FILTER pdy = $PDY
 
 export RUN=${RUN:-seaice_analysis}
+
+#debug: set -xe
 
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
 export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
 
+# Offline runs:
+#export COMIN=${COMIN:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
+#export COMINm1=${COMINm1:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDYm1}}
+#export COMOUT=${COMOUT:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
+
 export DCOM=${DCOM:-$DCOMROOT/$PDY}
 
-mkdir -p $COMOUT
+if [ ! -d $COMOUT ] ; then
+  mkdir -p $COMOUT
+fi
+echo zzz filter environment
 env
+echo zzz end filter environment
 
 #####################################
 # Execute the script

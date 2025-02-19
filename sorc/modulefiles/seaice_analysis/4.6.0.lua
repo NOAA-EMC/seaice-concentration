@@ -2,7 +2,7 @@
 --%Module  -----------------------------------------------------------------------
 ----                                                      Robert.Grumbine@noaa.gov 
 ----                                                      EMC/NCEP/NOAA
-----   Sea ice concentration analysis 4.4.0
+----   Sea ice concentration analysis 4.6.0
 ----_____________________________________________________
 ----
 --proc ModulesHelp { } {
@@ -25,8 +25,8 @@ prereq("envvar/1.0")
 --load("prod_util/"..os.getenv("prod_util_ver"))
 --load("wgrib2/"..os.getenv("wgrib2_ver"))
 
---load("intel/"..os.getenv("intel_ver"))
-load("intel-classic/"..os.getenv("intel_classic_ver"))
+load("intel/"..os.getenv("intel_ver"))
+--load("intel-classic/"..os.getenv("intel_classic_ver"))
 load("craype/"..os.getenv("craype_ver"))
 load("PrgEnv-intel/"..os.getenv("PrgEnv_intel_ver"))
 

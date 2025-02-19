@@ -25,6 +25,7 @@ else
 #on a system with module software, such as wcoss
 #  set +x
   module reset
+  source ../versions/build.ver
   module use `pwd`/modulefiles
   module load seaice_analysis/$seaice_analysis_ver
   if [ $? -ne 0 ] ; then
@@ -32,36 +33,32 @@ else
     exit 1
   fi
   set -x
+  echo zzzzzzzz
   module list
   env
-
-  # fix MMAB?
-  # module load mmab/$MMAB_VER
+  echo zzzzzzzz
 
   export MMAB_BASE=`pwd`/mmablib/${MMAB_VER}
   export MMAB_INC=$MMAB_BASE/include
   export MMAB_SRC=$MMAB_BASE/sorc
   export MMAB_LIBF4=$MMAB_BASE/libombf_4.a
-#If being built against new mmablib by developer:
-#  export BASE=/u/Robert.Grumbine/rgdev/mmablib
-#  export VER=""
-#  export MMAB_INC=$BASE/include/
-#  export MMAB_SRC=${BASE}/sorc/
-#  export MMAB_LIB="-L ${BASE}/"
-#  export MMAB_VER=""
-#  export VER=$MMAB_VER
-#  export dlib=${BASE}
-#  export MMAB_INC=$dlib/include
-#  export MMAB_OMBC_LIB4=$dlib/libombc_4.a
-#  export MMAB_OMBF_LIB4=$dlib/libombf_4.a
 
 fi
 export mmablib_ver=${MMAB_VER}
+#if [ ! -d mmablib ] ; then
+#	git clone --recursive -b operations https://github.com/rgrumbine/mmablib
+#fi
+git submodule update --init --recursive
+if [ ! -f mmablib/libombf_4.a ] ; then
+	cd mmablib
+	make
+	cd ..
+fi
 
 #set -xe
 set -x
 
-for d in general amsr2 ssmi ssmis avhrr l1b_to_l2 l2_to_l3
+for d in general amsr2 ssmis avhrr l1b_to_l2 l2_to_l3
 do
   cp makeall.mk $d
   cd $d

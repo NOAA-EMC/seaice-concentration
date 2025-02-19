@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "netcdf.h"
+#include <netcdf.h>
 
 /* For C++ emulation from C */
 typedef int bool;

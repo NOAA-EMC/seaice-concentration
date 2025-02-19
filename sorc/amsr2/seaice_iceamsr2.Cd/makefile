@@ -3,6 +3,7 @@
 include ../makeall.mk
 
 LIBS = ${W3EMC_LIBd} ${BACIO_LIB4}
+
 FFLAGS =	-O3 -convert big_endian -assume byterecl -real-size 64 -std90 -pg
 CFLAGS = 	-O2 -DLINUX -std=c89 -pg
 

@@ -4,6 +4,7 @@ set -x
 
 find . -type f -name '*.o' -exec rm {} \;
 rm general/*/icegrid.inc
+rm mmablib/*.a
 
 for ex in  \
 seaice_icegrid.Cd/seaice_icegrid \

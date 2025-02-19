@@ -17,6 +17,9 @@ float weather(double &t19v, double &t19h, double &t24v, double &t37v, double &t3
 void amsr2_regress_to_amsre(double &v19, double &h19, double &v24, 
                double &v37, double &h37, double &v89, double &h89, float lat) ;
 
+bool notbogus(double &h6p9, double &v6p9, double &h7p3, double &v7p3, double &h11, double &v11,
+	       double &h19) ;
+
 #include "amsr2_team2.C"
 class amsr2_base {
   public :
@@ -203,7 +206,15 @@ int main(int argc, char *argv[]) {
        ngrid[loc] = LAND;
      }
      else {
-       ngrid[loc] = nasa_team2(nh_lr_accum[loc].lr[AMSR2_T19V].spot.tmbr, 
+       ngrid[loc] = nasa_team2(
+                           nh_lr_accum[loc].lr[AMSR2_T6p9H].spot.tmbr,
+                           nh_lr_accum[loc].lr[AMSR2_T6p9V].spot.tmbr,
+                           nh_lr_accum[loc].lr[AMSR2_T7p3H].spot.tmbr,
+                           nh_lr_accum[loc].lr[AMSR2_T7p3V].spot.tmbr,
+                           nh_lr_accum[loc].lr[AMSR2_T11H].spot.tmbr,
+                           nh_lr_accum[loc].lr[AMSR2_T11V].spot.tmbr,
+
+                           nh_lr_accum[loc].lr[AMSR2_T19V].spot.tmbr, 
                            nh_lr_accum[loc].lr[AMSR2_T19H].spot.tmbr, 
                            nh_lr_accum[loc].lr[AMSR2_T24V].spot.tmbr, 
                            nh_lr_accum[loc].lr[AMSR2_T37V].spot.tmbr, 
@@ -226,7 +237,15 @@ int main(int argc, char *argv[]) {
        sgrid[loc] = LAND;
      }
      else {
-       sgrid[loc] = nasa_team2(sh_lr_accum[loc].lr[AMSR2_T19V].spot.tmbr, 
+       sgrid[loc] = nasa_team2(
+                           sh_lr_accum[loc].lr[AMSR2_T6p9H].spot.tmbr,
+                           sh_lr_accum[loc].lr[AMSR2_T6p9V].spot.tmbr,
+                           sh_lr_accum[loc].lr[AMSR2_T7p3H].spot.tmbr,
+                           sh_lr_accum[loc].lr[AMSR2_T7p3V].spot.tmbr,
+                           sh_lr_accum[loc].lr[AMSR2_T11H].spot.tmbr,
+                           sh_lr_accum[loc].lr[AMSR2_T11V].spot.tmbr,
+                       
+                           sh_lr_accum[loc].lr[AMSR2_T19V].spot.tmbr, 
                            sh_lr_accum[loc].lr[AMSR2_T19H].spot.tmbr, 
                            sh_lr_accum[loc].lr[AMSR2_T24V].spot.tmbr, 
                            sh_lr_accum[loc].lr[AMSR2_T37V].spot.tmbr, 
@@ -385,6 +404,19 @@ float weather(double &t19v, double &t19h, double &t24v, double &t37v, double &t3
     }
 
 }
+bool notbogus(double &h6p9, double &v6p9, double &h7p3, double &v7p3, double &h11, double &v11,
+	       double &h19) {
+  return (
+    h6p9 > 219 &&
+    v6p9 > 244 &&
+    h7p3 > 220 &&
+    v7p3 > 244 &&
+    h11  > 219 &&
+    v11  > 244 &&
+    h19  > 227    );
+} 
+
+
 void amsr2_regress_to_amsre(double &v19, double &h19, double &v24, 
                             double &v37, double &h37, double &v89, double &h89, float lat) {
   if (lat > 0) {

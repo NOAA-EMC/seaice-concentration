@@ -185,13 +185,15 @@ void lookuptable(amsr_team2_tables &tab) {
   return ;
 }
 
-float nasa_team2(float v19, float h19, float v24, float v37, float h37, 
+float nasa_team2(float h6p9, float v6p9, float h7p3, float v7p3, float h11, float v11,
+		 float v19, float h19, float v24, float v37, float h37, 
                  float v89, float h89, amsr_team2_tables &tab, float lat) {
 // nt2 in NASA original
   
     double sinphi19,sinphi89;
     double cosphi19,cosphi89;
 
+    double h6p9i, v6p9i, h7p3i, v7p3i, h11i, v11i;
     double v19i,h19i,v24i,v37i,h37i,v89i,h89i;
     double pr19,pr89,gr3719,gr8919v,gr8919h;
     double pr19r,pr89r,dgr;
@@ -227,6 +229,12 @@ float nasa_team2(float v19, float h19, float v24, float v37, float h37,
       #endif
 
       /*** If data are valid and no land ***/
+	h6p9i = (double) h6p9;
+	v6p9i = (double) v6p9;
+	h7p3i = (double) h7p3;
+	v7p3i = (double) v7p3;
+	h11i = (double) h11;
+	v11i = (double) v11;
         v19i=(double) v19;
         h19i=(double) h19;
         v24i=(double) v24;
@@ -240,7 +248,8 @@ float nasa_team2(float v19, float h19, float v24, float v37, float h37,
 
 // NOTE: in older code, only the 24ghz filter is used ... why? ... other is commented out
 // Newer team2 code returns to both filters
-        if (weather(v19i, h19i, v24i, v37i, h37i, v89i, h89i) != WEATHER) {
+        if ( notbogus(h6p9i, v6p9i, h7p3i, v7p3i, h11i, v11i, h19i) &&
+            (weather(v19i, h19i, v24i, v37i, h37i, v89i, h89i) != WEATHER) ) {
         /*** if passed the weather filters ***/
           pr19=(v19i-h19i)/(v19i+h19i);
           pr89=(v89i-h89i)/(v89i+h89i);

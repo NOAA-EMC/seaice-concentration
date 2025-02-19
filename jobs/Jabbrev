@@ -41,30 +41,30 @@ setpdy.sh
 
 echo zzzzzzzzzzzzzzzzzzz Beginning real work of seaice_analysis script zzzzzzzzzzzzzzzzzzzzzzzzz
 export RUN=${RUN:-seaice_analysis}
-export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
-export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
-export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+#export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+#export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
+#export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
 
 # manual runs:
-#export COMIN=${COMIN:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
-#export COMINm1=${COMINm1:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDYm1}}
-#export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
+export COMIN=${COMIN:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
+export COMINm1=${COMINm1:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDYm1}}
+export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
 
 export COMOUTwmo=${COMOUTwmo:-${COMOUT}/wmo}
+
+#export COMINsst_base=${COMINsst_base:-$(compath.py ${envir}/com/nsst/${nsst_ver}/nsst)}
 export COMINsst_base=${COMINsst_base:-$(compath.py prod/com/nsst/${nsst_ver}/nsst)}
 export COMINsst=${COMINsst:-${COMINsst_base}.${PDY}}
 export COMINsstm1=${COMINsstm1:-${COMINsst_base}.${PDYm1}}
 
-#if [ $NRT != 'YES' ] ; then
-#  export COMINsst_base=${COMINsst_base:-/u/robert.grumbine/noscrub/nsst/}
-#  export COMINsst=${COMINsst:-${COMINsst_base}/${PDY}}
-#  export COMINsstm1=${COMINsstm1:-${COMINsst_base}/${PDYm1}}
-#fi
-
-
 #export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
 export DCOM=${DCOM:-$DCOMROOT/$PDY}
 export DCOMm1=${DCOMm1:-$DCOMROOT/$PDYm1}
+
+#NCO request for this var to be defined in J
+#export HOMEobsproc_dump=${HOMEobsproc_dump:-$NWROOT/obsproc_dump.${obsproc_dump_ver}}
+#export USHobsproc_dump=${USHobsproc_dump:-${HOMEobsproc_dump}/ush}
+#export HOMEobsproc_shared_bufr_dumplist=${HOMEobsproc_shared_bufr_dumplist:-$NWROOT/obsproc_shared/bufr_dumplist.${obsproc_shared_bufr_dumplist_ver}}
 
 mkdir -p $COMOUT $COMOUTwmo
 env
@@ -72,7 +72,7 @@ env
 #####################################
 # Execute the script
 
-$HOMEseaice_analysis/scripts/exseaice_analysis.sh >> $pgmout
+$HOMEseaice_analysis/scripts/abbrev_analysis.sh >> $pgmout
 export err=$?
 err_chk
 #####################################
@@ -80,7 +80,6 @@ err_chk
 cat $pgmout
 
 if [ "$KEEPDATA" != "YES" ] ; then
-  mv $pgmout $HOME
   rm -rf $DATA
 fi
 

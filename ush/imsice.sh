@@ -14,6 +14,9 @@ tar xf  $FIXseaice_analysis/counts.tgz count.$stag
 
 if [ -f $DCOMm1/wgrbbul/imssnow96.grb.grib2 ] ; then
   cp $DCOMm1/wgrbbul/imssnow96.grb.grib2 imssnow96.grb.grib2
+fi
+
+if [ -f imssnow96.grb.grib2 ]  ; then
   $WGRIB2 imssnow96.grb.grib2 | grep ICEC | $WGRIB2 -i imssnow96.grb.grib2 -bin imsice.bin
 
   export pgm=imsice

@@ -1,16 +1,16 @@
 #!/bin/sh
-#set -xe
 set -x
+set -xe
 
 #Set up something like ecf environment for calling J job
 
 export cyc=${cyc:-00}
 export envir=${envir:-developer}
-export seaice_analysis_ver=${seaice_analysis_ver:-v4.4.0}
+export seaice_analysis_ver=${seaice_analysis_ver:-v4.6.0}
 export job=${job:-seaice_analysis}
 
-export PDY=${PDY:-20190226}
-export PDYm1=${PDYm1:-20190225}
+export PDY=${PDY:-20231026}
+export PDYm1=${PDYm1:-2231025}
 #Now call J job, which will call the ex
-/u/Robert.Grumbine/rgdev/seaice_analysis.${seaice_analysis_ver}/jobs/JSEAICE_ANALYSIS
+/u/robert.grumbine/rgdev/seaice_analysis.${seaice_analysis_ver}/jobs/JSEAICE_ANALYSIS
 

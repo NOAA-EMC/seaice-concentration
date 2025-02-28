@@ -27,12 +27,10 @@ void splice(global_12th<float> &noice, global_12th<float> &imsice, metricgrid<un
 int main(int argc, char *argv[]) {
   northhigh2<unsigned char> namsr2;
   northhigh<unsigned char> nout, nout2, nland;
-  northhigh<unsigned char> nssmi;
   northhigh<unsigned char> nssmis17, nssmis18;
 
   southhigh2<unsigned char> samsr2;
   southhigh<unsigned char> sout, sout2, sland;
-  southhigh<unsigned char> sssmi;
   southhigh<unsigned char> sssmis17, sssmis18;
 
   global_12th<float> noice, imsice;
@@ -40,11 +38,9 @@ int main(int argc, char *argv[]) {
 
 // Initialize grids:
   namsr2.set((unsigned char) NO_DATA);
-  nssmi.set((unsigned char) NO_DATA);
   nssmis17.set((unsigned char) NO_DATA);
   nssmis18.set((unsigned char) NO_DATA);
   samsr2.set((unsigned char) NO_DATA);
-  sssmi.set((unsigned char) NO_DATA);
   sssmis17.set((unsigned char) NO_DATA);
   sssmis18.set((unsigned char) NO_DATA);
   noice.set((float) NO_DATA/100.0);
@@ -62,104 +58,86 @@ int main(int argc, char *argv[]) {
 
   fin = fopen(argv[2],"r");
   if (fin == (FILE *) NULL) {
-    printf("failed to open nssmi %s\n",argv[2]); fflush(stdout);
-  }
-  else {
-    nssmi.binin(fin);
-    fclose(fin);
-  }
-
-  fin = fopen(argv[3],"r");
-  if (fin == (FILE *) NULL) {
-    printf("failed to open nssmis17 %s\n",argv[3]); fflush(stdout);
+    printf("failed to open nssmis17 %s\n",argv[2]); fflush(stdout);
   }
   else {
     nssmis17.binin(fin);
     fclose(fin);
   }
 
-  fin = fopen(argv[4],"r");
+  fin = fopen(argv[3],"r");
   if (fin == (FILE *) NULL) {
-    printf("failed to open nssmis18 %s\n",argv[4]); fflush(stdout);
+    printf("failed to open nssmis18 %s\n",argv[3]); fflush(stdout);
   }
   else {
     nssmis18.binin(fin);
     fclose(fin);
   }
 
-  nfout = fopen(argv[5],"w");
+  nfout = fopen(argv[4],"w");
   if (nfout == (FILE *) NULL) {
     printf("Failed to open the northern hemisphere file %s for writing!\n",argv[4]);
     return 1;
   }
 
-  fin = fopen(argv[6],"r");
+  fin = fopen(argv[5],"r");
   if (fin == (FILE *) NULL) {
-    printf("failed to open samsr2 %s\n",argv[6]); fflush(stdout);
+    printf("failed to open samsr2 %s\n",argv[5]); fflush(stdout);
   }
   else {
     samsr2.binin(fin);
     fclose(fin);
   }
 
-  fin = fopen(argv[7],"r");
+  fin = fopen(argv[6],"r");
   if (fin == (FILE *) NULL) {
-    printf("failed to open sssmi %s\n", argv[7]); fflush(stdout);
-  }
-  else {
-    sssmi.binin(fin);
-    fclose(fin);
-  }
-
-  fin = fopen(argv[8],"r");
-  if (fin == (FILE *) NULL) {
-    printf("failed to open sssmis17 %s\n",argv[8]); fflush(stdout);
+    printf("failed to open sssmis17 %s\n",argv[6]); fflush(stdout);
   }
   else {
     sssmis17.binin(fin);
     fclose(fin);
   }
-  fin = fopen(argv[9],"r");
+  fin = fopen(argv[7],"r");
   if (fin == (FILE *) NULL) {
-    printf("failed to open sssmis18 %s\n",argv[9]); fflush(stdout);
+    printf("failed to open sssmis18 %s\n",argv[7]); fflush(stdout);
   }
   else {
     sssmis18.binin(fin);
     fclose(fin);
   }
 
-  sfout = fopen(argv[10],"w");
+  sfout = fopen(argv[8],"w");
   if (sfout == (FILE *) NULL) {
-    printf("Failed to open the southern hemisphere file %s for writing!\n",argv[10]);
+    printf("Failed to open the southern hemisphere file %s for writing!\n",argv[8]);
     return 1;
   }
 // Land masks:
-  fin = fopen(argv[11], "r");
+  fin = fopen(argv[9], "r");
   if (fin == (FILE *) NULL) {
-    printf("failed to open nland %s\n",argv[11]);
+    printf("failed to open nland %s\n",argv[9]);
     return 1;
   }
   nland.binin(fin);
   fclose(fin);
-  fin = fopen(argv[12], "r");
+  fin = fopen(argv[10], "r");
   if (fin == (FILE *) NULL) {
-    printf("failed to open sland %s\n",argv[12]);
+    printf("failed to open sland %s\n",argv[10]);
     return 1;
   }
   sland.binin(fin);
 
 // noice (climatology) and imsice (IMS analysis)
-  fin = fopen(argv[13], "r");
+  fin = fopen(argv[11], "r");
   if (fin == (FILE *) NULL) {
-    printf("failed to open noice file %s\n",argv[13]); fflush(stdout);
+    printf("failed to open noice file %s\n",argv[11]); fflush(stdout);
   }
   else {
     noice.binin(fin);
     fclose(fin);
   }
-  fin = fopen(argv[14], "r");
+  fin = fopen(argv[12], "r");
   if (fin == (FILE*) NULL) {
-    printf("failed to open imsice file %s\n",argv[14]); fflush(stdout);
+    printf("failed to open imsice file %s\n",argv[12]); fflush(stdout);
   }
   else {
     imsice.binin(fin);

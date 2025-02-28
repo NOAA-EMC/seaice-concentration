@@ -6,18 +6,18 @@ include ../makeall.mk
 
 all : seaice_regions.northhigh seaice_regions.southhigh seaice_regions.north seaice_regions.south
 
-seaice_regions.northhigh : grid8b.C
-	 $(CPP) $(CPPOPTS) grid8b.C -DGRIDTYPE=northhigh -o $(@).o
+seaice_regions.northhigh : regions.C
+	 $(CPP) $(CPPOPTS) $< -DGRIDTYPE=northhigh -o $(@).o
 	 $(CPPLD) $(MMAB_LIBF4) $(@).o $(CPPLDFLAGS) -o $(@)
 
-seaice_regions.southhigh : grid8b.C
-	 $(CPP) $(CPPOPTS) grid8b.C -DGRIDTYPE=southhigh -o $(@).o
+seaice_regions.southhigh : regions.C
+	 $(CPP) $(CPPOPTS) $< -DGRIDTYPE=southhigh -o $(@).o
 	 $(CPPLD) $(MMAB_LIBF4) $(@).o $(CPPLDFLAGS) -o $(@)
 
-seaice_regions.north : grid8b.C
-	 $(CPP) $(CPPOPTS) grid8b.C -DGRIDTYPE=northgrid -o $(@).o
+seaice_regions.north : regions.C
+	 $(CPP) $(CPPOPTS) $< -DGRIDTYPE=northgrid -o $(@).o
 	 $(CPPLD) $(MMAB_LIBF4) $(@).o $(CPPLDFLAGS) -o $(@)
 
-seaice_regions.south : grid8b.C
-	 $(CPP) $(CPPOPTS) grid8b.C -DGRIDTYPE=southgrid -o $(@).o
+seaice_regions.south : regions.C
+	 $(CPP) $(CPPOPTS) $< -DGRIDTYPE=southgrid -o $(@).o
 	 $(CPPLD) $(MMAB_LIBF4) $(@).o $(CPPLDFLAGS) -o $(@)

@@ -2,8 +2,9 @@
 #include "icessmi.h"
 
 #include "params.h"
-//to 2021/04 #define MAXAGE  16 
-#define MAXAGE  4 
+//to 2021/04 #define MAXAGE  16
+//to present:
+#define MAXAGE  4
 
 /* Construct a filled lat-long grid of sea ice data from yesterday's
      filled map and today's observations.  If today has a valid 
@@ -26,6 +27,7 @@ int main(int argc, char *argv[]) {
   GRIDTYPE<float> noice, imsice;
   ijpt x, tloc;
   latpt ll;
+  int imscount = 0;
 
   fice1 = fopen(argv[1], "r");
   fice2 = fopen(argv[2], "r");
@@ -88,9 +90,12 @@ int main(int argc, char *argv[]) {
 //Do not need to scale the ice concentrations, because the global fields
 //  being input are guaranteed (unsigned char) to be in percents, rather
 //  than fractions.
+  float itmp;
 
   for (x.j = 0; x.j < ice1.ypoints() ; x.j++) {
-    for (x.i = 0; x.i < ice1.xpoints() ; x.i++) {
+  for (x.i = 0; x.i < ice1.xpoints() ; x.i++) {
+
+    ll   = oice.locate(x);
       if (ice2[x] >= ( (unsigned char) MAX_ICE ) ) { 
         if (ice2[x] == (unsigned char) WEATHER ) {
           oice[x] = 0;
@@ -105,44 +110,71 @@ int main(int argc, char *argv[]) {
         oice[x] = ice2[x];
         oage[x] = 0;
       }
+
       if (oice[x] > MAX_ICE) {
         oice[x] = 100;
       }
       else if (oice[x] < MIN_CONC) {
         oice[x] = 0;
       }
-      if (iage[x] > MAXAGE ) { 
-        ll   = oice.locate(x);
-        tloc = imsice.locate(ll);
-        #ifdef VERBOSE
-        printf("Reset %4d %4d  %7.3f %7.3f  overage %2d from conc %3d ",
-            x.i, x.j, ll.lon, ll.lat, iage[x], (int) oice[x]);
-        #endif
 
-        if (imsice[tloc] < MAX_ICE) {
+      if (iage[x] > MAXAGE ) { 
+        //tloc = imsice.locate(ll);
+        tloc = x; // only need above if ims/noice grids are different than the analysis
+
+        if (tloc.i >= 0 && tloc.j >= 0 && imsice[tloc] < MAX_ICE) {
           #ifdef VERBOSE
-          printf(" via imsice ");
-        #endif
-          oice[x] = imsice[tloc];
-        }
-        else if (noice[tloc] < MAX_ICE) {
-          #ifdef VERBOSE
-          printf(" via noice ");
+	  itmp = imsice[tloc];
+	  itmp =  min(100, max(0, (int)(imsice[tloc]+0.5) ) );
+	  if ((int) (imsice[tloc]+0.5) != (int) oice[x]) {
+            printf("reset %4d %4d  %7.3f %7.3f  overage %2d from conc %3d ",
+                x.i, x.j, ll.lon, ll.lat, iage[x], (int) oice[x]);
+            printf(" via imsice ");
+            printf(" to  %f \n", itmp );
+	  }
           #endif
-          oice[x] = noice[tloc];
+          oice[x] = (unsigned char) (itmp );
+        }
+        else if (tloc.i >= 0 && tloc.j >= 0 && noice[tloc] < MAX_ICE) {
+	  if ((int) (noice[tloc]+0.5) != (int) oice[x]) {
+          #ifdef VERBOSE
+          printf("reset %4d %4d  %7.3f %7.3f  overage %2d from conc %3d ",
+              x.i, x.j, ll.lon, ll.lat, iage[x], (int) oice[x]);
+          printf(" via noice ");
+          printf(" to  %f\n", noice[tloc]);
+          #endif
+	  }
+	  oice[x] = (unsigned char) (0.5+noice[tloc]);
         }
         else {
           oice[x] = 0;
         }
-          #ifdef VERBOSE
-        printf(" to %3d  %f %f\n",oice[x], imsice[tloc], noice[tloc]);
-        #endif
         oage[x] = 0; 
       }
 
-    }
+      // 4/2024 -- Hard masking -- if ims has zero, ensure zero in output:
+      // the 89.0 limit comes from artefacts of interpolating the half-degree
+      //   climatology in to the 5 arcmin grid
+      if (imsice[x] == 0. && ll.lat > 0. && ll.lat < 89.0 ) {
+        if (oice[x] != 0) {
+          oice[x] = 0;
+	  oage[x] = 0;
+	  imscount += 1;
+	}
+      }
+      if (ll.lat >= 89.0) {
+        oage[x] = 0;
+	oice[x] = 98;
+      }
+      if (oice[x] > 100 && oice[x] <= MAX_ICE) {
+        oice[x] = 100;
+      }
+  }
   }
 
+  //#ifdef VERBOSE
+  printf("zzz ims filtered %d points\n", imscount);
+  //#endif
   oice.binout(foice);
   oage.binout(foage);
 

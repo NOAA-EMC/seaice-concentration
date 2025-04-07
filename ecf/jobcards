@@ -26,7 +26,8 @@ module list
 set -x
 
 export HOMEbase=/u/robert.grumbine/rgdev
-export seaice_analysis_ver=v4.4.0
+export seaice_analysis_ver=v4.5.1
+
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 export MODULEPATH_ROOT=/usrx/local/prod/modulefiles

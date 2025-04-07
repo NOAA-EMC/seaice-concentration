@@ -19,6 +19,9 @@ export end=20240318
 
 export HOMEbase=/u/robert.grumbine/rgdev
 export seaice_analysis_ver=v4.5.1
+
+echo zzz tagm = $tagm
+
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 echo zzz tagm = $tagm

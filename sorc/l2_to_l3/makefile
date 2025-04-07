@@ -3,7 +3,6 @@ SHELL=/bin/sh
         
 include ../makeall.mk
 #work -- from makeall.mk or makeall.sh as a rule
-
 NCEPLIB=$(BUFR_LIB4) $(W3EMC_LIB4) 
 
 #Should be no changes below this point---------------------------------

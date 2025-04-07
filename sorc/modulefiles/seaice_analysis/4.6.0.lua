@@ -26,7 +26,7 @@ prereq("envvar/1.0")
 --load("wgrib2/"..os.getenv("wgrib2_ver"))
 
 load("intel/"..os.getenv("intel_ver"))
-
+--load("intel-classic/"..os.getenv("intel_classic_ver"))
 load("craype/"..os.getenv("craype_ver"))
 load("PrgEnv-intel/"..os.getenv("PrgEnv_intel_ver"))
 

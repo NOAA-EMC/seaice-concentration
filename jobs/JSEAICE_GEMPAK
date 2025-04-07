@@ -15,12 +15,11 @@ set -xa
 # ###################################
 export PS4='$SECONDS + ' 
 date
-export pid=$$
 export DATA=$DATAROOT/${jobid}
 mkdir -p $DATA
 cd $DATA 
 
-export pgmout="OUTPUT.${pid}"
+export pgmout="OUTPUT.$$"
 
 export cycle=t${cyc}z 
 
@@ -45,7 +44,6 @@ export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${
 
 if [ ! -f $COMOUT ] ; then
   mkdir -p -m 775 $COMOUT
-#  mkdir -p -m 775 $WMOOUT
 fi
 
 cp ${HOMEseaice_analysis}/fix/*.tbl .

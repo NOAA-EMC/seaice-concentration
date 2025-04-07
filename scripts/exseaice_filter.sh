@@ -21,7 +21,6 @@ echo zzzzzzzzzzzzzzz  exseaice_filter: DCOMROOT = $DCOMROOT
 #Note that date is PDYm1 -- this gives full calendar day of data 
 if [ ! -f $COMOUT/land.$PDYm1 ] ; then
   echo zzzzz working on land $PDYm1
-
   if [ -f ${DCOMROOT}/$PDY/b021/xx054 ] ; then
     ln -sf ${DCOMROOT}/$PDY/b021/xx054 fort.11
     touch fort.51

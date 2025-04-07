@@ -12,7 +12,6 @@ date
 echo cyc is ${cyc:?}
 echo envir is ${envir:?}
 echo seaice_analysis_ver is ${seaice_analysis_ver:?} 
-export pid=$$
 
 export DATA=$DATAROOT/${jobid}
 mkdir -p $DATA
@@ -21,7 +20,7 @@ cd $DATA
 ####################################
 # Determine Job Output Name on System
 ####################################
-export pgmout="OUTPUT.${pid}"
+export pgmout="OUTPUT.$$"
 
 export cycle=t${cyc}z
 export NET=${NET:-seaice_analysis}
@@ -29,10 +28,10 @@ export NET=${NET:-seaice_analysis}
 #################################################
 # Specify job's execution areas (directory paths)
 #################################################
-export EXECseaice_analysis=${EXECseaice_analysis:-$HOMEseaice_analysis/exec/}
-export FIXseaice_analysis=${FIXseaice_analysis:-$HOMEseaice_analysis/fix/}
-export PARMseaice_analysis=${PARMseaice_analysis:-$HOMEseaice_analysis/parm/}
-export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush/}
+export EXECseaice_analysis=${EXECseaice_analysis:-$HOMEseaice_analysis/exec}
+export FIXseaice_analysis=${FIXseaice_analysis:-$HOMEseaice_analysis/fix}
+export PARMseaice_analysis=${PARMseaice_analysis:-$HOMEseaice_analysis/parm}
+export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
 
 #########################################
 # Run setpdy and initialize PDY variables
@@ -49,11 +48,6 @@ export RUN=${RUN:-seaice_analysis}
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
 export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
-
-# Offline runs:
-#export COMIN=${COMIN:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
-#export COMINm1=${COMINm1:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDYm1}}
-#export COMOUT=${COMOUT:-${HOME}/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
 
 export DCOM=${DCOM:-$DCOMROOT/$PDY}
 

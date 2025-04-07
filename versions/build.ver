@@ -1,5 +1,6 @@
 #!/bin/bash
 export seaice_analysis_ver=4.6.0
+
 export MMAB_VER=""  #handle this in makeall.sh, by checkout out mmablib submodule operations
 
 export envvar_ver=1.0

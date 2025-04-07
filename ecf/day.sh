@@ -2,6 +2,8 @@
 
 #export tag=20240110
 export tag=${tag:-`date +"%Y%m%d"`}
+export NRT=${NRT:-YES}
+echo zzz tag, NRT = $tag, $NRT
 
 export NRT=${NRT:-YES}
 echo zzz tag, NRT = $tag, $NRT
@@ -37,7 +39,6 @@ module list
 echo $jlogfile $DATA $cyc $cycle
 echo date pdy= $PDY ncepdate = $ncepdate
 
-
 echo date before obsproc: $PDY
 if [ -z $obsproc_dump_ver ] ; then
   echo null obsproc_dump_ver
@@ -49,7 +50,6 @@ echo tag = $tag date after obsproc: $PDY
 #--------------------------------------------------------------------------------------
 #The actual running of stuff
 export KEEPDATA=${KEEPDATA:-NO}
-
 
 while [ $tag -le $end ]
 do
@@ -63,7 +63,6 @@ do
   export TMPDIR=$DATA
 
   time ./sms.filter.fake > /u/robert.grumbine/noscrub/com/sms.filter.$tag
-
   #debug: exit
 
   export job=seaice_analysis

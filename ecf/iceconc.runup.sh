@@ -12,17 +12,16 @@
 #-----------------------------------------------------------------------------
 set -x
 
-export tagm=20240201
-export tag=20240202
-export end=20240229
-
 export NRT=NO
-
-echo zzz tagm = $tagm
+export tagm=20240315
+export tag=20240316
+export end=20240318
 
 export HOMEbase=/u/robert.grumbine/rgdev
-export seaice_analysis_ver=v4.6.0
+export seaice_analysis_ver=v4.5.1
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
+
+echo zzz tagm = $tagm
 
 #Use this to override system in favor of my archive:
 if [ $NRT == 'NO' ] ; then

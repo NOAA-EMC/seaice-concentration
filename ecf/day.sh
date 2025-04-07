@@ -2,6 +2,7 @@
 
 #export tag=20240110
 export tag=${tag:-`date +"%Y%m%d"`}
+
 export NRT=${NRT:-YES}
 echo zzz tag, NRT = $tag, $NRT
 
@@ -18,7 +19,8 @@ set -xe
 #NCO refers to these as 'job card' variables
 
 export HOMEbase=/u/robert.grumbine/rgdev
-export seaice_analysis_ver=v4.6.0
+export seaice_analysis_ver=v4.5.1
+
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 #Use this to override system in favor of my archive:
 if [ $NRT == 'NO' ] ; then
@@ -48,6 +50,7 @@ echo tag = $tag date after obsproc: $PDY
 #The actual running of stuff
 export KEEPDATA=${KEEPDATA:-NO}
 
+
 while [ $tag -le $end ]
 do
   export PDY=$tag
@@ -60,11 +63,12 @@ do
   export TMPDIR=$DATA
 
   time ./sms.filter.fake > /u/robert.grumbine/noscrub/com/sms.filter.$tag
+
   #debug: exit
 
   export job=seaice_analysis
   export DATA=$DATAROOT/${job}.${pid}
-#debug:  
+
   time ./sms.fake > /u/robert.grumbine/noscrub/com/sms.$tag
 
 #  module load gempak

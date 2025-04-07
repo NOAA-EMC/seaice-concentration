@@ -6,7 +6,7 @@ include ../makeall.mk
 SRCS=	gac_readavhrr.f90 gac_binary.c
 OBJS=	gac_readavhrr.o gac_binary.o
 # Tunable parameters
-#
+
 LIBS =	   $(W3EMC_LIBd) $(BUFR_LIB4)
 CMD =	    seaice_avhrrbufr
 

@@ -41,6 +41,7 @@ setpdy.sh
 
 echo zzzzzzzzzzzzzzzzzzz Beginning real work of seaice_analysis script zzzzzzzzzzzzzzzzzzzzzzzzz
 export RUN=${RUN:-seaice_analysis}
+
 export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
 export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
 export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
@@ -51,6 +52,7 @@ export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${
 #export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY}}
 
 export COMOUTwmo=${COMOUTwmo:-${COMOUT}/wmo}
+
 export COMINsst_base=${COMINsst_base:-$(compath.py prod/com/nsst/${nsst_ver}/nsst)}
 export COMINsst=${COMINsst:-${COMINsst_base}.${PDY}}
 export COMINsstm1=${COMINsstm1:-${COMINsst_base}.${PDYm1}}

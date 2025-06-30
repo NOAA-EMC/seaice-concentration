@@ -592,7 +592,7 @@ then
   
   startmsg
   $EXECseaice_analysis/seaice_filtanal sst umasknorth12.${PDY} umasksouth12.${PDY} \
-        latlon.$PDY nps.$PDY sps.$PDY $FIXseaice_analysis/seaice_gland5min 275.3 \
+        latlon.$PDY nps.$PDY sps.$PDY $FIXseaice_analysis/seaice_gland5min 273.15 \
         $FIXseaice_analysis/seaice_nland127.map $FIXseaice_analysis/seaice_sland127.map \
         >> $pgmout 2>errfile
   export err=$?;err_chk

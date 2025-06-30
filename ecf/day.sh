@@ -5,9 +5,6 @@ export tag=${tag:-`date +"%Y%m%d"`}
 export NRT=${NRT:-YES}
 echo zzz tag, NRT = $tag, $NRT
 
-export NRT=${NRT:-YES}
-echo zzz tag, NRT = $tag, $NRT
-
 tagm=`expr $tag - 1`
 export tagm=`/u/robert.grumbine/bin/dtgfix3 $tagm`
 export end=$tag

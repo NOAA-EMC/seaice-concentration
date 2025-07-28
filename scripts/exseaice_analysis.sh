@@ -55,7 +55,7 @@ export FNLAND127=${FNLAND127:-${FIXseaice_analysis}/seaice_nland127.map}
 export FSLAND=${FSLAND:-${FIXseaice_analysis}/seaice_sland.map}
 export FSLAND127=${FSLAND127:-${FIXseaice_analysis}/seaice_sland127.map}
 export FGLAND5MIN=${FGLAND5MIN:-${FIXseaice_analysis}/seaice_gland5min}
-export FPOSTERIORI5=${FPOSTERIORI5:-${FIXseaice_analysis}/seaice_posteriori_5min}
+export FPOSTERIORI5=${FPOSTERIORI5:-${FIXseaice_analysis}/seaice_posteriori.nc}
 export FDIST=${FDIST:-${FIXseaice_analysis}/seaice_alldist.bin}
 export FGSHHS=${FGSHHS:-${FIXseaice_analysis}/seaice_lake_isleout}
 
@@ -354,11 +354,12 @@ export err=$?;err_chk
 
 #----------- Do the a posteriori filtering -- no dependance on sst field ---
 # New 27 July 2011
+# Update to new .nc file 28 July 2025
 #
 cp $FPOSTERIORI5  . 
 export pgm=seaice_posteriori_5min.x
 startmsg
-$EXECseaice_analysis/seaice_posteriori_5min.x seaice_posteriori_5min \
+$EXECseaice_analysis/seaice_posteriori_5min.x seaice_posteriori.nc \
       initnorth12.$PDY initsouth12.$PDY \
       umasknorth12.$PDY umasksouth12.$PDY
 export err=$?;err_chk

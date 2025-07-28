@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
   //flags.binin(inflag); fclose(inflag);
   // read posteriori.nc
   get_nc(argv[1],flags);
+  printf("returned from get_nc\n"); fflush(stdout);
 
   innh   = fopen(argv[2], "r");
   insh   = fopen(argv[3], "r");
@@ -100,16 +101,16 @@ int get_nc(char *fname, global_12th<short int> &posteriori) {
 
   retval = nc_open(fname, NC_NOWRITE, &ncid); if (retval != 0) ERR(retval);
 
-  retval = nc_inq_dim(ncid, idp, obname, &lenp);
-  if (retval != 0) ERR(retval);
-  printf("var name and size %s %ld\n",obname, lenp);
-  if (lenp == 0) {
-    printf("no data for posteriori file file %s, exiting\n",fname);
-    return 1;
-  }
+  //retval = nc_inq_dim(ncid, idp, obname, &lenp);
+  //if (retval != 0) ERR(retval);
+  //printf("var name and size %s %ld\n",obname, lenp); fflush(stdout);
+  //if (lenp == 0) {
+  //  printf("no data for posteriori file file %s, exiting\n",fname);
+  //  return 1;
+  //}
 
   short int *ix;
-  ix = (short int *) malloc(sizeof(short int) *lenp);
+  ix = (short int *) malloc(sizeof(short int) * posteriori.xpoints()*posteriori.ypoints()  );
  
   retval = nc_inq_varid(ncid, "posteriori", &varid); 
   if (retval != 0) ERR(retval);

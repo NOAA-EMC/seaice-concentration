@@ -17,11 +17,11 @@
 int main(int argc, char *argv[]) {
   global_ice<float> climo[7];
 
+  //bedient_north<float> ims(96); // ims ice on 1/96th bedient grid
+  ims4km<float> ims; // ims ice on 4 km ps grid
   GRIDTYPE<float> fromims;
   GRIDTYPE<float> high, countmp, avgtmp;
   
-  //bedient_north<float> ims(96); // ims ice on 1/96th bedient grid
-  ims4km<float> ims; // ims ice on 4 km ps grid
   FILE *fin, *fout;
   ijpt loc;
   latpt ll;

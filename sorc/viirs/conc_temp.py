@@ -37,9 +37,7 @@ for fname in sys.argv[1:]:
   
   #This is a masked array, determined by fill value
   conc = viirs.variables['IceConc'][:,:]
-  temp = viirs.variables['IceSrfTemp'][:,:] 
   print(nfiles,"conc ",conc.max(), conc.min(),flush=True, file=sys.stderr )
-  print(nfiles,"temp ",temp.max(), temp.min(),flush=True, file=sys.stderr )
   indices = conc.nonzero()
 
   npts = len(indices[0])
@@ -52,6 +50,8 @@ for fname in sys.argv[1:]:
   lons = viirs.variables['Longitude'][:,:]
 
   #QC:
+  temp = viirs.variables['IceSrfTemp'][:,:] 
+  print(nfiles,"temp ",temp.max(), temp.min(),flush=True, file=sys.stderr )
 
   #Start Working:
   for k in range(0,len(indices[0])):
@@ -73,7 +73,7 @@ for fname in sys.argv[1:]:
       tsumx2[tj,ti] += t*t
       #debug print(j, i, tj, ti, lons[j,i], lats[j,i], conc[j,i], t, " pt", flush=True)
 
-  if (nfiles >= 100): break
+  #debug: if (nfiles >= 100): break
 
 print("total number of ice conc observations: ",totnp, file=sys.stderr)
 
@@ -115,8 +115,8 @@ class ncout:
       tlons = np.linspace(flon, 360-flon, nx)
       #RG: Verify that this is correct direction and values
       tlats = np.linspace(flat, -90+dlat/2, ny)
-      print(tlats)
-      print(tlons)
+      #debug: print(tlats)
+      #debug: print(tlons)
       for i in range(0,nx):
         self.lats[:,i] = tlats[:]
       for i in range(0,ny):
@@ -183,14 +183,12 @@ class ncout:
       if (self.nx*self.ny != 0) :
         self.ncfile.variables[vname][:,:] = allvalues[:,:]
 
-
-
     def close(self):
       # close netcdf file associated w. patch
       self.ncfile.close()
 
 #----------------------------------------------------------------------------------
-xout = ncout(4320, 2160)
+xout = ncout(target_grid.nx, target_grid.ny)
 xout.ncopen("hello.nc")
 
 # will want to go to 4 byte float and int, default is 8

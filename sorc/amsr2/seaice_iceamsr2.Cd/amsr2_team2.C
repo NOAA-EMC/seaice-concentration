@@ -12,6 +12,12 @@ void arctic_tables(amsr_team2_tables &x);
 void antarctic_tables(amsr_team2_tables &x);
 void lookuptable(amsr_team2_tables &x);
 
+
+// For 7/2025 weather filter:
+float dr(double x, double y) ;
+float lfweather(double h6p9i, double v6p9i, double h7p3i, double v7p3i, double h11i, double v11i) ;
+
+
 //////////////// Begin TEAM2 code:
 void arctic_tables(amsr_team2_tables &arctic) {
 // equivalent to get_lut in the original nt2 file
@@ -246,10 +252,15 @@ float nasa_team2(float h6p9, float v6p9, float h7p3, float v7p3, float h11, floa
 
         gr3719=(v37i-v19i)/(v37i+v19i);
 
-// NOTE: in older code, only the 24ghz filter is used ... why? ... other is commented out
-// Newer team2 code returns to both filters
-        if ( notbogus(h6p9i, v6p9i, h7p3i, v7p3i, h11i, v11i, h19i) &&
-            (weather(v19i, h19i, v24i, v37i, h37i, v89i, h89i) != WEATHER) ) {
+// NOTE: in older (pre-2017) code, only the 24ghz filter is used ... 
+//      why? ... other is commented out
+// Newer (2017) team2 code returns to both filters
+//2017        if ( notbogus(h6p9i, v6p9i, h7p3i, v7p3i, h11i, v11i, h19i) &&
+//2017            (weather(v19i, h19i, v24i, v37i, h37i, v89i, h89i) != WEATHER) ) {
+// New (7/2025) filter using low frequency from ML decision tree
+        if (lfweather(h6p9i, v6p9i, h7p3i, v7p3i, h11i, v11i) != 0 &&
+            lfweather(h6p9i, v6p9i, h7p3i, v7p3i, h11i, v11i) != WEATHER) {
+
         /*** if passed the weather filters ***/
           pr19=(v19i-h19i)/(v19i+h19i);
           pr89=(v89i-h89i)/(v89i+h89i);
@@ -350,7 +361,8 @@ float nasa_team2(float h6p9, float v6p9, float h7p3, float v7p3, float h11, floa
 
     } /*endif*/
     else {
-      icecon = WEATHER;   /** Weather **/
+      //icecon = WEATHER;   /** Weather **/
+      icecon = lfweather(h6p9i, v6p9i, h7p3i, v7p3i, h11i, v11i);   /** Weather **/
     }
   }/* endif*/
   else {
@@ -358,4 +370,37 @@ float nasa_team2(float h6p9, float v6p9, float h7p3, float v7p3, float h11, floa
   }
 
   return icecon;
+}
+float dr(double x, double y) {
+  return (x-y)/(x+y);
+}
+float lfweather(double h6p9i, double v6p9i, double h7p3i, double v7p3i, double h11i, double v11i) {
+  float x = WEATHER;
+  double f23, f4, f31, f69, f71;
+
+  f23 = dr(h7p3i, v11i);
+  f4  = dr(h6p9i, v11i);
+  f31 = dr(v7p3i, v11i);
+  f69 = v7p3i;
+  f71 = v11i;
+
+  if (f23 <= 0.273) {
+  // non-ice branch
+    if (f4 <= -0.307 && f31 <= -0.019) {
+      x = 0;
+    }
+    else {
+      x = WEATHER;
+    }
+  }
+  // if it is ice, give a value other than 0 or WEATHER
+  else if (f71 > 241.865 and f69 > 246.775) {
+      x = 5;
+  }
+  else {
+      x = WEATHER;
+  }
+
+
+  return x;
 }

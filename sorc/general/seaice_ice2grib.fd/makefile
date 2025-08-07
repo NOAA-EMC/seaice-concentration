@@ -20,7 +20,7 @@ seaice_ice2grib : mkllglob.o
 mkllglob5.o : mkllglob.f90
 	ln -sf $(MMAB_INC)/icegrid.global5min icegrid.inc
 	$(FC) $(FOPTS) $< -o $(@)
- 
+
 mkllglob.o : mkllglob.f90
 	ln -sf $(MMAB_INC)/icegrid.global icegrid.inc
 	$(FC) $(FOPTS) $<  -o $(@)

@@ -17,8 +17,8 @@ set -x
 # Bring the various environment-sensitive definitions out of J jobs and to here:
 #NCO refers to these as 'job card' variables
 
-export HOMEbase=/u/robert.grumbine/rgdev
-export seaice_analysis_ver=v4.5.1
+export HOMEbase=$HOME/rgdev
+export seaice_analysis_ver=v4.5.2
 
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 #Use this to override system in favor of my archive:

@@ -47,10 +47,12 @@ export RUN=${RUN:-seaice_analysis}
 
 if [ NRT == 'NO' ] ; then
   export COMIN=${COMIN:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+  echo zzz COMIN $COMIN for not real time
   export COMINm1=${COMINm1:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
   export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
 else
   export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+  echo zzz COMIN $COMIN for near real time
   export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
 fi

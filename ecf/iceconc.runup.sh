@@ -2,7 +2,7 @@
 #####
 #PBS -l select=1:ncpus=1
 #PBS -l walltime=5:59:00
-#PBS -N aice_2025
+#PBS -N aice_20250a
 #PBS -q "dev"
 #PBS -j oe
 #PBS -A ICE-DEV
@@ -14,9 +14,9 @@ set -x
 
 export NRT=NO
 
-export tagm=20241201
-export tag=20241202
-export end=20250728
+export tagm=20240701
+export tag=20240702
+export end=20250101
 
 export HOMEbase=/u/robert.grumbine/rgdev
 export seaice_analysis_ver=v4.5.1

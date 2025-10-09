@@ -11,7 +11,6 @@
 int main(int argc, char *argv[]) {
   FILE *fin, *fout;
   global_12th<float> conc, sigmaconc, temp, sigmatemp, count;
-  global_12th<float> sst;
   global_12th<unsigned char> mask;
   int fnum, ti, tj;
   ijpt loc;
@@ -23,17 +22,10 @@ int main(int argc, char *argv[]) {
     printf("failed to open output file %s\n", argv[1]);
     exit(1);
   }
+
   fin = fopen(argv[2],"r");
   if (fin == (FILE *) NULL) {
-    printf("failed to open sst file %s\n", argv[2]);
-    exit(1);
-  }
-  sst.binin(fin);
-  fclose(fin);
-
-  fin = fopen(argv[3],"r");
-  if (fin == (FILE *) NULL) {
-    printf("failed to open land mask file %s\n", argv[3]);
+    printf("failed to open land mask file %s\n", argv[2]);
     exit(1);
   }
   mask.binin(fin);
@@ -45,7 +37,7 @@ int main(int argc, char *argv[]) {
   sigmatemp.set((float) 0.);
   count.set((float) 0.);
 
-  for (fnum = 4; fnum < argc; fnum++) {
+  for (fnum = 3; fnum < argc; fnum++) {
     fin = fopen(argv[fnum],"r");
     if (fin == (FILE *) NULL) {
       printf("failed to open input file %d %s\n",fnum, argv[fnum]);

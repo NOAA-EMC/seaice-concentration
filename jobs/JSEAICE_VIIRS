@@ -1,0 +1,73 @@
+#!/bin/sh
+
+set -xa
+export PS4='$SECONDS + '
+date
+echo cyc is ${cyc:?}
+echo envir is ${envir:?}
+echo seaice_viirs_ver is ${seaice_viirs_ver:?} 
+
+export DATA=$DATAROOT/${jobid}
+mkdir -p $DATA
+cd $DATA
+
+####################################
+# Determine Job Output Name on System
+####################################
+export pgmout="OUTPUT.$$"
+
+export cycle=t${cyc}z
+export NET=${NET:-seaice_analysis}
+
+export SENDEMAIL=${SENDEMAIL:-YES}
+#################################################
+# Specify job's execution areas (directory paths)
+#################################################
+export EXECseaice_analysis=${EXECseaice_analysis:-$HOMEseaice_analysis/exec}
+export FIXseaice_analysis=${FIXseaice_analysis:-$HOMEseaice_analysis/fix}
+export PARMseaice_analysis=${PARMseaice_analysis:-$HOMEseaice_analysis/parm}
+export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
+
+#########################################
+# Run setpdy and initialize PDY variables
+#########################################
+setpdy.sh
+. ./PDY
+
+#--------------------------------------------------------------------
+export RUN=${RUN:-seaice_analysis}
+export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+export COMOUTwmo=${COMOUTwmo:-${COMOUT}/wmo}
+
+
+if [ $NRT == "NO" ] ; then
+  export COMIN=${COMIN:-$HOME/noscrub/com/${NET}/${RUN}.${PDY}}
+  export COMINm1=${COMINm1:-$HOME/noscrub/com/${NET}/${RUN}.${PDYm1}}
+ else
+  export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+  export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
+fi
+
+#export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
+export DCOM=${DCOM:-$DCOMROOT/$PDY}
+export DCOMm1=${DCOMm1:-$DCOMROOT/$PDYm1}
+
+mkdir -p $COMOUT $COMOUTwmo
+env
+
+#####################################
+# Execute the script
+
+$HOMEseaice_analysis/scripts/exseaice_viirs.sh >> $pgmout
+export err=$?
+err_chk
+#####################################
+
+cat $pgmout
+
+if [ "$KEEPDATA" != "YES" ] ; then
+  mv $pgmout $HOME
+  rm -rf $DATA
+fi
+
+date

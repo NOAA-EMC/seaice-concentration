@@ -8,10 +8,12 @@ import netCDF4 as nc
 from grid import *
 
 #---------------------------------------------------------------------------
+'''
 #Loop over input arg list (JRR-IceConcentration*)
 # and composite the concentration and temperatures on to global_12th grids
 # write out in netcdf
 #fname = "20220828/JRR-IceConcentration_v2r3_j01_s202208281036198_e202208281037426_c202208281059540.nc"
+'''
 
 #For output grid:
 target_grid = global_5min()

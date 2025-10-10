@@ -46,37 +46,72 @@ int main(int argc, char *argv[]) {
 
     while (!feof(fin)) {
       fscanf(fin,"%d %d %f %f %f %f %f %f %f\n", &ti, &tj, &tlat, &tlon, &tconc, &tsigmaconc, &ttemp, &tsigmatemp, &tcount);
-      count[ti,tj]     += tcount;
-      conc[ti,tj]      += tconc*count[ti,tj];
-      temp[ti,tj]      += ttemp*count[ti,tj];
+      loc.i = ti;
+      loc.j = tj;
+      if (tconc > 100 || tcount == 0) {
+        printf("file %d  %d %d %f %f\n",fnum, ti, tj, tconc, tcount);
+      }
+      conc[loc]      += tconc*tcount;
+      temp[loc]      += ttemp*tcount;
+      count[loc]     += tcount;
       // need more detailed additions for differing counts RG
-      sigmaconc[ti,tj] += tsigmaconc*tsigmaconc * count[ti,tj];
-      sigmatemp[ti,tj] += tsigmatemp*tsigmatemp * count[ti,tj];
+      sigmaconc[loc] += tsigmaconc*tsigmaconc * tcount;
+      sigmatemp[loc] += tsigmatemp*tsigmatemp * tcount;
     }
-    printf("count %f\n",count.gridmax() );
+    //debug: printf("%d count %f\n",fnum, count.gridmax() );
   
     fclose(fin);
   }
 
+  float scale = 1.;
+  int fcount = 0;
+  global_12th<unsigned char> cout; // for compatibility with system, make this uchar
   for (loc.j = 0; loc.j < count.ypoints() ; loc.j++) {
   for (loc.i = 0; loc.i < count.xpoints() ; loc.i++) {
     if (count[loc] != 0) {
       conc[loc] /= count[loc];
       temp[loc] /= count[loc];
+      ll = conc.locate(loc);
+      scale = count[loc] / cos(M_PI/180.*ll.lat);
       // need more detailed math for differing counts RG
       sigmaconc[loc] = sqrt(sigmaconc[loc]/count[loc]);
       sigmatemp[loc] = sqrt(sigmatemp[loc]/count[loc]);
-    }
-    // apply filter here RG
-  }
-  }
 
-  conc.binout(fout);
+    // apply filter here RG
+      if ( !(temp[loc] < 268.5 && scale > 125.005) || mask[loc] > 0 ) {
+        fcount += 1;
+        conc[loc] = NO_DATA;
+        temp[loc] = NO_DATA;
+        sigmaconc[loc] = NO_DATA;
+        sigmatemp[loc] = NO_DATA;
+        count[loc] = 0;
+      }
+
+      cout[loc] = (unsigned char) (0.5 + conc[loc]);
+    }
+
+    // diagnostic range check
+    if (count[loc] > 0) {
+      if ((cout[loc] > 100 && (cout[loc] != 224)) || cout[loc] <= 0.) {
+        printf("cout out of range %d %d %d %f\n", loc.i, loc.j, cout[loc], count[loc]);
+      } 
+    }
+
+  }
+  }
+  //debug: 
+  printf("Filtered out %d points\n",fcount);
+
+//dev  conc.binout(fout);
+//dev  //debug: printf("conc %f %f\n", conc.gridmax(NO_DATA), conc.gridmin() );
+  cout.binout(fout);
+  //debug: printf("cout %d %d\n", cout.gridmax(NO_DATA), cout.gridmin() );
+
   temp.binout(fout);
+  //debug: printf("temp %f %f\n", temp.gridmax(NO_DATA), temp.gridmin() );
   sigmaconc.binout(fout);
   sigmatemp.binout(fout);
   count.binout(fout);
 
   return 0;
 }
-//0 0 89.95833333333333 0.041666666666666664 99.15856475830078 1.1910030221915704 239.72630615234374 4.2478503154843 5.0

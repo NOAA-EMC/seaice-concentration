@@ -11,7 +11,8 @@
 #                                   = COMOUTbase.$dayp1 for 18z cycle
 
 set -x
-echo zzzzzzzzzzzzzzz  exseaice_viirs: DCOMROOT = $DCOMROOT
+source $HOME/env3.12/bin/activate
+export PYTHONPATH=$PYTHONPATH:$HOME/mmablib/py
 
 if [ $cyc == '00' ] ; then
   day=$PDYm1

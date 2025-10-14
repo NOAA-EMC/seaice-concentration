@@ -1,12 +1,16 @@
 #!/bin/sh
 
 set -xa
+set -e
+
 export PS4='$SECONDS + '
 date
 echo cyc is ${cyc:?}
 echo envir is ${envir:?}
 echo seaice_viirs_ver is ${seaice_viirs_ver:?} 
 
+export DATAROOT=${dataroot:-/lfs/h2/emc/ptmp/wx21rg}
+export jobid=${jobid:-72}
 export DATA=$DATAROOT/${jobid}
 mkdir -p $DATA
 cd $DATA
@@ -36,8 +40,15 @@ setpdy.sh
 
 #--------------------------------------------------------------------
 export RUN=${RUN:-seaice_analysis}
-export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
-export COMOUTwmo=${COMOUTwmo:-${COMOUT}/wmo}
+if [ $envir == 'prod' ] ; then
+  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+else
+  export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/$RUN.$PDY}
+fi
+echo comout = $COMOUT
+if [ ! -d $COMOUT ] ; then
+  mkdir -p $COMOUT
+fi
 
 
 if [ $NRT == "NO" ] ; then
@@ -48,17 +59,16 @@ if [ $NRT == "NO" ] ; then
   export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
 fi
 
-#export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
 export DCOM=${DCOM:-$DCOMROOT/$PDY}
 export DCOMm1=${DCOMm1:-$DCOMROOT/$PDYm1}
 export DCOMm2=${DCOMm2:-$DCOMROOT/$PDYm2}
 
 env
 
-exit
+#debug: exit
 #####################################
 # Execute the script
-
+echo zzz calling ex viirs script
 $HOMEseaice_analysis/scripts/exseaice_viirs.sh >> $pgmout
 export err=$?
 err_chk

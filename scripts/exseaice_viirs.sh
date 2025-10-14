@@ -13,12 +13,14 @@
 #
 
 # Environment to run: COMOUT, DCOMROOT, PDY, PDYm1, PDYm2
-#                     EXDIR
+#                     EXECseaice_analysis
 set -x
 set -e
 
+echo zzz entered exseaice_viirs
 source $HOME/env3.12/bin/activate
 export PYTHONPATH=$PYTHONPATH:$HOME/rgops/mmablib/py
+echo zzz prepared python
 
 day=$PDY
 if [ $cyc == '00' ] ; then
@@ -36,12 +38,12 @@ else
 fi
 
 
-echo zzzzz working on viirs $PDY $cyc
+echo zzzzz working on viirs $PDY cycle=$cyc
 for inst in j01 npp n21
 do
   for hh in $hours
   do
-    python3 $EXDIR/composite.py \
+    python3 $EXECseaice_analysis/composite.py \
     $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
     > output.$inst.$cyc.${day}$hh 
     # Handle no file case 
@@ -59,7 +61,7 @@ if [ $cyc == '18' ] ; then
   do
     for hh in $hours
     do
-      python3 $EXDIR/composite.py \
+      python3 $EXECseaice_analysis/composite.py \
       $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
       > output.$inst.$cyc.${day}$hh 
       # Handle no file case 

@@ -51,10 +51,11 @@ fi
 #export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
 export DCOM=${DCOM:-$DCOMROOT/$PDY}
 export DCOMm1=${DCOMm1:-$DCOMROOT/$PDYm1}
+export DCOMm2=${DCOMm2:-$DCOMROOT/$PDYm2}
 
-mkdir -p $COMOUT $COMOUTwmo
 env
 
+exit
 #####################################
 # Execute the script
 

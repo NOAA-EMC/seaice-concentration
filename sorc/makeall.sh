@@ -58,7 +58,7 @@ fi
 #set -xe
 set -x
 
-for d in general amsr2 ssmis avhrr l1b_to_l2 l2_to_l3
+for d in general amsr2 ssmis avhrr l1b_to_l2 l2_to_l3 viirs
 do
   cp makeall.mk $d
   cd $d

@@ -45,10 +45,10 @@ else
 
 fi
 export mmablib_ver=${MMAB_VER}
-#if [ ! -d mmablib ] ; then
-#	git clone --recursive -b operations https://github.com/rgrumbine/mmablib
-#fi
-git submodule update --init --recursive
+if [ ! -d mmablib ] ; then
+	git clone --recursive https://github.com/rgrumbine/mmablib
+fi
+
 if [ ! -f mmablib/libombf_4.a ] ; then
 	cd mmablib
 	make

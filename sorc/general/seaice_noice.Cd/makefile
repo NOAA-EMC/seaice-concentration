@@ -3,7 +3,7 @@
 include ../makeall.mk
 
 #------------------------------------------------------------
-all : noice noice_nc 
+all : noice 
 
 noice : noice.o
 	$(CPPLD) $(CPPLDFLAGS) $< -o $@ $(MMAB_LIBF4)

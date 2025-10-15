@@ -39,7 +39,8 @@ seaice_psgnorth.fd/seaice_psgnorth12 \
 seaice_grib2.fd/seaice_grib2 \
 seaice_psgsouth.fd/seaice_psgsouth12 \
 seaice_psgnorth.fd/seaice_psgnorth \
-seaice_psgsouth.fd/seaice_psgsouth 
+seaice_psgsouth.fd/seaice_psgsouth \
+seaice_global_blend.Cd/seaice_global_blend
 do
   if [ -f general/$ex ] ; then
     rm general/$ex 
@@ -52,5 +53,6 @@ avhrr/seaice_avhrrfilter.Cd/seaice_avhrrfilter \
 avhrr/seaice_avhrrbufr.fd/seaice_avhrrbufr \
 amsr2/seaice_iceamsr2.Cd/seaice_iceamsr2 \
 amsr2/seaice_amsrbufr.fd/seaice_amsrbufr \
+viirs/seaice_viirscomp.Cd/seaice_viirs \
 l1b_to_l2/ssmisu_tol2 \
 l2_to_l3/ssmisu_tol3 \

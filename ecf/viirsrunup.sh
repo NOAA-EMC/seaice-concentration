@@ -15,9 +15,9 @@ set -x
 export NRT=YES
 export KEEPDATA=NO
 
-export tagm=20251006
-export tag=20251007
-export end=20251013
+export tagm=20251013
+export tag=20251014
+export end=20251014
 
 #-----------------------------------------------------------------------------
 export HOMEbase=$HOME/rgdev

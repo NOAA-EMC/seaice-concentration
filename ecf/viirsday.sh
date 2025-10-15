@@ -35,8 +35,8 @@ module reset
 source ../versions/run.ver
 . ./jobcards
 module list
-echo $jlogfile $DATA $cyc $cycle
-echo date pdy= $PDY ncepdate = $ncepdate
+echo zzz $jlogfile $DATA $cyc $cycle
+echo zzz date pdy= $PDY cyc = $cyc ncepdate = $ncepdate
 
 #--------------------------------------------------------------------------------------
 #The actual running of stuff

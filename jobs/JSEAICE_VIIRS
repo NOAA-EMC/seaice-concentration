@@ -7,7 +7,7 @@ export PS4='$SECONDS + '
 date
 echo cyc is ${cyc:?}
 echo envir is ${envir:?}
-echo seaice_viirs_ver is ${seaice_viirs_ver:?} 
+echo seaice_analysis_ver is ${seaice_analysis_ver:?} 
 
 export DATAROOT=${dataroot:-/lfs/h2/emc/ptmp/wx21rg}
 export jobid=${jobid:-72}

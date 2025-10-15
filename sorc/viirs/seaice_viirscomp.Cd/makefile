@@ -4,9 +4,9 @@ include ../makeall.mk
 
 #Should be no changes below this point---------------------------------
 
-all : seaice_viirs 
+all : seaice_viirscomp
 
-seaice_viirs : viirs.o
+seaice_viirscomp: viirs.o
 	$(CPPLD) $(MMAB_LIBF4) $< $(CPPLDFLAGS) -o $(@)
 
 viirs_blend : blend.o

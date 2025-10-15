@@ -56,7 +56,7 @@ avhrr/seaice_avhrrbufr.fd/seaice_avhrrbufr \
 amsr2/seaice_iceamsr2.Cd/seaice_iceamsr2 \
 amsr2/seaice_amsrbufr.fd/seaice_amsrbufr \
 viirs/seaice_viirsread.py/composite.py \
-viirs/seaice_viirscomp.Cd/seaice_viirs \
+viirs/seaice_viirscomp.Cd/seaice_viirscomp \
 l1b_to_l2/ssmisu_tol2 \
 l2_to_l3/ssmisu_tol3 \
 ../exec

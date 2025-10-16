@@ -3,7 +3,7 @@
 // composite N viirs ascii files in to simple binary global grids
 //   of concentration, temperature, sigmaconc, sigmatemp, and count
 // Along the way also:
-//   filter by sst and land mask
+//   filter by land mask
 //   apply the viirs-specific filter
 // Robert Grumbine
 // 9 October 2025
@@ -77,8 +77,8 @@ int main(int argc, char *argv[]) {
       sigmaconc[loc] = sqrt(sigmaconc[loc]/count[loc]);
       sigmatemp[loc] = sqrt(sigmatemp[loc]/count[loc]);
 
-    // apply filter here RG
-      if ( !(temp[loc] < 268.5 && scale > 125.005) || mask[loc] > 0 ) {
+    // apply filter 
+      if ( !(temp[loc] < 268.545 && scale > 125.005) || mask[loc] > 0 ) {
         fcount += 1;
         conc[loc] = NO_DATA;
         temp[loc] = NO_DATA;
@@ -99,8 +99,7 @@ int main(int argc, char *argv[]) {
 
   }
   }
-  //debug: 
-  printf("Filtered out %d points\n",fcount);
+  //debug: printf("Filtered out %d points\n",fcount);
 
 //dev  conc.binout(fout);
 //dev  //debug: printf("conc %f %f\n", conc.gridmax(NO_DATA), conc.gridmin() );

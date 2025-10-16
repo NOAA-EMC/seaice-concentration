@@ -21,9 +21,11 @@ int main(int argc, char *argv[]) {
     sigma = atof(argv[fnum]);
     fin = fopen(argv[fnum+1], "r"); 
     if (fin == (FILE*) NULL) {
-      printf("failed to open input concentration file %s\n",argv[fnum+1]);
+      printf("seaice_global_blend: failed to open input concentration file %s\n",argv[fnum+1]);
       exit(1);
     }
+    //debug:
+    printf("seaice_global_blend: working on file %s\n", argv[fnum+1]);
     conc.binin(fin);
     fclose(fin);
 
@@ -31,8 +33,8 @@ int main(int argc, char *argv[]) {
     for (loc.i = 0; loc.i < conc.xpoints() ; loc.i++) {
       // Requires that concentrations be meaningful, even 0s, or flagged out (ignored)
       if (conc[loc] <= 100) {
-	invsigmasum[loc] += 1./sigma;
-	weightsum[loc] += conc[loc]/sigma;
+	invsigmasum[loc] += 1./sigma/sigma;
+	weightsum[loc] += conc[loc]/sigma/sigma;
       }
     }
     }

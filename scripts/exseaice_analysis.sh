@@ -308,7 +308,7 @@ export err=$?;err_chk
 export pgm=seaice_viirscomp
 . prep_step
 startmsg
-time $EXECseaice_analysis/seaice_viirscomp ir_latlon.$PDY $FGLAND5MIN $COMOUT/output.*.*.*
+time $EXECseaice_analysis/seaice_viirscomp ir_latlon.$PDY $FGLAND5MIN $COMOUT/viirs.*.*.*
 export err=$?;err_chk
 touch ir_latlon.$PDY
 
@@ -612,7 +612,7 @@ then
   # Blend passive microwave L3 global with VIIRS L3 global
   startmsg
   . prep_step
-  $EXECseaice_analysis/seaice_global_blend final_latlon.$PDY 0.05 latlon.$PDY 0.20 ir_latlon.$PDY
+  time $EXECseaice_analysis/seaice_global_blend final_latlon.$PDY 0.05 latlon.$PDY 0.20 ir_latlon.$PDY
   export err=$?; err_chk
   #VIIRS ln -s latlon.$PDY final_latlon.$PDY
 

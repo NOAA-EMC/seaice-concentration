@@ -31,7 +31,7 @@ elif [ $cyc == '12' ] ; then
   hours='22 21 20 19 18 17'
 elif [ $cyc == '18' ] ; then
   day=$PDYm1
-  hours='04 03 02 01 00' #handle 23 separately, PDYm1
+  hours='04 03 02 01 00' #handle 23 separately, PDYm2
 else
   echo exseaice_viirs: illegal cycle $cyc, exiting
   exit 1
@@ -45,10 +45,10 @@ do
   do
     python3 $EXECseaice_analysis/composite.py \
     $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
-    > output.$inst.$cyc.${day}$hh 
+    > viirs.$inst.$cyc.${day}$hh 
     # Handle no file case 
-    if [ ! -f output.$inst.$cyc.${day}$hh ] ; then
-      touch output.$inst.$cyc.${day}$hh
+    if [ ! -f viirs.$inst.$cyc.${day}$hh ] ; then
+      touch viirs.$inst.$cyc.${day}$hh
     fi
   done
 done
@@ -63,15 +63,15 @@ if [ $cyc == '18' ] ; then
     do
       python3 $EXECseaice_analysis/composite.py \
       $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
-      > output.$inst.$cyc.${day}$hh 
+      > viirs.$inst.$cyc.${day}$hh 
       # Handle no file case 
-      if [ ! -f output.$inst.$cyc.${day}$hh ] ; then
-        touch output.$inst.$cyc.${day}$hh
+      if [ ! -f viirs.$inst.$cyc.${day}$hh ] ; then
+        touch viirs.$inst.$cyc.${day}$hh
       fi
     done
   done
 fi
 
 
-mv output.*.$cyc.${day}?? $COMOUT
+mv viirs.*.$cyc.*?? $COMOUT
 

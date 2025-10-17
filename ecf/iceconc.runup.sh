@@ -13,12 +13,12 @@
 set -x
 
 export NRT=NO
-export tagm=20240315
-export tag=20240316
-export end=20240318
+export tagm=20250928
+export tag=20250929
+export end=20251014
 
 export HOMEbase=/u/robert.grumbine/rgdev
-export seaice_analysis_ver=v4.5.1
+export seaice_analysis_ver=v4.5.2
 
 echo zzz tagm = $tagm
 
@@ -30,6 +30,7 @@ echo zzz tagm = $tagm
 if [ $NRT == 'NO' ] ; then
   export DCOMROOT=/u/robert.grumbine/noscrub/satellites/prod/
   export RGTAG=prod
+  export COMINsst_base=$HOME/noscrub/nsst/
   export my_archive=true
 fi
 

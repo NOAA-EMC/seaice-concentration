@@ -302,7 +302,7 @@ export pgm=seaice_iceamsr2
 startmsg
 time $EXECseaice_analysis/seaice_iceamsr2 amsr2.bufr $FNLAND127 $FSLAND127 \
            namsr2.$PDY samsr2.$PDY amsr2north6.$PDY amsr2south6.$PDY \
-           $FGSHHS $FDIST >> $pgmout 2>errfile
+           >> $pgmout 2>errfile
 export err=$?;err_chk
 
 # RG: Save point for initial L2, L3 analyses:
@@ -571,8 +571,8 @@ echo zzzzz completed the L2 and L3 analyses zzzzzzzzzzzzzzzz
 #-----------------------------------------------------------
 
 qc="false"
-echo zzzzz qc, cominsst, cominsstm1:
-echo $qc $COMINsst $COMINsstm1
+echo zzz qc, cominsst_base, cominsst, cominsstm1:
+echo $qc $COMINsst_base $COMINsst $COMINsstm1
 
 if [ -s $COMINsst/rtgssthr_grb_0.083.grib2 ] ; then
   cp $COMINsst/rtgssthr_grb_0.083.grib2 oned

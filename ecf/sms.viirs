@@ -13,5 +13,6 @@ export PDY=${PDY:-20250926}
 export PDYm1=${PDYm1:-20250925}
 export PDYm1=${PDYm1:-20250924}
 #Now call J job, which will call the ex
+echo in sms.viirs version = ${seaice_analysis_ver}
 /u/robert.grumbine/rgdev/seaice_analysis.${seaice_analysis_ver}/jobs/JSEAICE_VIIRS
 

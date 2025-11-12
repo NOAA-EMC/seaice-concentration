@@ -45,8 +45,9 @@ else
 
 fi
 export mmablib_ver=${MMAB_VER}
+
 if [ ! -d mmablib ] ; then
-	git clone --recursive https://github.com/rgrumbine/mmablib
+  git clone --recursive https://github.com/rgrumbine/mmablib
 fi
 
 if [ ! -f mmablib/libombf_4.a ] ; then

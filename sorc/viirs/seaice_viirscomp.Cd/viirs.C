@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     fin = fopen(argv[fnum],"r");
     if (fin == (FILE *) NULL) {
       printf("failed to open input file %d %s\n",fnum, argv[fnum]);
-      exit(1);
+      break;
     }
 
     while (!feof(fin)) {
@@ -66,6 +66,8 @@ int main(int argc, char *argv[]) {
   float scale = 1.;
   int fcount = 0;
   global_12th<unsigned char> cout; // for compatibility with system, make this uchar
+  cout.set((unsigned char) NO_DATA);
+
   for (loc.j = 0; loc.j < count.ypoints() ; loc.j++) {
   for (loc.i = 0; loc.i < count.xpoints() ; loc.i++) {
     if (count[loc] != 0) {

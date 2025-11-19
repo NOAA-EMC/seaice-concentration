@@ -5,22 +5,20 @@ export tag=${tag:-`date +"%Y%m%d"`}
 export NRT=${NRT:-YES}
 echo zzz tag, NRT = $tag, $NRT
 
-export NRT=${NRT:-YES}
-echo zzz tag, NRT = $tag, $NRT
-
 tagm=`expr $tag - 1`
 export tagm=`/u/robert.grumbine/bin/dtgfix3 $tagm`
 export end=$tag
 echo initial tag date = $tag
 
 #-----------------------------------------------------------------------------
+# This is rgrumbine dev/viirs version
 
-set -xe
+set -x
 
 # Bring the various environment-sensitive definitions out of J jobs and to here:
 #NCO refers to these as 'job card' variables
 
-export HOMEbase=/u/robert.grumbine/rgdev
+export HOMEbase=$HOME/rgdev
 export seaice_analysis_ver=v4.5.2
 
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
@@ -49,7 +47,7 @@ echo tag = $tag date after obsproc: $PDY
 
 #--------------------------------------------------------------------------------------
 #The actual running of stuff
-export KEEPDATA=${KEEPDATA:-NO}
+export KEEPDATA=${KEEPDATA:-YES}
 
 while [ $tag -le $end ]
 do

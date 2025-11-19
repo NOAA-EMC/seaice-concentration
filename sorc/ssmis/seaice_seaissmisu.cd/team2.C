@@ -304,9 +304,9 @@ float nasa_team2(float v19, float h19, float v22, float v37, float h37,
        icecon=(camina[bestk]+ccmina[bestk]);
 
     } /*endif*/
-    else icecon= 177;   /** Weather **/
+    else icecon= WEATHER;   /** Weather **/
   }/* endif*/
-  else icecon = 224;     /** Missing data **/
+  else icecon = NO_DATA;     /** Missing data **/
 
   return icecon;
 }

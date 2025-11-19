@@ -1,28 +1,8 @@
 #include <stdio.h>
+
 /* Various defined values/flags/...  Moved here from ncepgrids 2006 Jan 30 */
-#define LAND     157
-#define COAST    195
-#define BAD_DATA 166
-#define WEATHER  177
-#define NO_DATA  224
-#define OCEAN      0
-#define MIN_CONC  15
-#define MAX_CONC 127
-#define MAX_ICE  128
-/* Note that these indices refer to the ssmisupt, rather than the */
-/*   ice spot values I'll be using later */
-#define SSMIS_T150H 0
-#define SSMIS_T19H 1
-#define SSMIS_T19V 2
-#define SSMIS_T22V 3
-#define SSMIS_T37H 4
-#define SSMIS_T37V 5
-#define SSMIS_T92V 6
-#define SSMIS_T92H 7
-/* Items for the concentration algorithm: */
-#define SSMIS_ANTENNA 0
-#define SSMIS_GR37LIM 0.05
-#define SSMIS_GR22LIM 0.045
+#include "cincludes.h"
+
 
 /* For error/filtration statistics */
 extern int bad_low;
@@ -30,7 +10,6 @@ extern int bad_high;
 extern int crop_low;
 extern int filt37;
 extern int filt22;
-
 
 void antenna(float *t19v, float *t19h, float *t22v, float *t37v, float *t37h,
              float *t92v, float *t92h, float *t150h);

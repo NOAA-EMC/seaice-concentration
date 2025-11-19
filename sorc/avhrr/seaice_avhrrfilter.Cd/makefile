@@ -7,6 +7,3 @@ include ../makeall.mk
 seaice_avhrrfilter : gacfilt.o
 	$(CPPLD) $(MMAB_LIBF4) $< $(CPPLDFLAGS) -o seaice_avhrrfilter
 
-gacfilt.o : gacfilt.C
-	$(CPP) $(CPPOPTS) gacfilt.C 
-

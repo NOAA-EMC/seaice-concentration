@@ -48,9 +48,11 @@ if [ ! -f $COMOUT/seas.$PDYm1 ] ; then
 fi
 
 if [ ! -f $COMOUT/land.$PDYm1 ] ; then
+  echo zzz could not produce AVHRR land file
   touch $COMOUT/land.$PDYm1
 fi
 
 if [ ! -f $COMOUT/seas.$PDYm1 ] ; then
+  echo zzz could not produce AVHRR seas file
   touch $COMOUT/seas.$PDYm1
 fi

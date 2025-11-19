@@ -1,24 +1,13 @@
 #include <stdio.h>
 #include <netcdf.h>
 
-/* For C++ emulation from C */
-typedef int bool;
-#define false (1==0)
-#define true (1==1)
+#include "cincludes.h"
 
 #include "ssmisu.h"
-/* Items for the concentration algorithm: */
-#define SSMIS_ANTENNA 0
-#define SSMIS_GR37LIM 0.05
-#define SSMIS_GR22LIM 0.045
-#define BAD_DATA 166
-#define WEATHER  177
+
 extern float nasa_team(float t19v, float f19h, float t22v, float t37v, float t37h,
                 float t92v, float t92h, float t150h, const char pole, const int ant,
                 const int satno);
-#define NFREQS 8
-#define LAND 157
-#define MIXED 195
 
 int l1b_to_l2(ssmisupt *a, float *concentration, int *qc, float *land);
 

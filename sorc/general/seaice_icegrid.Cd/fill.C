@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
   isolani(ice2);  // remove isolated ice points
 
   if (fice1 == (FILE *) NULL) {
-    ice1.set((unsigned char) 224);
+    ice1.set((unsigned char) NO_DATA);
   }
   else {
     ice1.binin(fice1);
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
   for (x.i = 0; x.i < ice1.xpoints() ; x.i++) {
 
     ll   = oice.locate(x);
-      if (ice2[x] >= ( (unsigned char) MAX_ICE ) ) { 
+      if (ice2[x] >= ( (unsigned char) MAX_CONC ) ) { 
         if (ice2[x] == (unsigned char) WEATHER ) {
           oice[x] = 0;
           oage[x] = 0;
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
         oage[x] = 0;
       }
 
-      if (oice[x] > MAX_ICE) {
+      if (oice[x] > MAX_CONC) {
         oice[x] = 100;
       }
       else if (oice[x] < MIN_CONC) {
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
         //tloc = imsice.locate(ll);
         tloc = x; // only need above if ims/noice grids are different than the analysis
 
-        if (tloc.i >= 0 && tloc.j >= 0 && imsice[tloc] < MAX_ICE) {
+        if (tloc.i >= 0 && tloc.j >= 0 && imsice[tloc] < MAX_CONC) {
           #ifdef VERBOSE
 	  itmp = imsice[tloc];
 	  itmp =  min(100, max(0, (int)(imsice[tloc]+0.5) ) );
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
           #endif
           oice[x] = (unsigned char) (itmp );
         }
-        else if (tloc.i >= 0 && tloc.j >= 0 && noice[tloc] < MAX_ICE) {
+        else if (tloc.i >= 0 && tloc.j >= 0 && noice[tloc] < MAX_CONC) {
 	  if ((int) (noice[tloc]+0.5) != (int) oice[x]) {
           #ifdef VERBOSE
           printf("reset %4d %4d  %7.3f %7.3f  overage %2d from conc %3d ",
@@ -166,7 +166,7 @@ int main(int argc, char *argv[]) {
         oage[x] = 0;
 	oice[x] = 98;
       }
-      if (oice[x] > 100 && oice[x] <= MAX_ICE) {
+      if (oice[x] > 100 && oice[x] <= MAX_CONC) {
         oice[x] = 100;
       }
   }

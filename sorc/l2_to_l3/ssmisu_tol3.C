@@ -37,8 +37,8 @@ int main(int argc, char *argv[]) {
     conv(south, sconc);
   }
   else {
-    nconc.set(224);
-    sconc.set(224);
+    nconc.set(NO_DATA);
+    sconc.set(NO_DATA);
   }
 
   fout = fopen(argv[2], "w");
@@ -202,7 +202,7 @@ int get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
       north[locn] /= ncount[locn];
     }
     else {
-      north[locn] = 224.;
+      north[locn] = NO_DATA;
       undef++;
     }
   }
@@ -213,7 +213,7 @@ int get_nc(char *fname, psgrid<float> &north, psgrid<float> &south) {
       south[locs] /= scount[locs];
     }
     else {
-      south[locs] = 224.;
+      south[locs] = NO_DATA;
       undef++;
     }
   }

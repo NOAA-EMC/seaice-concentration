@@ -18,9 +18,6 @@ $(CMD):		$(OBJS)
 	echo cmd $(CMD) at $(@)
 	$(FLD) $(FLDFLAGS) -o $(@) $(OBJS) $(LIBS)
 
-gac_binary.o: gac_binary.c 
-	$(CC) $(COPTS) gac_binary.c
-
 clean:
 	-rm -f $(OBJS)
 

@@ -100,7 +100,7 @@ void  edger(metricgrid<unsigned char> &conc, metricgrid<unsigned char> &land,
       newloc = conc.locate(newer); // teset for loc being on grid (!)
       // if (! ongrid) escape
       newconc = conc[newloc];
-      if (oldconc > 0 && oldconc < 128 && newconc == 0 && land[newloc] == 0 ) {
+      if (oldconc > 0 && oldconc < MAX_CONC && newconc == 0 && land[newloc] == 0 ) {
         // found an edge point
         analy_edge[npts] = newer; // really want to make this an 
                                   //   interpolation between grid points 

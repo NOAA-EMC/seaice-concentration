@@ -1,4 +1,6 @@
-#!/bin/ksh
+#!/bin/bash
+
+set -xe
 
 #Use IMS ice analysis and conditional climatology to estimate current
 #  ice cover

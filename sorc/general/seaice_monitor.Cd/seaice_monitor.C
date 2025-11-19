@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
   GRIDTYPE<unsigned char> nland;
 
   palette<unsigned char>  hpal(21), gg(19,65);
-  unsigned char land_flag = 157;
+  unsigned char land_flag = LAND;
   float tmp = 255;
   ijpt x;
   int i;
@@ -84,12 +84,12 @@ int main(int argc, char *argv[]) {
       ntoday[x] = land_flag;
       nyesterday[x] = land_flag;
     }
-    if (ntoday[x] > 100 && ntoday[x] <= 128) ntoday[x] = 100;
-    if (ntoday[x] > 128) ntoday[x] = land_flag;
-    if (ntoday[x] < 15 ) ntoday[x] = 0;
-    if (nyesterday[x] > 100 && nyesterday[x] <= 128) nyesterday[x] = 100;
-    if (nyesterday[x] > 128) nyesterday[x] = land_flag;
-    if (nyesterday[x] < 15 ) nyesterday[x] = 0;
+    if (ntoday[x] > 100 && ntoday[x] <= MAX_CONC) ntoday[x] = 100;
+    if (ntoday[x] > MAX_CONC) ntoday[x] = land_flag;
+    if (ntoday[x] < MIN_CONC ) ntoday[x] = 0;
+    if (nyesterday[x] > 100 && nyesterday[x] <= MAX_CONC) nyesterday[x] = 100;
+    if (nyesterday[x] > MAX_CONC) nyesterday[x] = land_flag;
+    if (nyesterday[x] < MIN_CONC ) nyesterday[x] = 0;
   }
   }
   // will want to do something about the points that one has an analysis 
@@ -128,11 +128,11 @@ int main(int argc, char *argv[]) {
 
   for (x.j = 0; x.j < ntoday.ypoints() ; x.j++) {
   for (x.i = 0; x.i < ntoday.xpoints() ; x.i++) {
-     if (ntoday[x] < 128. && nyesterday[x] < 128. ) {
+     if (ntoday[x] < MAX_CONC && nyesterday[x] < MAX_CONC ) {
        ndelta[x] = ntoday[x] - nyesterday[x];
      }
-     if (ntoday[x] > 128)     { nland[x] = land_flag; }
-     if (nyesterday[x] > 128) { nland[x] = land_flag; }
+     if (ntoday[x] > MAX_CONC)     { nland[x] = land_flag; }
+     if (nyesterday[x] > MAX_CONC) { nland[x] = land_flag; }
   }
   }
   printf("ndelta.gridmax %5.1f %5.1f\n", (float) ndelta.gridmax(), 
@@ -175,7 +175,7 @@ int main(int argc, char *argv[]) {
          ndelta[x] = tmp;
      }
 
-     if (nland[x] > 128)    ndelta[x] = itmp;
+     if (nland[x] > MAX_CONC)    ndelta[x] = itmp;
   }
   }
   ndelta.xpm(argv[4], 1, hpal);
@@ -212,12 +212,12 @@ void forstats(metricgrid<T> &ntoday, metricgrid<T> &nyesterday, metricgrid<unsig
     xjm1 = x; xjm1.j -= 1;
     xip1 = x; xip1.i += 1;
     xim1 = x; xim1.i -= 1;
-    if ( ntoday[x] < 128 &&
-         nyesterday[x] < 128 &&
-         nyesterday[xip1] < 128 && 
-         nyesterday[xim1] < 128 && 
-         nyesterday[xjp1] < 128 && 
-         nyesterday[xjm1] < 128 &&
+    if ( ntoday[x] < MAX_CONC &&
+         nyesterday[x] < MAX_CONC &&
+         nyesterday[xip1] < MAX_CONC && 
+         nyesterday[xim1] < MAX_CONC && 
+         nyesterday[xjp1] < MAX_CONC && 
+         nyesterday[xjm1] < MAX_CONC &&
          nland[x] < 100 &&
         (nyesterday[x] + nyesterday[xip1] + nyesterday[xim1] + nyesterday[xjp1] + nyesterday[xjm1]) > 0 ) {
      printf("%3.0f  %3.0f %3.0f %3.0f %3.0f %3.0f\n",(float) ntoday[x], 
@@ -270,7 +270,7 @@ void flags(GRIDTYPE<DATTYPE> &ref, GRIDTYPE<DATTYPE> &newer, GRIDTYPE<unsigned c
      baddata += 1;
      delta[loc] = 0;
      }
-     if (land[loc] > (unsigned int) 128) {
+     if (land[loc] > (unsigned int) MAX_CONC) {
        delta[loc] = 0;
      }
      if (fabs(delta[loc]) >= cutoff) {

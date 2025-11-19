@@ -7,16 +7,16 @@ include ../makeall.mk
 LIBS = ${MMAB_LIBF4} ${W3EMC_LIB4} ${BACIO_LIB4}
 
 #Should be no changes below this point---------------------------------
-all: psgnorth psgnorth12
+all: seaice_psgnorth seaice_psgnorth12
 
-psgnorth12 : 
+seaice_psgnorth12 : psgrib.f90 
 	ln -sf $(MMAB_INC)/icegrid.north12 icegrid.inc
-	$(FC) $(FOPTS)  psgrib.f90 
-	$(FLD) $(FLDFLAGS) psgrib.o $(LIBS) $(MMAB_LIBF4) -o seaice_psgnorth12
+	$(FC) $(FOPTS)  $<
+	$(FLD) $(FLDFLAGS) psgrib.o $(LIBS) $(MMAB_LIBF4) -o $(@)
 	rm -f icegrid.inc psgrib.o
 
-psgnorth : 
+seaice_psgnorth : psgrib.f90 
 	ln -sf $(MMAB_INC)/icegrid.north icegrid.inc
-	$(FC) $(FOPTS)   psgrib.f90 
-	$(FLD) $(FLDFLAGS) psgrib.o $(LIBS) $(MMAB_LIBF4) -o seaice_psgnorth
+	$(FC) $(FOPTS)   $<
+	$(FLD) $(FLDFLAGS) psgrib.o $(LIBS) $(MMAB_LIBF4) -o $(@)
 	rm -f icegrid.inc psgrib.o

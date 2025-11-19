@@ -123,11 +123,11 @@ int main(int argc, char *argv[]) {
 //    bucket averaging 
 // Mask out a range of grid points near land (set by 'range') 
 //    -- note that range = 0, as we're accepting up to the very edge
-  flag = 224.;
+  flag = NO_DATA;
   gridset(nf, nmap);
 
   for (index = 0; index < nf.xpoints()*nf.ypoints(); index++) {
-    if (nf[index] > 100. && nf[index] < MAX_ICE) {
+    if (nf[index] > 100. && nf[index] < MAX_CONC) {
        nf[index] = 100.;
     }
     else if (nf[index] < MIN_CONC) {
@@ -141,24 +141,24 @@ int main(int argc, char *argv[]) {
        }
     }
   }
-  filled  = gapfill(nf, (float)0., (float)100., (float)224.); //no-data points
-  filled += gapfill(nf, (float)0., (float)100., (float)166.); //bad-data points
-  filled += gapfill(nf, (float)0., (float)100., (float)177.); //weather points
+  filled  = gapfill(nf, (float)0., (float)100., (float)NO_DATA); //no-data points
+  filled += gapfill(nf, (float)0., (float)100., (float)BAD_DATA); //bad-data points
+  filled += gapfill(nf, (float)0., (float)100., (float)WEATHER); //weather points
   weather_zero(nf);
-  filled += gapfill(nf, (float)0., (float)100., (float)224.); //no-data points
-  filled += gapfill(nf, (float)0., (float)100., (float)166.); //bad-data points
+  filled += gapfill(nf, (float)0., (float)100., (float)NO_DATA); //no-data points
+  filled += gapfill(nf, (float)0., (float)100., (float)BAD_DATA); //bad-data points
 
   for (index = 0; index < nf.xpoints()*nf.ypoints(); index++) {
        if (nf[index] == WEATHER) {
          nf[index] = 0.;
        }
-       if (nf[index] >= MAX_ICE || nlandf[index] == COAST ) {
-        nf[index] = 224.;
+       if (nf[index] >= MAX_CONC || nlandf[index] == COAST ) {
+        nf[index] = NO_DATA;
         nlandf[index] = flag;
        }
   }
 
-  outmap.fromall(nf, nlandf, flag, 224.);
+  outmap.fromall(nf, nlandf, flag, NO_DATA);
   #ifdef VERBOSE
   for (ijloc.j = 0; ijloc.j < outmap.ypoints(); ijloc.j++) {
   for (ijloc.i = 0; ijloc.i < outmap.xpoints(); ijloc.i++) {
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
   gridset(sf, smap);
 
   for (index = 0; index < smap.xpoints()*smap.ypoints(); index++) {
-       if (sf[index] > 100. && sf[index] < MAX_ICE) {
+       if (sf[index] > 100. && sf[index] < MAX_CONC) {
          sf[index] = 100.;
        }
        else if (sf[index] < MIN_CONC) {
@@ -192,12 +192,12 @@ int main(int argc, char *argv[]) {
        if (slandf.anyof((float) LAND, range, ijloc) > 0) slandf[ijloc] = flag;
     }
   }
-  filled += gapfill(sf, (float)0., (float)100., (float)224.); //no-data points
-  filled += gapfill(sf, (float)0., (float)100., (float)166.); //bad-data points
-  filled += gapfill(sf, (float)0., (float)100., (float)177.); //weather points
+  filled += gapfill(sf, (float)0., (float)100., (float)NO_DATA); //no-data points
+  filled += gapfill(sf, (float)0., (float)100., (float)BAD_DATA); //bad-data points
+  filled += gapfill(sf, (float)0., (float)100., (float)WEATHER); //weather points
   weather_zero(sf);
-  filled += gapfill(sf, (float)0., (float)100., (float)224.); //no-data points
-  filled += gapfill(sf, (float)0., (float)100., (float)166.); //bad-data points
+  filled += gapfill(sf, (float)0., (float)100., (float)NO_DATA); //no-data points
+  filled += gapfill(sf, (float)0., (float)100., (float)BAD_DATA); //bad-data points
   printf("filled %d points\n",filled);
 
 // 
@@ -206,19 +206,19 @@ int main(int argc, char *argv[]) {
        if (sf[ijloc] == WEATHER) {
          sf[ijloc] = 0.;
        }
-       if (sf[ijloc] >= MAX_ICE || slandf[ijloc] == COAST ) {
-        sf[ijloc] = 224.;
+       if (sf[ijloc] >= MAX_CONC || slandf[ijloc] == COAST ) {
+        sf[ijloc] = NO_DATA;
         slandf[ijloc] = flag;
        }
     }
   }
-  altmap.fromall(sf, slandf, flag, 224.);
+  altmap.fromall(sf, slandf, flag, NO_DATA);
   
   for (ijloc.j = 0; ijloc.j < outmap.ypoints(); ijloc.j++) {
   for (ijloc.i = 0; ijloc.i < outmap.xpoints(); ijloc.i++) {
      outloc = outmap.locate(ijloc);
      if (outloc.lat < -20.) outmap[ijloc] = altmap[ijloc];
-     if (outmap[ijloc] > 100.1 && outmap[ijloc] != 224.) {
+     if (outmap[ijloc] > 100.1 && outmap[ijloc] != NO_DATA) {
        printf("%3d %3d %f over\n",ijloc.i, ijloc.j, (float) outmap[ijloc]);
      }
   }

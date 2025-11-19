@@ -1,15 +1,7 @@
 #include <stdio.h>
 
+#include "cincludes.h"
 
-#define NFREQS 8
-
-#define LAND 157
-#define MIXED 195
-
-/* For C++ emulation from c */
-typedef int bool;
-#define false (1==0)
-#define true  (1==1)
 
 int tb_filter(float *tb, float *concentration, int *flag) ;
 int waters(float tb1, float tb2, bool alpha, float crit, bool under, float *concentration, int *qc, float *land) ;

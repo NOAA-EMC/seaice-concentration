@@ -16,6 +16,8 @@ seaice_xpm.Cd/seaice_northxpm \
 seaice_reduce.Cd/seaice_global_reduce \
 seaice_xpm.Cd/seaice_south12xpm \
 seaice_xpm.Cd/seaice_north12xpm \
+seaice_xpm.Cd/seaice_south6xpm \
+seaice_xpm.Cd/seaice_north6xpm \
 seaice_blend.Cd/seaice_blend \
 seaice_posteriori.Cd/seaice_posteriori_30min.x \
 seaice_posteriori.Cd/seaice_posteriori_5min.x \
@@ -37,7 +39,8 @@ seaice_psgnorth.fd/seaice_psgnorth12 \
 seaice_grib2.fd/seaice_grib2 \
 seaice_psgsouth.fd/seaice_psgsouth12 \
 seaice_psgnorth.fd/seaice_psgnorth \
-seaice_psgsouth.fd/seaice_psgsouth 
+seaice_psgsouth.fd/seaice_psgsouth \
+seaice_global_blend.Cd/seaice_global_blend
 do
   if [ -f general/$ex ] ; then
     $cmd general/$ex ../exec
@@ -52,6 +55,8 @@ avhrr/seaice_avhrrfilter.Cd/seaice_avhrrfilter \
 avhrr/seaice_avhrrbufr.fd/seaice_avhrrbufr \
 amsr2/seaice_iceamsr2.Cd/seaice_iceamsr2 \
 amsr2/seaice_amsrbufr.fd/seaice_amsrbufr \
+viirs/seaice_viirsread.py/composite.py \
+viirs/seaice_viirscomp.Cd/seaice_viirscomp \
 l1b_to_l2/ssmisu_tol2 \
 l2_to_l3/ssmisu_tol3 \
 ../exec

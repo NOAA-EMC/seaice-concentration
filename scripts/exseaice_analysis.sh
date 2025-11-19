@@ -322,7 +322,7 @@ then
   # Raw files -- L3 -- on per-instrument basis
   #L2 ice files -- conc + Tb
   cp l2out.* ${COMOUT}
-    
+
   #L3 with tb etc.
   cp namsr2.${PDY}_hr ${COMOUT}/seaice.t${cyc}z.namsr2.${PDY}_hr
   cp namsr2.${PDY}_lr ${COMOUT}/seaice.t${cyc}z.namsr2.${PDY}_lr
@@ -426,6 +426,8 @@ convert sh.$PDY.xpm sh.$PDY.gif
 if [ $SENDCOM = "YES" ]
 then
   #Summary files 
+  cp initnorth12.$PDY   ${COMOUT}
+  cp initsouth12.$PDY   ${COMOUT}
   cp umasknorth12.$PDY  ${COMOUT}/seaice.t${cyc}z.umasknorth12
   cp umasksouth12.$PDY  ${COMOUT}/seaice.t${cyc}z.umasksouth12
   cp umasknorth.$PDY  ${COMOUT}/seaice.t${cyc}z.umasknorth
@@ -741,9 +743,9 @@ startmsg
 #  Now perform some qc analyses of the output.  9 June 2011
 ###############################################################################
 ### 
-  export pgm=seaice_monitor_c12th
-  . prep_step
-  startmsg
+export pgm=seaice_monitor_c12th
+. prep_step
+startmsg
 $EXECseaice_analysis/seaice_monitor_c12th  fill5min.$PDY ${COMINm1}/seaice.${cycle}.fill5min \
                            $FGLAND5MIN seaice_delta_$PDY.xpm seaice_monitor_${PDY}.kml \
                            > seaice_monitor_${PDY}.txt 

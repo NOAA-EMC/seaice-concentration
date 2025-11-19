@@ -1,8 +1,8 @@
 #!/bin/bash 
 #####
 #PBS -l select=1:ncpus=1
-#PBS -l walltime=5:59:00
-#PBS -N aice
+#PBS -l walltime=9:59:00
+#PBS -N aice6
 #PBS -q "dev"
 #PBS -j oe
 #PBS -A ICE-DEV
@@ -10,13 +10,14 @@
 #####
 
 #-----------------------------------------------------------------------------
-set -x
+set -xe
 
 export NRT=NO
+export KEEPDATA=YES
 
-export tagm=20251028
-export tag=20251029
-export end=20251103
+export tagm=20250531
+export tag=20250601
+export end=20250601
 
 export HOMEbase=/u/robert.grumbine/rgdev
 export seaice_analysis_ver=v4.5.2

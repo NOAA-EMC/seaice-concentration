@@ -20,7 +20,7 @@ set -x
 #NCO refers to these as 'job card' variables
 
 export HOMEbase=$HOME/rgdev
-export seaice_analysis_ver=v4.5.2
+export seaice_analysis_ver=${seaice_analysis_ver:-v4.5.2}
 
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 #Use this to override system in favor of my archive:

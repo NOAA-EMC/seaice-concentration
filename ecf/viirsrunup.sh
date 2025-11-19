@@ -1,8 +1,8 @@
 #!/bin/bash 
 #####
 #PBS -l select=1:ncpus=1
-#PBS -l walltime=0:59:00
-#PBS -N viirs_nrt
+#PBS -l walltime=9:59:00
+#PBS -N viirs_rerun6
 #PBS -q "dev"
 #PBS -j oe
 #PBS -A ICE-DEV
@@ -12,12 +12,12 @@
 #-----------------------------------------------------------------------------
 set -x
 
-export NRT=YES
+export NRT=NO
 export KEEPDATA=NO
 
-export tagm=20251014
-export tag=20251015
-export end=20251015
+export tagm=20250625
+export tag=20250626
+export end=20250630
 
 #-----------------------------------------------------------------------------
 export HOMEbase=$HOME/rgdev

@@ -1,11 +1,7 @@
 #!/bin/sh
 
-#set -xae
 set -xa
-# #### 31 March 2015 ******************************
-# SETUP AVHRR DATA RETRIEVAL for SEAICE CONCENTRATION ANALYSIS filter
-# ###########################################
-echo zzzzzzzzzzzzzzzzzz   Have Entered Filtering Script, PDY = $PDY m1 = $PDYm1
+set -e
 
 export PS4='$SECONDS + '
 date
@@ -13,6 +9,8 @@ echo cyc is ${cyc:?}
 echo envir is ${envir:?}
 echo seaice_analysis_ver is ${seaice_analysis_ver:?} 
 
+export DATAROOT=${dataroot:-/lfs/h2/emc/ptmp/wx21rg}
+export jobid=${jobid:-72}
 export DATA=$DATAROOT/${jobid}
 mkdir -p $DATA
 cd $DATA
@@ -25,6 +23,7 @@ export pgmout="OUTPUT.$$"
 export cycle=t${cyc}z
 export NET=${NET:-seaice_analysis}
 
+export SENDEMAIL=${SENDEMAIL:-YES}
 #################################################
 # Specify job's execution areas (directory paths)
 #################################################
@@ -39,37 +38,38 @@ export USHseaice_analysis=${USHseaice_analysis:-$HOMEseaice_analysis/ush}
 setpdy.sh
 . ./PDY
 
-echo zzzzzzzzzzzzzzzzzz   FILTER pdy = $PDY
-
+#--------------------------------------------------------------------
 export RUN=${RUN:-seaice_analysis}
-
-#debug: set -xe
-
-if [ NRT == 'NO' ] ; then
-  export COMIN=${COMIN:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
-  echo zzz COMIN $COMIN for not real time
-  export COMINm1=${COMINm1:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
-  export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
+if [ $envir == 'prod' ] ; then
+  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
 else
-  export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
-  echo zzz COMIN $COMIN for near real time
-  export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
-  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver}/${RUN}.${PDY})}
+  export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/$RUN.$PDY}
 fi
-
-export DCOM=${DCOM:-$DCOMROOT/$PDY}
-
+echo comout = $COMOUT
 if [ ! -d $COMOUT ] ; then
   mkdir -p $COMOUT
 fi
-echo zzz filter environment
-env
-echo zzz end filter environment
 
+
+if [ $NRT == "NO" ] ; then
+  export COMIN=${COMIN:-$HOME/noscrub/com/${NET}/${RUN}.${PDY}}
+  export COMINm1=${COMINm1:-$HOME/noscrub/com/${NET}/${RUN}.${PDYm1}}
+ else
+  export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+  export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
+fi
+
+export DCOM=${DCOM:-$DCOMROOT/$PDY}
+export DCOMm1=${DCOMm1:-$DCOMROOT/$PDYm1}
+export DCOMm2=${DCOMm2:-$DCOMROOT/$PDYm2}
+
+env
+
+#debug: exit
 #####################################
 # Execute the script
-echo ${HOMEseaice_analysis}
-$HOMEseaice_analysis/scripts/exseaice_filter.sh >> $pgmout
+echo zzz calling ex viirs script
+$HOMEseaice_analysis/scripts/exseaice_viirs.sh >> $pgmout
 export err=$?
 err_chk
 #####################################
@@ -77,6 +77,7 @@ err_chk
 cat $pgmout
 
 if [ "$KEEPDATA" != "YES" ] ; then
+  mv $pgmout $HOME
   rm -rf $DATA
 fi
 

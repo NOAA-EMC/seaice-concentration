@@ -1,0 +1,18 @@
+#!/bin/sh
+set -x
+set -xe
+
+#Set up something like ecf environment for calling J job
+
+export cyc=${cyc:-00}
+export envir=${envir:-developer}
+export seaice_analysis_ver=${seaice_analysis_ver:-v4.5.2}
+export job=${job:-seaice_analysis}
+
+export PDY=${PDY:-20250926}
+export PDYm1=${PDYm1:-20250925}
+export PDYm1=${PDYm1:-20250924}
+#Now call J job, which will call the ex
+echo in sms.viirs version = ${seaice_analysis_ver}
+/u/robert.grumbine/rgdev/seaice_analysis.${seaice_analysis_ver}/jobs/JSEAICE_VIIRS
+

@@ -48,24 +48,19 @@ seaice_fnorthxpm : seaice_fxpm.C
 seaice_fsouthxpm : seaice_fxpm.C
 	$(CPP) $(CPPOPTS) $< -DGRIDTYPE=southgrid 
 	$(CPPLD) $(MMAB_LIBF4) seaice_fxpm.o $(CPPLDFLAGS) -o $(@)
-	$(CPPLD) $(CPPOPTS) $(CPPLDFLAGS) seaice_fxpm.C -DGRIDTYPE=southgrid $(MMAB_LIBF4) -o $(@)
 
 seaice_fnorth12xpm : seaice_fxpm.C
 	$(CPP) $(CPPOPTS) $< -DGRIDTYPE=northhigh 
 	$(CPPLD) $(MMAB_LIBF4) seaice_fxpm.o $(CPPLDFLAGS) -o $(@)
-	$(CPPLD) $(CPPOPTS) $(CPPLDFLAGS) seaice_fxpm.C -DGRIDTYPE=northhigh $(MMAB_LIBF4) -o $(@)
 
 seaice_fsouth12xpm : seaice_fxpm.C
 	$(CPP) $(CPPOPTS) $< -DGRIDTYPE=southhigh 
 	$(CPPLD) $(MMAB_LIBF4) seaice_fxpm.o $(CPPLDFLAGS) -o $(@)
-	$(CPPLD) $(CPPOPTS) $(CPPLDFLAGS) seaice_fxpm.C -DGRIDTYPE=southhigh $(MMAB_LIBF4) -o $(@)
 
 seaice_fglobal5minxpm : seaice_fxpm.C 
 	$(CPP) $(CPPOPTS) $< -DGRIDTYPE=global_12th 
 	$(CPPLD) $(MMAB_LIBF4) seaice_fxpm.o $(CPPLDFLAGS) -o $(@)
-	$(CPPLD) $(CPPOPTS) $(CPPLDFLAGS) seaice_fxpm.C -DGRIDTYPE=global_12th $(MMAB_LIBF4) -o $(@)
 
 seaice_fglobalxpm : seaice_fxpm.C 
 	$(CPP) $(CPPOPTS) $< -DGRIDTYPE=global_ice 
 	$(CPPLD) $(MMAB_LIBF4) seaice_fxpm.o $(CPPLDFLAGS) -o $(@)
-	$(CPPLD) $(CPPOPTS) $(CPPLDFLAGS) seaice_fxpm.C -DGRIDTYPE=global_ice $(MMAB_LIBF4) -o $(@)

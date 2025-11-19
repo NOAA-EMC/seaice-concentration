@@ -8,10 +8,12 @@ import netCDF4 as nc
 from grid import *
 
 #---------------------------------------------------------------------------
+'''
 #Loop over input arg list (JRR-IceConcentration*)
 # and composite the concentration and temperatures on to global_12th grids
 # write out in netcdf
 #fname = "20220828/JRR-IceConcentration_v2r3_j01_s202208281036198_e202208281037426_c202208281059540.nc"
+'''
 
 #For output grid:
 target_grid = global_5min()
@@ -93,12 +95,18 @@ for k in range(0,len(indices[0])):
     tsumx[j,i] /= gcount[j,i]
     tsumx2[j,i] = sqrt(max(0., tsumx2[j,i]/gcount[j,i] - tsumx[j,i]*tsumx[j,i]) )
     target_grid.locate(i,j,z)
-    #debug: print(i,j,z.lat, z.lon, csumx[j,i], csumx2[j,i], tsumx[j,i], tsumx2[j,i], gcount[j,i], flush=True, file=sys.stdout)
+   
+    print(i,j,z.lat, z.lon, csumx[j,i], csumx2[j,i], tsumx[j,i], tsumx2[j,i], gcount[j,i], flush=True, file=sys.stdout)
     cellcount += 1
 
 print("gcount, avg: ",gcount.max(), gcount.min(), tsumx.max(), tsumx.min(), tsumx2.max(), tsumx2.min(),file=sys.stderr  )
 print("cellcount = ",cellcount,file=sys.stderr)
 
+exit(0)
+
+#----------------------------------------------------------------------------------
+# Here and below is pre-adaptation for netcdf output to be used downstream
+# It is fully functional, but not polished
 #----------------------------------------------------------------------------------
 
 class ncout:

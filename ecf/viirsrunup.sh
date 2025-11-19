@@ -2,7 +2,7 @@
 #####
 #PBS -l select=1:ncpus=1
 #PBS -l walltime=9:59:00
-#PBS -N aice6
+#PBS -N viirs_rerun6
 #PBS -q "dev"
 #PBS -j oe
 #PBS -A ICE-DEV
@@ -10,40 +10,44 @@
 #####
 
 #-----------------------------------------------------------------------------
-set -xe
+set -x
 
 export NRT=NO
-export KEEPDATA=YES
+export KEEPDATA=NO
 
-export tagm=20250531
-export tag=20250601
-export end=20250601
+export tagm=20250625
+export tag=20250626
+export end=20250630
 
-export HOMEbase=/u/robert.grumbine/rgdev
+#-----------------------------------------------------------------------------
+export HOMEbase=$HOME/rgdev
 export seaice_analysis_ver=v4.5.2
 
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
-
-echo zzz tagm = $tagm
 
 #Use this to override system in favor of my archive:
 if [ $NRT == 'NO' ] ; then
   echo zzz not running in near real time, use my archives
   export DCOMROOT=/u/robert.grumbine/noscrub/satellites/prod/
-  export COMINsst_base=$HOME/noscrub/nsst/
   export RGTAG=dev
   export my_archive=true
+else
+  echo zzz running in near real time, use operations
 fi
 
 cd $HOMEseaice_analysis/ecf
 
+export cyc=00
 #--------------------------------------------------------------------------------------
 #The actual running of stuff
 
 while [ $tag -le $end ]
 do
 
-  time ./day.sh
+  for cyc in 00 06 12 18
+  do
+    time ./viirsday.sh
+  done
 
   export tagm=$tag
   tag=`expr $tag + 1`

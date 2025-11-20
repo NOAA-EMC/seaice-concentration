@@ -26,7 +26,7 @@ module list
 set -x
 
 export HOMEbase=/u/robert.grumbine/rgdev
-export seaice_analysis_ver=${seaice_analysis_ver:-v4.5.2}
+export seaice_analysis_ver=v4.5.2
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
 
 export MODULEPATH_ROOT=/usrx/local/prod/modulefiles
@@ -55,7 +55,6 @@ else
   #developer
   export DATAROOT=/lfs/h2/emc/ptmp/wx21rg/
   export COMROOT=/u/robert.grumbine/noscrub/com/
-  export COMINsst_base=$HOME/noscrub/nsst/
   export HOMEbase=/u/robert.grumbine/rgdev
   export jlogfile=/u/robert.grumbine/jlogfile
   export PCOMROOT=/u/robert.grumbine/noscrub/pcom/$RUN

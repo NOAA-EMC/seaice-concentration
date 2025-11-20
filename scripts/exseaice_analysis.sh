@@ -561,8 +561,8 @@ echo zzzzz completed the L2 and L3 analyses zzzzzzzzzzzzzzzz
 #debug RG: exit
 
 qc="false"
-echo zzzzz qc, cominsst, cominsstm1:
-echo $qc $COMINsst $COMINsstm1
+echo zzz qc, cominsst_base, cominsst, cominsstm1:
+echo $qc $COMINsst_base $COMINsst $COMINsstm1
 
 if [ -s $COMINsst/rtgssthr_grb_0.083.grib2 ] ; then
   cp $COMINsst/rtgssthr_grb_0.083.grib2 oned

@@ -1,7 +1,6 @@
 #!/bin/sh
 
-#set -xae
-set -xa
+set -xae
 # #### 05/18/99 #############################
 # SETUP SEAICE CONCENTRATION ANALYSIS PROCESSING CONTROL SHELL VARIABLES
 # ###########################################
@@ -40,35 +39,41 @@ setpdy.sh
 
 echo zzzzzzzzzzzzzzzzzzz Beginning real work of seaice_analysis script zzzzzzzzzzzzzzzzzzzzzzzzz
 export RUN=${RUN:-seaice_analysis}
-export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
-export COMOUTwmo=${COMOUTwmo:-${COMOUT}/wmo}
-
-
 if [ $NRT == "NO" ] ; then
   echo zzz running in archive mode, use my archive for sst
   export COMINsst_base=${COMINsst_base:-$HOME/noscrub/nsst/}
-  echo $COMINsst_base
   export COMINsst=${COMINsst:-${COMINsst_base}/${PDY}}
   export COMINsstm1=${COMINsstm1:-${COMINsst_base}/${PDYm1}}
   export COMIN=${COMIN:-$HOME/noscrub/com/${NET}/${RUN}.${PDY}}
   export COMINm1=${COMINm1:-$HOME/noscrub/com/${NET}/${RUN}.${PDYm1}}
+  export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/${RUN}.${PDY}}
  else
-  echo zzz running in nrt mode, use ops for sst
   export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
-  echo COMIN $COMIN
   export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
-  #export COMINsst_base=${COMINsst_base:-$(compath.py prod/com/nsst/${nsst_ver}/nsst)}
-  export COMINsst_base=$(compath.py prod/com/nsst/${nsst_ver}/nsst)
-  echo zzz NRT sstbase $COMINsst_base $nsst_ver
+  echo zzz running in nrt mode, use ops for sst
+  export COMINsst_base=${COMINsst_base:-$(compath.py prod/com/nsst/${nsst_ver}/nsst)}
   export COMINsst=${COMINsst:-${COMINsst_base}.${PDY}}
   export COMINsstm1=${COMINsstm1:-${COMINsst_base}.${PDYm1}}
+  export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
 fi
+#export COMIN=${COMIN:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
+#export COMINm1=${COMINm1:-$(compath.py ${envir}/com/${NET}/${seaice_analysis_ver})/${RUN}.${PDYm1}}
+#
+#export COMINsst_base=${COMINsst_base:-$(compath.py prod/com/nsst/${nsst_ver}/nsst)}
+#export COMINsst=${COMINsst:-${COMINsst_base}.${PDY}}
+#export COMINsstm1=${COMINsstm1:-${COMINsst_base}.${PDYm1}}
+
+export COMOUTwmo=${COMOUTwmo:-${COMOUT}/wmo}
 
 #export DCOMROOT=${DCOMROOT:-/lfs/h1/ops/${envir}/dcom}
 export DCOM=${DCOM:-$DCOMROOT/$PDY}
 export DCOMm1=${DCOMm1:-$DCOMROOT/$PDYm1}
 
 mkdir -p $COMOUT $COMOUTwmo
+if [ $? -ne 0 ] ; then
+  echo zzzzzz some error in creating comout, comoutwmo: $COMOUT $COMOUTwmo
+  exit 1
+fi
 env
 
 #####################################

@@ -23,3 +23,9 @@ do
   cd ..
 done
 
+for d in seaice_xpm.Cd
+do
+  cd $d
+  make float
+  cd ..
+done

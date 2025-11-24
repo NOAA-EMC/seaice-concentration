@@ -185,7 +185,7 @@ void blend(metricgrid<unsigned char> &namsr2,
   for (loc.j = 0; loc.j < namsr2.ypoints(); loc.j++) {
   for (loc.i = 0; loc.i < namsr2.xpoints(); loc.i++) {
     // Pre-bound:
-    if (namsr2[loc] > 100 && namsr2[loc] <= 128) namsr2[loc] = 100;
+    if (namsr2[loc] > 100 && namsr2[loc] <= MAX_CONC) namsr2[loc] = 100;
     if (namsr2[loc] <= 100) {
       #ifdef VERBOSE
         ll = namsr2.locate(loc);
@@ -209,8 +209,8 @@ void blend(metricgrid<unsigned char> &namsr2,
   for (loc.j = 0; loc.j < nout.ypoints(); loc.j++) {
   for (loc.i = 0; loc.i < nout.xpoints(); loc.i++) {
     // Pre-bound:
-    if (nssmis17[loc] > 100 && nssmis17[loc] <= 128) nssmis17[loc] = 100;
-    if (nssmis18[loc] > 100 && nssmis18[loc] <= 128) nssmis18[loc] = 100;
+    if (nssmis17[loc] > 100 && nssmis17[loc] <= MAX_CONC) nssmis17[loc] = 100;
+    if (nssmis18[loc] > 100 && nssmis18[loc] <= MAX_CONC) nssmis18[loc] = 100;
 
     if (nssmis17[loc] <= 100) {
       c[loc]++; tmp[loc] += nssmis17[loc];
@@ -275,7 +275,7 @@ void blend(metricgrid<unsigned char> &namsr2, metricgrid<unsigned char> &nssmi,
   for (loc.j = 0; loc.j < namsr2.ypoints(); loc.j++) {
   for (loc.i = 0; loc.i < namsr2.xpoints(); loc.i++) {
     // Pre-bound:
-    if (namsr2[loc] > 100 && namsr2[loc] <= 128) namsr2[loc] = 100;
+    if (namsr2[loc] > 100 && namsr2[loc] <= MAX_CONC) namsr2[loc] = 100;
     if (namsr2[loc] <= 100) {
       #ifdef VERBOSE
         ll = namsr2.locate(loc);
@@ -299,9 +299,9 @@ void blend(metricgrid<unsigned char> &namsr2, metricgrid<unsigned char> &nssmi,
   for (loc.j = 0; loc.j < nout.ypoints(); loc.j++) {
   for (loc.i = 0; loc.i < nout.xpoints(); loc.i++) {
     // Pre-bound:
-    if (nssmi[loc] > 100 && nssmi[loc] <= 128) nssmi[loc] = 100;
-    if (nssmis17[loc] > 100 && nssmis17[loc] <= 128) nssmis17[loc] = 100;
-    if (nssmis18[loc] > 100 && nssmis18[loc] <= 128) nssmis18[loc] = 100;
+    if (nssmi[loc] > 100 && nssmi[loc] <= MAX_CONC) nssmi[loc] = 100;
+    if (nssmis17[loc] > 100 && nssmis17[loc] <= MAX_CONC) nssmis17[loc] = 100;
+    if (nssmis18[loc] > 100 && nssmis18[loc] <= MAX_CONC) nssmis18[loc] = 100;
 
     if (nssmi[loc] <= 100) {
       c[loc]++; tmp[loc] += nssmi[loc];

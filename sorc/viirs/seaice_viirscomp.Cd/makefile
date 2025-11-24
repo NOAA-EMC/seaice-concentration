@@ -8,6 +8,3 @@ all : seaice_viirscomp
 
 seaice_viirscomp: viirs.o
 	$(CPPLD) $(MMAB_LIBF4) $< $(CPPLDFLAGS) -o $(@)
-
-viirs_blend : blend.o
-	$(CPPLD) $(MMAB_LIBF4) $< $(CPPLDFLAGS) -o $(@)

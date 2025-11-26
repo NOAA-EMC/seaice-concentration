@@ -1,20 +1,23 @@
+'''
+Loop over input arg list (JRR-IceConcentration*)
+ and composite the concentration and temperatures on to global_12th grids
+ write out in netcdf
+fname are in this convention: 
+  "20220828/JRR-IceConcentration_v2r3_j01_s202208281036198_e202208281037426_c202208281059540.nc"
+Robert.Grumbine
+25 November 2025
+'''
+
 import sys
 import datetime
 
 import numpy as np
 import numpy.ma as ma
-import netCDF4 as nc 
+import netCDF4 as nc
 
 from grid import *
 
 #---------------------------------------------------------------------------
-'''
-#Loop over input arg list (JRR-IceConcentration*)
-# and composite the concentration and temperatures on to global_12th grids
-# write out in netcdf
-#fname = "20220828/JRR-IceConcentration_v2r3_j01_s202208281036198_e202208281037426_c202208281059540.nc"
-'''
-
 #For output grid:
 target_grid = global_5min()
 tsumx  = np.zeros((target_grid.ny,target_grid.nx))
@@ -38,7 +41,7 @@ for fname in sys.argv[1:]:
 
   #debug: print("dimensions ",len(viirs.dimensions['Columns']), len(viirs.dimensions['Rows']) )
   nfiles += 1
-  
+
   #This is a masked array, determined by fill value
   conc = viirs.variables['IceConc'][:,:]
   #debug: print(nfiles,"conc ",conc.max(), conc.min(),flush=True, file=sys.stderr )
@@ -54,7 +57,7 @@ for fname in sys.argv[1:]:
   lons = viirs.variables['Longitude'][:,:]
 
   #QC:
-  temp = viirs.variables['IceSrfTemp'][:,:] 
+  temp = viirs.variables['IceSrfTemp'][:,:]
   #debug: print(nfiles,"temp ",temp.max(), temp.min(),flush=True, file=sys.stderr )
 
   #Start Working:
@@ -95,14 +98,16 @@ for k in range(0,len(indices[0])):
     tsumx[j,i] /= gcount[j,i]
     tsumx2[j,i] = sqrt(max(0., tsumx2[j,i]/gcount[j,i] - tsumx[j,i]*tsumx[j,i]) )
     target_grid.locate(i,j,z)
-   
-    print(i,j,z.lat, z.lon, csumx[j,i], csumx2[j,i], tsumx[j,i], tsumx2[j,i], gcount[j,i], flush=True, file=sys.stdout)
+
+    print(i,j,z.lat, z.lon, csumx[j,i], csumx2[j,i], tsumx[j,i], \
+            tsumx2[j,i], gcount[j,i], flush=True, file=sys.stdout)
     cellcount += 1
 
-print("gcount, avg: ",gcount.max(), gcount.min(), tsumx.max(), tsumx.min(), tsumx2.max(), tsumx2.min(),file=sys.stderr  )
+print("gcount, avg: ",gcount.max(), gcount.min(), tsumx.max(), tsumx.min(), \
+        tsumx2.max(), tsumx2.min(),file=sys.stderr  )
 print("cellcount = ",cellcount,file=sys.stderr)
 
-exit(0)
+sys.exit(0)
 
 #----------------------------------------------------------------------------------
 # Here and below is pre-adaptation for netcdf output to be used downstream
@@ -110,6 +115,9 @@ exit(0)
 #----------------------------------------------------------------------------------
 
 class ncout:
+    """
+    class ncout is for managing the writing of netcdf output
+    """
 
     def __init__(self, nx, ny):
       self.nx = nx
@@ -127,14 +135,17 @@ class ncout:
       tlats = np.linspace(flat, -90+dlat/2, ny)
       #debug: print(tlats)
       #debug: print(tlons)
-      for i in range(0,nx):
-        self.lats[:,i] = tlats[:]
-      for i in range(0,ny):
-        self.lons[i,:] = tlons[:]
+      for ii in range(0,nx):
+        self.lats[:,ii] = tlats[:]
+      for ii in range(0,ny):
+        self.lons[ii,:] = tlons[:]
       del tlons, tlats
 
-    def ncopen(self, fname):
-      self.ncfile = nc.Dataset(fname, mode='w', format='NETCDF4')
+    def ncopen(self, fout):
+      """
+      ncout.ncopen(fout) opens fout for netcdf writing
+      """
+      self.ncfile = nc.Dataset(fout, mode='w', format='NETCDF4')
       self.lat_dim = self.ncfile.createDimension('lat', self.ny)
       self.lon_dim = self.ncfile.createDimension('lon', self.nx)
       # Create variables to hold values for those referenced dimensions
@@ -147,13 +158,14 @@ class ncout:
       self.lon.units = 'degrees_east'
       self.lon.long_name = 'longitude'
       self.lon[:,:] = self.lons[:,:]
-  
-      self.header(fname)
+
+      self.header(fout)
 
 
-    def header(self, fname):
+    def header(self, fout):
+      """ ncout.header(fout) -- write netcdf header informtion """
       #Generic global header info:
-      self.ncfile.title = fname
+      self.ncfile.title = fout
       self.ncfile.setncattr("institution","NOAA/NWS/NCEP")
       self.ncfile.setncattr("geospatial_lon_max","{:f}".format(self.lons.max() )  )
       self.ncfile.setncattr("geospatial_lon_min","{:f}".format(self.lons.min() )  )
@@ -175,12 +187,14 @@ class ncout:
       #self.ncfile.setncattr("keywords","YOPP, Polar, Supersite")
 
     def addvar(self, vname, dtype):
+      """ ncout.addvar(varname, data_type) -- name and type a variable 
+          for netcdf output """
       #debug print('dtype = ',dtype, flush=True)
       if (dtype == 'uint8'):
         fill = 255
       else:
         fill = -1
-  
+
       try:
         tmp = self.ncfile.createVariable(vname, dtype, ( 'lat','lon'), fill_value=fill)
       except:
@@ -194,7 +208,7 @@ class ncout:
         self.ncfile.variables[vname][:,:] = allvalues[:,:]
 
     def close(self):
-      # close netcdf file associated w. patch
+      """ ncout.close() -- close netcdf file """
       self.ncfile.close()
 
 #----------------------------------------------------------------------------------

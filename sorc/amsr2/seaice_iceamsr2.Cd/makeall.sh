@@ -1,3 +1,4 @@
+set -x
 module load intel/19.1.3.304
 
 make

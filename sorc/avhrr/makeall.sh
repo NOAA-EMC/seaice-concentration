@@ -1,4 +1,5 @@
 #!/bin/sh
+set -x
 
 if [ -z $MMAB_BASE ] ; then
   echo MMAB_BASE for mmablib has not been defined

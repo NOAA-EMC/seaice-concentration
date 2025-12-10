@@ -34,7 +34,6 @@ export MODULEPATH_ROOT=/usrx/local/prod/modulefiles
 #export COMINsst_base=${COMINsst_base:-`compath.py gfs/prod/sst`}
 
 #Important that these be after compath.py
-export RUN_ENVIR=not_nco
 export envir=developer
 
 export NET=seaice_analysis

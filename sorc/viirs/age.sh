@@ -1,4 +1,5 @@
 #!/bin/sh
+set -x
 
 tagm=20250101
 tag=20250102

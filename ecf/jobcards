@@ -55,7 +55,6 @@ else
   export DATAROOT=/lfs/h2/emc/ptmp/wx21rg/
   export COMROOT=/u/robert.grumbine/noscrub/com/
   export HOMEbase=/u/robert.grumbine/rgdev
-  export jlogfile=/u/robert.grumbine/jlogfile
   export PCOMROOT=/u/robert.grumbine/noscrub/pcom/$RUN
   export SENDCOM=YES
 

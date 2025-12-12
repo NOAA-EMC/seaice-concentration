@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #Parameters have been set up by J job
 #Robert Grumbine
@@ -15,7 +15,6 @@
 # Environment to run: COMOUT, DCOMROOT, PDY, PDYm1, PDYm2
 #                     EXECseaice_analysis
 set -x
-set -e
 
 echo zzz entered exseaice_viirs
 source $HOME/env3.12/bin/activate
@@ -33,8 +32,8 @@ elif [ $cyc == '18' ] ; then
   day=$PDYm1
   hours='04 03 02 01 00' #handle 23 separately, PDYm2
 else
-  echo exseaice_viirs: illegal cycle $cyc, exiting
-  exit 1
+  err_exit exseaice_viirs: illegal cycle $cyc, exiting
+#  exit 1
 fi
 
 

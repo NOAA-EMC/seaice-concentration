@@ -36,7 +36,6 @@ module reset
 source ../versions/run.ver
 . ./jobcards
 module list
-echo $jlogfile $DATA $cyc $cycle
 echo date pdy= $PDY ncepdate = $ncepdate
 
 echo date before obsproc: $PDY

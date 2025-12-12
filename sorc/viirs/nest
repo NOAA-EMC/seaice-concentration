@@ -1,5 +1,0 @@
-#!bin/sh
-
-source ~/env3.12/bin/activate
-module load intel netcdf imagemagick
-export PYTHONPATH=$PYTHONPATH:~/rgops/mmablib/py

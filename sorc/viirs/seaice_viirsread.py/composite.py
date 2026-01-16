@@ -10,11 +10,13 @@ Robert.Grumbine
 
 import sys
 import datetime
+from math import sqrt
 
 import numpy as np
 import numpy.ma as ma
 import netCDF4 as nc
 
+from latpt import *
 from grid import *
 
 #---------------------------------------------------------------------------
@@ -204,6 +206,7 @@ class ncout:
       self.count += 1
 
     def encodevar(self, allvalues, vname):
+      ''' ncout.encodevar(allvalues, vname) '''
       if (self.nx*self.ny != 0) :
         self.ncfile.variables[vname][:,:] = allvalues[:,:]
 

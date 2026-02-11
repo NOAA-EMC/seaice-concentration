@@ -110,7 +110,7 @@
 
       DO j = 1, ny
         DO i = 1, nx
-          outmap(i,j) = FLOAT(MOVA2I(cmap(i,j))) / 100.
+          outmap(i,j) = REAL(MOVA2I(cmap(i,j))) / 100.
         ENDDO
       ENDDO
 

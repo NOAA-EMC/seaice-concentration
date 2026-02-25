@@ -42,7 +42,7 @@ for inst in j01 npp n21
 do
   for hh in $hours
   do
-    python3 $EXECseaice_analysis/composite.py \
+    $EXECseaice_analysis/composite.py \
     $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
     > viirs.$inst.$cyc.${day}$hh 
     # Handle no file case 

@@ -104,7 +104,7 @@
 
       DO j = 1, MP
         DO i = 1, LP
-          map(i,j) = FLOAT(MOVA2I(conc(i,j))) / 100.
+          map(i,j) = REAL(MOVA2I(conc(i,j))) / 100.
         ENDDO
       ENDDO
 

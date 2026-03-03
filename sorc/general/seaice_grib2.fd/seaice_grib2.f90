@@ -109,7 +109,7 @@
 
 
       DO i = 1, ndpts
-        fld(i) = FLOAT(MOVA2I(cin(i))) / 100.  ! Convert to float, and scale to percent
+        fld(i) = REAL(MOVA2I(cin(i))) / 100.  ! Convert to float, and scale to percent
 !CD        PRINT *,'in grib2 fld, mova2i, cin ',i,fld(i), 
 !CD     1                           MOVA2I(cin(i)), cin(i)
       ENDDO

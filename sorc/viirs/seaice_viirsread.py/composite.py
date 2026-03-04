@@ -1,3 +1,4 @@
+#!/apps/test/ve/intel/19.1.3.304/python/3.12.0/seaice-analysis/4.5.2/bin/python3
 '''
 Loop over input arg list (JRR-IceConcentration*)
  and composite the concentration and temperatures on to global_12th grids
@@ -10,11 +11,13 @@ Robert.Grumbine
 
 import sys
 import datetime
+from math import sqrt
 
 import numpy as np
 import numpy.ma as ma
 import netCDF4 as nc
 
+from latpt import *
 from grid import *
 
 #---------------------------------------------------------------------------
@@ -204,6 +207,7 @@ class ncout:
       self.count += 1
 
     def encodevar(self, allvalues, vname):
+      ''' ncout.encodevar(allvalues, vname) '''
       if (self.nx*self.ny != 0) :
         self.ncfile.variables[vname][:,:] = allvalues[:,:]
 

@@ -13,12 +13,16 @@
 #
 
 # Environment to run: COMOUT, DCOMROOT, PDY, PDYm1, PDYm2
-#                     EXECseaice_analysis
+#                     USHseaice_analysis
 set -x
 
 echo zzz entered exseaice_viirs
-source $HOME/env3.12/bin/activate
-export PYTHONPATH=$PYTHONPATH:$HOME/rgops/mmablib/py
+
+export PYTHONPATH=$PYTHONPATH:$PACKAGEROOT/seaice_analysis.v4.5.1/sorc/mmablib/py
+if [ ! -d $PACKAGEROOT/seaice_analysis.v4.5.1/sorc/mmablib/py ] ; then
+  echo could not find mmablib/py
+  exit 1
+fi
 echo zzz prepared python
 
 day=$PDY
@@ -42,7 +46,7 @@ for inst in j01 npp n21
 do
   for hh in $hours
   do
-    $EXECseaice_analysis/composite.py \
+    $USHseaice_analysis/composite.py \
     $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
     > viirs.$inst.$cyc.${day}$hh 
     # Handle no file case 
@@ -60,7 +64,7 @@ if [ $cyc == '18' ] ; then
   do
     for hh in $hours
     do
-      $EXECseaice_analysis/composite.py \
+      $USHseaice_analysis/composite.py \
       $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
       > viirs.$inst.$cyc.${day}$hh 
       # Handle no file case 

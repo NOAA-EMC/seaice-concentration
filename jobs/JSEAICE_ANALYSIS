@@ -80,7 +80,6 @@ err_chk
 cat $pgmout
 
 if [ "$KEEPDATA" != "YES" ] ; then
-  mv $pgmout $HOME
   rm -rf $DATA
 fi
 

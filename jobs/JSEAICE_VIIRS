@@ -9,8 +9,6 @@ echo cyc is ${cyc:?}
 echo envir is ${envir:?}
 echo seaice_analysis_ver is ${seaice_analysis_ver:?} 
 
-export DATAROOT=${dataroot:-/lfs/h2/emc/ptmp/wx21rg}
-export jobid=${jobid:-72}
 export DATA=$DATAROOT/${jobid}
 mkdir -p $DATA
 cd $DATA
@@ -77,7 +75,6 @@ err_chk
 cat $pgmout
 
 if [ "$KEEPDATA" != "YES" ] ; then
-  mv $pgmout $HOME
   rm -rf $DATA
 fi
 

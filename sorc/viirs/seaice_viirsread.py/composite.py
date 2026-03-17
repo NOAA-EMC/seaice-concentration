@@ -1,4 +1,4 @@
-#!/apps/test/ve/intel/19.1.3.304/python/3.12.0/seaice-analysis/4.5.2/bin/python3
+#!/usr/bin/env python3
 '''
 Loop over input arg list (JRR-IceConcentration*)
  and composite the concentration and temperatures on to global_12th grids

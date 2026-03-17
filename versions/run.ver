@@ -15,3 +15,5 @@ export imagemagick_ver=7.0.8-7
 export hdf5_ver=1.10.6
 export netcdf_ver=4.7.4
 
+export ve_seaice_analysis_ver=4.5.2
+export seaice_analysis_ver=v4.5.1

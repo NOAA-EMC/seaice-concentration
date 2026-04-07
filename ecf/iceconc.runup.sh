@@ -13,9 +13,9 @@
 set -x
 
 export NRT=NO
-export tagm=20260215
-export tag=20260216
-export end=20260223
+export tagm=20260402
+export tag=20260403
+export end=20260404
 
 export HOMEbase=/u/robert.grumbine/rgdev
 export seaice_analysis_ver=v4.5.2

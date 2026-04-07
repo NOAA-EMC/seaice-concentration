@@ -12,5 +12,5 @@ export job=${job:-seaice_analysis}
 export PDY=${PDY:-20231026}
 export PDYm1=${PDYm1:-2231025}
 #Now call J job, which will call the ex
-/u/robert.grumbine/rgdev/seaice_analysis.${seaice_analysis_ver}/jobs/JSEAICE_ANALYSIS
+/u/robert.grumbine/rgops/seaice_analysis.${seaice_analysis_ver}/jobs/JSEAICE_ANALYSIS
 

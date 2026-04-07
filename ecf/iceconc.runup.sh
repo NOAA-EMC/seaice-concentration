@@ -17,7 +17,7 @@ export tagm=20260402
 export tag=20260403
 export end=20260404
 
-export HOMEbase=/u/robert.grumbine/rgdev
+export HOMEbase=/u/robert.grumbine/rgops/
 export seaice_analysis_ver=v4.5.2
 
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}

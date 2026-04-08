@@ -46,13 +46,15 @@ for inst in j01 npp n21
 do
   for hh in $hours
   do
-    $USHseaice_analysis/composite.py \
-    $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
-    > viirs.$inst.$cyc.${day}$hh 
-    # Handle no file case 
-    if [ ! -f viirs.$inst.$cyc.${day}$hh ] ; then
-      touch viirs.$inst.$cyc.${day}$hh
-    fi
+     echo " $USHseaice_analysis/seaice_viirs.sh ${day} ${hh} ${inst} " >> poe.viirs
+
+#    $USHseaice_analysis/composite.py \
+#    $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
+#    > viirs.$inst.$cyc.${day}$hh 
+#    # Handle no file case 
+#    if [ ! -f viirs.$inst.$cyc.${day}$hh ] ; then
+#      touch viirs.$inst.$cyc.${day}$hh
+#    fi
   done
 done
 
@@ -64,17 +66,23 @@ if [ $cyc == '18' ] ; then
   do
     for hh in $hours
     do
-      $USHseaice_analysis/composite.py \
-      $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
-      > viirs.$inst.$cyc.${day}$hh 
-      # Handle no file case 
-      if [ ! -f viirs.$inst.$cyc.${day}$hh ] ; then
-        touch viirs.$inst.$cyc.${day}$hh
-      fi
+      echo " $USHseaice_analysis/seaice_viirs.sh ${day} ${hh} ${inst} " >> poe.viirs
+
+#      $USHseaice_analysis/composite.py \
+#      $DCOMROOT/$day/wgrdbul/IST/JRR-IceConcentration*_${inst}_s${day}${hh}*.nc \
+#      > viirs.$inst.$cyc.${day}$hh 
+#      # Handle no file case 
+#      if [ ! -f viirs.$inst.$cyc.${day}$hh ] ; then
+#        touch viirs.$inst.$cyc.${day}$hh
+#      fi
     done
   done
 fi
 
+#From Simon Hsio 8 April 2026
+chmod 775 poe.viirs
+ntask=`cat poe.viirs |wc -l`;
+mpiexec -n $ntask -ppn $ntask --cpu-bind verbose,core cfp ./poe.viirs
+export err=$?; err_chk
 
-mv viirs.*.$cyc.*?? $COMOUT
-
+#mv viirs.*.$cyc.*?? $COMOUT

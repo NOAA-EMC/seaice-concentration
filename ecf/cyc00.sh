@@ -16,7 +16,7 @@ export NRT=YES
 export KEEPDATA=NO
 
 export tag=${tag:-`date +"%Y%m%d"`}
-export tag=20260407
+#export tag=20260407
 
 #-----------------------------------------------------------------------------
 export HOMEbase=$HOME/rgops

@@ -60,7 +60,7 @@ done
 
 # special case for 23z
 if [ $cyc == '18' ] ; then
-  day=$PDYm2
+  day=$PDYm1
   hours='23'
   for inst in j01 npp n21
   do

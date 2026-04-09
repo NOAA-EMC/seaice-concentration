@@ -308,7 +308,8 @@ export err=$?;err_chk
 export pgm=seaice_viirscomp
 . prep_step
 startmsg
-time $EXECseaice_analysis/seaice_viirscomp ir_latlon.$PDY $FGLAND5MIN $COMOUT/viirs.*.*.*
+#time $EXECseaice_analysis/seaice_viirscomp ir_latlon.$PDY $FGLAND5MIN $COMOUT/viirs.*.*.*
+time $EXECseaice_analysis/seaice_viirscomp ir_latlon.$PDY $FGLAND5MIN $COMIN/viirs.*.*.* $COMINm1/viirs.*.06.* $COMINm1/viirs.*.12.* 
 export err=$?;err_chk
 touch ir_latlon.$PDY
 

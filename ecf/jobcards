@@ -8,6 +8,7 @@ if [ -z $LMOD_FAMILY_COMPILER ] ; then
 
   module load prod_envir/$prod_envir_ver
   module load prod_util/$prod_util_ver
+  module load cray-mpich/${cray_mpich_ver}
 
   #module load intel-classic/$intel_classic_ver
   #module load craype/$craype_ver

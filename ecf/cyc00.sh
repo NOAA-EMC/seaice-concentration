@@ -1,8 +1,8 @@
 #!/bin/bash 
 #####
-#PBS -l select=1:ncpus=1
+#PBS -l select=1:ncpus=18:mem=20GB
 #PBS -l walltime=0:59:00
-#PBS -N viirs_nrt
+#PBS -N viirs_nrt0
 #PBS -q "dev"
 #PBS -j oe
 #PBS -A ICE-DEV
@@ -15,7 +15,8 @@ set -x
 export NRT=YES
 export KEEPDATA=NO
 
-tag=${tag:-`date +"%Y%m%d"`}
+export tag=${tag:-`date +"%Y%m%d"`}
+export tag=20260407
 
 #-----------------------------------------------------------------------------
 export HOMEbase=$HOME/rgops

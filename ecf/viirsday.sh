@@ -30,9 +30,14 @@ if [ $NRT == 'NO' ] ; then
 fi
 
 cd $HOMEseaice_analysis/ecf/
-module reset
 source ../versions/run.ver
 . ./jobcards
+module load intel/$intel_ver
+module load craype/$craype_ver
+module load cray-mpich/${cray_mpich_ver}
+module load cray-pals/${cray_pals_ver}
+module load cfp/${cfp_ver}
+module load ve/seaice-analysis/${ve_seaice_analysis_ver}
 module list
 echo zzz date pdy= $PDY cyc = $cyc ncepdate = $ncepdate
 

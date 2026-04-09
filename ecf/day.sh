@@ -5,13 +5,20 @@ export tag=${tag:-`date +"%Y%m%d"`}
 export NRT=${NRT:-YES}
 echo zzz tag, NRT = $tag, $NRT
 
-export NRT=${NRT:-YES}
-echo zzz tag, NRT = $tag, $NRT
-
 tagm=`expr $tag - 1`
 export tagm=`/u/robert.grumbine/bin/dtgfix3 $tagm`
 export end=$tag
 echo initial tag date = $tag
+
+if [ $NRT == "NO" ] ; then
+  echo zzz running in archive mode, use my archive for sst
+  export COMINsst_base=${COMINsst_base:-$HOME/noscrub/nsst/}
+  export COMINsst=${COMINsst:-${COMINsst_base}/${PDY}}
+  export COMINsstm1=${COMINsstm1:-${COMINsst_base}/${PDYm1}}
+  export COMIN=${COMIN:-$HOME/noscrub/com/${NET}/${RUN}.${PDY}}
+  export COMINm1=${COMINm1:-$HOME/noscrub/com/${NET}/${RUN}.${PDYm1}}
+  export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/${RUN}.${PDY}}
+fi
 
 #-----------------------------------------------------------------------------
 
@@ -20,7 +27,7 @@ set -xe
 # Bring the various environment-sensitive definitions out of J jobs and to here:
 #NCO refers to these as 'job card' variables
 
-export HOMEbase=/u/robert.grumbine/rgdev
+export HOMEbase=/u/robert.grumbine/rgops/
 export seaice_analysis_ver=v4.5.2
 
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}

@@ -38,11 +38,11 @@ setpdy.sh
 
 #--------------------------------------------------------------------
 export RUN=${RUN:-seaice_analysis}
-if [ $envir == 'prod' ] ; then
+#if [ $envir == 'prod' ] ; then
   export COMOUT=${COMOUT:-$(compath.py -o ${NET}/${seaice_analysis_ver})/${RUN}.${PDY}}
-else
-  export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/$RUN.$PDY}
-fi
+#else
+#  export COMOUT=${COMOUT:-$HOME/noscrub/com/${NET}/$RUN.$PDY}
+#fi
 echo comout = $COMOUT
 if [ ! -d $COMOUT ] ; then
   mkdir -p $COMOUT

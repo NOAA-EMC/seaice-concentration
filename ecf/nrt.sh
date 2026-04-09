@@ -20,7 +20,7 @@ export tag=20251004
 export end=20251006
 
 #-----------------------------------------------------------------------------
-export HOMEbase=$HOME/rgdev
+export HOMEbase=$HOME/rgops/
 export seaice_analysis_ver=v4.5.2
 
 export HOMEseaice_analysis=$HOMEbase/seaice_analysis.${seaice_analysis_ver}
